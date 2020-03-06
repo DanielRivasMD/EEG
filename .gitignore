@@ -15,3 +15,8 @@ Script/GoWorkshop/Executables/
 
 # guideline
 Archive/Guideline/
+
+# word documents
+*.doc
+*.docx
+
