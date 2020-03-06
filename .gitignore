@@ -16,6 +16,9 @@ Script/GoWorkshop/Executables/
 # guideline
 Archive/Guideline/
 
+# minutes
+Archive/Minutes/
+
 # word documents
 *.doc
 *.docx
