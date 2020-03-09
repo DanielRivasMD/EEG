@@ -23,3 +23,5 @@ Archive/Minutes/
 *.doc
 *.docx
 
+# tar balls
+*.tar
