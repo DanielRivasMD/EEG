@@ -1,0 +1,57 @@
+
+Guideline for annotation files.
+
+Each recording will have attached two annotation files:
+
+	1. PatientData:
+
+		Naming:
+			Example: PD0001LB.csv
+				Annotation type => Patient Data (PD)
+				Patient number => 0001 (continous numbering by four digits)
+				Patient name => Luis Bustamente (LB). First letter of first name and first letter of first last name.
+
+		Format:
+			CSV file with semicolon separated (;) records with the following fields:
+				Gender
+				Age
+				Diagnosis
+				Interpretation (brief)
+				Signs & Symptoms
+				Treatment
+
+			See example => "PatientDataEXAMPLE.csv"
+
+	2. StateAnnotation:
+
+		Naming:
+			Example: SA0001LB.csv
+				Annotation type => State Annoation (SA)
+				Patient number => 0001 (continous numbering by four digits)
+				Patient name => Luis Bustamente (LB). First letter of first name and first letter of first last name.
+
+		Format:
+			CSV file with semicolon separated (;) records with the following fields:
+				State
+				Start
+				End
+
+			See example => "StateAnnotationEXAMPLE.csv"
+
+	3. EventMarking:
+
+		Naming:
+			Example: EM0001LB.csv
+				Annotation type => Event Marking (EM)
+				Patient number => 0001 (continous numbering by four digits)
+				Patient name => Luis Bustamente (LB). First letter of first name and first letter of first last name.
+
+		Format:
+			CSV file with semicolon separated (;) records with the following fields:
+				Event
+				Start
+				End
+
+			See example => "EventMarkingEXAMPLE.csv"
+
+Important: time should be annotated with the format "24hour:minute:second" => Example: 00:01:30
