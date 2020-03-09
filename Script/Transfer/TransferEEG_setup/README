@@ -8,7 +8,7 @@ This is a guide for file transfer associated with the project "Interpretation of
 
 - Copy the following commands and paste them in the Terminal:
 --------------------------------------------------
-cd ~/Descargas/
+cd ~/Dropbox/TransferFiles/
 tar -xf Transfer.tar
 cd Transfer/TransferEEG_setup/
 open .
