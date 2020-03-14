@@ -4,4 +4,4 @@ echo ""
 echo "Transfering patient data"
 echo "--------------------------------------------------"
 
-rsync -zaP ${HOME}/Desktop/AI_EEG/* innn@elefant.imbim.uu.se:/data2/collaborations/eeg/patients_raw/
+rsync -zaP ${HOME}/Desktop/EEG_AI_study/* innn@elefant.imbim.uu.se:/data2/collaborations/eeg/patients_raw/
