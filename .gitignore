@@ -1,8 +1,11 @@
 # Data folders
 Data/
+
+# Archive
 Archive/Assets/
 Archive/Plots/
 Archive/Prints/
+Archive/Presentations/
 
 # R package
 Script/Rpacks/
