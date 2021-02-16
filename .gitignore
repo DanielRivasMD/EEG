@@ -1,26 +1,22 @@
-# data folders
-data/
-
-# arch
+# archive
 arch/assets/
-arch/plots/
 arch/prints/
 arch/presentations/
-
-# R package
-src/Rpacks/
-
-# Deprecated scripts
-src/deprecated/
-
-# Go Executables
-src/GoExecutables/
 
 # guideline
 arch/guideline/
 
 # minutes
 arch/minutes/
+
+# resources
+arch/resources
+
+# data
+data/
+
+# deprecated scripts
+src/deprecated/
 
 # word documents
 *.doc
