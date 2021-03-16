@@ -17,3 +17,22 @@
 	- **Examples**:
 		- Classification of epilepsy types?
 		- Diagnosis of epileptic epidose during post-ictal period?
+
+TUH
+real-time computer assisted monitoring of electroencephalograms can improve the quality and efficiency of a physician's diagnostic capabilities.
+the ability to rapidly detect and interpret seizures and other brain abnormalities in critical care settings can improve patient outcomes.
+automatic detection would reduce moribility and mortality without increasing the costs of care.
+due to manpower and cost constrains hospitals lack 24 / 7 neurologist coverage.
+MindReader offers the potential to revolutionize healthcare in critical care settings by allowing clinicians to identify clinical changes rapidly and treat patients more safely and effectively.
+
+modules:
+  - signal preprocessor
+  - feature extractor
+  - event decoder
+  - postprocessor
+  - visualizer
+
+
+EEG is vulnerable to interference -> characteristics & sampling method
+model is simple in implementation with low computational complexity
+present results in real time
