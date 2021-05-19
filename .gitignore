@@ -13,6 +13,10 @@ arch/minutes/
 # resources
 arch/resources
 
+# journal cache & output
+journal/jl_*
+journal/*html
+
 # data
 data/
 
