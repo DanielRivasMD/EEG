@@ -1,0 +1,184 @@
+---
+title  :           MindReader performance
+author :           Daniel Rivas
+data   :           May 2021
+---
+
+```julia; echo = false
+
+# load packages
+using DelimitedFiles
+using Plots
+using RCall
+
+```
+
+```julia; echo = false
+
+begin
+  # declare peak identification function
+  R"
+  peak_iden <- function(
+
+    f_seq,
+    d_threshold = NULL
+  ) {
+
+    if ( is.null(d_threshold) ) d_threshold <- 1
+    f_seq <- c(0, f_seq, 0)
+    f_threseq <- which(f_seq >= d_threshold)
+    f_peak_length <- which(f_seq[f_threseq + 1] < d_threshold) - which(f_seq[f_threseq-1] < d_threshold) + 1
+    f_upper_lim_ix <- (f_threseq[cumsum(f_peak_length)]) - 1
+    f_lower_lim_ix <- f_upper_lim_ix - f_peak_length + 1
+    peak_feat <- data.frame(peak_no = seq_along(f_lower_lim_ix), lower_lim_ix = f_lower_lim_ix, upper_lim_ix = f_upper_lim_ix, peak_length_ix = f_peak_length)
+
+    return(peak_feat)
+  }
+  "
+end;
+
+```
+
+```julia; echo = false
+
+begin
+  # load data
+  d = readdir("/Users/drivas/Factorem/MindReader/data/hmm")
+
+  files = d |> p -> contains.(p, r"states") |> p -> getindex(d, p)
+
+  smp = 57692
+
+  pt = Matrix{Int64}(undef, 22, 57692)
+  lx = 1:smp |> collect
+  ly = Vector{String}()
+
+  for (c, f) ∈ enumerate(files)
+    k = f |> p -> replace(p, "chb04_28_" => "") |> p -> replace(p, "_states.csv" => "")
+    @info k
+    push!(ly, k)
+    pt[c, :] .= readdlm( string("/Users/drivas/Factorem/MindReader/data/hmm/", f) )[2:end, 1] |> p -> convert.(Int64, p)
+  end
+
+  utilDir    = "/Users/drivas/Factorem/MindReader/src/Utilities/"
+  include( string(utilDir,    "fileReaderEDF.jl") )
+
+  signalDir = "/Users/drivas/Factorem/MindReader/src/SignalProcessing/"
+  include( string(signalDir,  "signalBin.jl") )
+
+  annotDir   = "/Users/drivas/Factorem/MindReader/src/Annotator/"
+  include( string(annotDir,   "annotationCalibrator.jl") )
+
+  dir = "/Users/drivas/Factorem/EEG/data/physionet.org/files/chbmit/1.0.0/chb04/"
+  xfile = "chb04-summary.txt"
+  annotFile = annotationReader( string(dir, xfile) )
+  file = "chb04_28.edf"
+  outimg = replace(file, ".edf" => "")
+
+  edfDf, startTime, recordFreq = getSignals( string(dir, file) )
+
+  winBin = 256
+  overlap = 4
+
+  labelAr = annotationCalibrator(
+    annotFile[outimg],
+    startTime = startTime,
+    recordFreq = recordFreq,
+    signalLength = size(edfDf, 1),
+    binSize = winBin,
+    binOverlap = overlap
+  )
+
+  frThres = 120
+  ct = 0
+  for r ∈ eachrow(pt)
+    R"tmp <- peak_iden($r, 2)"
+    @rget tmp
+    global ct += 1
+    insertcols!(tmp, :channel => ct)
+    pgTmp = filter(:peak_length_ix => x -> x >= frThres, tmp)
+    if r == pt[1, :]
+      global df = tmp
+      global pgDf = pgTmp
+    else
+      df = [df; tmp]
+      pgDf = [pgDf; pgTmp]
+    end
+  end
+
+  ms = ones(Int64, size(pt))
+
+  for r ∈ eachrow(pgDf)
+    ms[r.channel, convert(Int64, r.lower_lim_ix):convert.(Int64, r.upper_lim_ix)] .= 2
+  end
+
+  annotSJTime = [
+             "00:09:50"
+             "00:15:40"
+             "00:28:30"
+             "00:32:35"
+             "01:07:43"
+            ]
+
+  annotSJSec = Dates.Time.(annotSJTime) .- Dates.Time("0") |> p -> convert.(Second, p)
+  annotSJ = [(annotSJSec[i], annotSJSec[i] + Second(60)) for i = eachindex(annotSJTime)]
+
+  labelSJ= annotationCalibrator(
+    annotSJ,
+    startTime = startTime,
+    recordFreq = recordFreq,
+    signalLength = size(edfDf, 1),
+    binSize = winBin,
+    binOverlap = overlap
+  )
+end;
+
+```
+
+# Background
+
+Our aim is to produce two articles on Artificial Intelligence and EEG interprestion: the first dealing with the presentation of an unsupervised method for EEG annoation, and the second an machine-aided medical analysis of the dataset collected by Dr. SanJuan and collaborators.
+
+To this end, the first project uses a public dataset of long and recurrent EEG recordings collected at Children's Hospital Boston. More information can be found [here](https://physionet.org/content/chbmit/1.0.0/).
+
+# Results
+
+The present analysis displays record **chb04_28** of the said dataset. We procceded to run our latest implementation of MindReader, unsupervised EEG detection, and plotted the results.
+
+According to our model, we hypothesize 5 different states (this number is arbitry) from which we consider state 1 (black) to be 'normal', 'non-pathological' or 'ground' state, whereas others might suggest an anomalies.
+
+We use Physionet's annoations not as a training, but only as measure of performance. Furthermore, Dr. SanJuan and Dr. Vargas were able to review _chb04_28_ recording personally and provide annoations.
+
+#### Figure 1
+
+The following graph is compose of:
+
+  1) Dr. SanJuan and Dr. Vargas annoations.
+
+  2) Physionet's annoations.
+
+  3) Heatmap output from MindReader. _Y axis_ represents channels on the recording whereas _X axis_ represent time domain across the recording.
+
+  4) Heatmap where quick changes (<30s) on states or blips where filtered out.
+
+Accoring to the analysis on this recording, our sensitivity and specificity in relation to Physionet annoations are 100% and 100%. This is outstanding due to the fact that MindReader requires nothing else but the raw input (edf file). Additional analysis on other files will be included on the first article where we will present MindReader.
+
+```julia; echo = false, fig_cap = "Heatmap annotation vs Predictions"
+
+hmASJ = heatmap(labelSJ |> permutedims, framestyle = :none, leg = :none, title = "SanJuan / Angel Annotations")
+hmAPh = heatmap(labelAr |> permutedims, framestyle = :none, leg = :none, title = "Physionet Annotations")
+hmRec = heatmap(lx, ly, pt, framestyle = :semi, leg = :none)
+hmMas = heatmap(lx, ly, ms, framestyle = :semi, leg = :none)
+plot(hmASJ, hmAPh, hmRec, hmMas, layout = grid(4, 1, heights = [0.05, 0.05, 0.45, 0.45]), dpi = 300)
+
+```
+
+#### Figure 2
+
+Figure shows barplot of sorted changes in states across all channels in the recording from our MindReader output. With the settings the were used for this analysis 4 frames represent 1 second, therefore 120 frames represent 30 seconds, which were used as threshold. _Y axis_ represents the duration of change on states measure in frames. This indicates that the vast majority of changes in states are short and presumably noise.
+
+```julia; echo = false, fig_cap = "Barplot of state's delta lenght"
+
+df |> p -> sort(p, :peak_length_ix, rev = true) |> p -> bar(p[:, :peak_length_ix], leg = :none, dpi = 300)
+
+```
