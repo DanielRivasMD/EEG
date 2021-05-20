@@ -45,7 +45,7 @@ begin
   # load data
   d = readdir("/Users/drivas/Factorem/MindReader/data/hmm")
 
-  files = d |> p -> contains.(p, r"states") |> p -> getindex(d, p)
+  files = d |> p -> match.(r"chb04_28_(.*)states", p) |> p -> findall(!isnothing, p) |> p -> getindex(d, p)
 
   smp = 57692
 
