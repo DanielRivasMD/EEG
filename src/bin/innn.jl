@@ -62,9 +62,11 @@ end;
 
 # build autoencoder & train hidden Markov model
 begin
-  for d in [Symbol(i, "Dc") for i = [:err, :post, :comp]]
-    @eval $d = Dict{String, Tuple{Array{Int64, 1}, Array{Array{Float64, 1}, 1}}}()
-  end
+  # for d in [Symbol(i, "Dc") for i = [:err, :post, :comp]]
+    # @eval $d = Dict{String, Tuple{Array{Int64, 1}, Array{Array{Float64, 1}, 1}}}()
+  # end
+
+  errDc = Dict{String, Tuple{Array{Int64, 1}, Array{Array{Float64, 1}, 1}}}()
 
   for (k, f) in freqDc
     println()
