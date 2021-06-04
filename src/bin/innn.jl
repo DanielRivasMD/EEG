@@ -74,12 +74,12 @@ begin
 
     #  build & train autoencoder
     freqAr = shifter(f)
-    model = buildAutoencoder(length(freqAr[1]), 100, leakyrelu)
+    model = buildAutoencoder(length(freqAr[1]), 100, Params)
     model = modelTrain(freqAr, model, Params)
 
     ################################################################################
 
-    postAr = cpu(model).(freqAr)
+    postAr = Flux.cpu(model).(freqAr)
 
     ################################################################################
 
@@ -93,12 +93,12 @@ begin
 
       # process
       for i in 1:4
-        errDc[k] = process(hmm, aErr, true, args = hmmParams)
+        errDc[k] = process!(hmm, aErr, true, args = hmmParams)
       end
 
       # final
       for i in 1:2
-        errDc[k] = process(hmm, aErr, false, args = hmmParams)
+        errDc[k] = process!(hmm, aErr, false, args = hmmParams)
       end
     end;
 
