@@ -30,8 +30,12 @@ hmmParams = HMMParams(
 
 ################################################################################
 
-#  argument parser
-include( "Utilities/argParser.jl" );
+file = "/Users/drivas/Factorem/EEG/data/patientEEG/0001LB.edf"
+winBin = 128
+overlap = 4
+
+# #  argument parser
+# include( "Utilities/argParser.jl" );
 
 ################################################################################
 
