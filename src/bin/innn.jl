@@ -16,7 +16,7 @@ import Parameters: @with_kw
   batchsize::Int               = 1000             # batch size for training
   throttle::Int                = 5                # throttle timeout
   device::Function             = Flux.gpu         # set as gpu, if gpu available
-  σ::Function                  = Flux.leakyrelu   # learning functionend;
+  σ::Function                  = Flux.leakyrelu   # learning function
 end;
 
 ################################################################################
