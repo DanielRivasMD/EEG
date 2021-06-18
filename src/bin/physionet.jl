@@ -9,11 +9,12 @@ import Parameters: @with_kw
 
 # set hyperparameters
 @with_kw mutable struct Params
-  η::Float64                   = 1e-3     # learning rate
-  epochs::Int                  = 10       # number of epochs
-  batchsize::Int               = 1000     # batch size for training
-  throttle::Int                = 5        # throttle timeout
-  device::Function             = gpu      # set as gpu, if gpu available
+  η::Float64                   = 1e-3             # learning rate
+  epochs::Int                  = 30               # number of epochs
+  batchsize::Int               = 1000             # batch size for training
+  throttle::Int                = 5                # throttle timeout
+  device::Function             = Flux.gpu         # set as gpu, if gpu available
+  σ::Function                  = Flux.leakyrelu   # learning function
 end;
 
 ################################################################################
@@ -23,8 +24,8 @@ hmmParams = HMMParams(pen = 200., distance = euclDist)
 
 ################################################################################
 
-#  argument parser
-include( "Utilities/argParser.jl" );
+# #  argument parser
+# include( "Utilities/argParser.jl" );
 
 ################################################################################
 
@@ -33,9 +34,21 @@ outcsv = "/Users/drivas/Factorem/MindReader/data/csv/"
 outscreen = "/Users/drivas/Factorem/MindReader/data/screen/"
 outhmm = "/Users/drivas/Factorem/MindReader/data/hmm/"
 
+shArgs = Dict(
+  "indir" => "/Users/drivas/Factorem/EEG/data/physionet.org/files/chbmit/1.0.0/chb04/",
+  "file" => "chb04_28.edf",
+  "outdir" => "/Users/drivas/Factorem/MindReader/data/",
+  "outsvg" => nothing,
+  "outcsv" => nothing,
+  "outscreen" => "/Users/drivas/Factorem/MindReader/data/screen/",
+  "outhmm" => "/Users/drivas/Factorem/MindReader/data/hmm/",
+  "window-size" => 256,
+  "bin-overlap" => 4,
+)
+
 dir = "/Users/drivas/Factorem/EEG/data/physionet.org/files/chbmit/1.0.0/chb04/"
 xfile = "chb04-summary.txt"
-# file = "chb04_28.edf"
+file = "chb04_28.edf"
 
 winBin = 256
 overlap = 4
@@ -47,7 +60,7 @@ annotFile = annotationReader( string(dir, xfile) )
 dirRead = readdir(dir)
 fileList = contains.(dirRead, r"edf$") |> p -> getindex(dirRead, p)
 
-for file in fileList
+# for file in fileList
 
   @info file
   outimg = replace(file, ".edf" => "")
@@ -88,12 +101,12 @@ for file in fileList
 
       #  build & train autoencoder
       freqAr = shifter(f)
-      model = buildAutoencoder(length(freqAr[1]), 100, leakyrelu)
+      model = buildAutoencoder(length(freqAr[1]), convert(Int64, length(freqAr[1] / 4)), Params)
       model = modelTrain(freqAr, model, Params)
 
       ################################################################################
 
-      postAr = cpu(model).(freqAr)
+      postAr = Flux.cpu(model).(freqAr)
 
       ################################################################################
 
@@ -107,12 +120,12 @@ for file in fileList
 
         # process
         for i in 1:4
-          errDc[k] = process(hmm, aErr, true, args = hmmParams)
+          errDc[k] = process!(hmm, aErr, true, params = hmmParams)
         end
 
         # final
         for i in 1:2
-          errDc[k] = process(hmm, aErr, false, args = hmmParams)
+          errDc[k] = process!(hmm, aErr, false, params = hmmParams)
         end
       end;
 
@@ -120,6 +133,10 @@ for file in fileList
 
     end
   end;
+
+  ################################################################################
+
+  writeHMM( string(shArgs["outhmm"], replace(shArgs["file"], ".edf" => "_")), errDc)
 
   ################################################################################
 
@@ -131,20 +148,16 @@ for file in fileList
 
     ################################################################################
 
-    runHeatmap(outimg, outsvg, outcsv, errDc, labelAr)
+    runHeatmap(shArgs, errDc, labelAr)
 
   else
 
-    runHeatmap(outimg, outsvg, outcsv, errDc)
+    runHeatmap(shArgs, errDc)
 
   end
 
   ################################################################################
 
-  writeHMM( string(outhmm, replace(file, ".edf" => "_")), errDc)
-
-  ################################################################################
-
-end
+# end
 
 ################################################################################
