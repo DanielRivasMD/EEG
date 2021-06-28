@@ -3,6 +3,7 @@
 using MindReader
 using HiddenMarkovModelReaders
 
+import Flux: cpu, gpu, flatten, leakyrelu
 ################################################################################
 
 import Parameters: @with_kw
@@ -15,8 +16,8 @@ import Parameters: @with_kw
   epochs::Int                  = 10               # number of epochs
   batchsize::Int               = 1000             # batch size for training
   throttle::Int                = 5                # throttle timeout
-  device::Function             = Flux.gpu         # set as gpu, if gpu available
-  σ::Function                  = Flux.leakyrelu   # learning function
+  device::Function             = gpu              # set as gpu, if gpu available
+  σ::Function                  = leakyrelu        # learning function
 end;
 
 ################################################################################
@@ -83,14 +84,14 @@ begin
 
     ################################################################################
 
-    postAr = Flux.cpu(model).(freqAr)
+    postAr = cpu(model).(freqAr)
 
     ################################################################################
 
     begin
       @info "Creating Hidden Markov Model..."
       # error
-      aErr = reshifter(postAr - freqAr) |> p -> Flux.flatten(p) |> permutedims
+      aErr = reshifter(postAr - freqAr) |> p -> flatten(p) |> permutedims
 
       # setup
       hmm = setup!(aErr)
