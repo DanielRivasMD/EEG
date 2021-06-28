@@ -24,7 +24,6 @@ end;
 
 # hidden Markov model parameters
 hmmParams = HMMParams(
-  pen = 200.,
   distance = euclDist,
 )
 # TODO: perhaps pass them together with other Params
@@ -94,16 +93,16 @@ begin
       aErr = reshifter(postAr - freqAr) |> p -> flatten(p) |> permutedims
 
       # setup
-      hmm = setup!(aErr)
+      hmm = setup(aErr)
 
       # process
       for i in 1:4
-        errDc[k] = process!(hmm, aErr, true, args = hmmParams)
+        errDc[k] = process!(hmm, aErr, true, params = hmmParams)
       end
 
       # final
       for i in 1:2
-        errDc[k] = process!(hmm, aErr, false, args = hmmParams)
+        errDc[k] = process!(hmm, aErr, false, params = hmmParams)
       end
     end;
 
