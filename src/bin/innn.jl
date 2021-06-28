@@ -4,6 +4,8 @@ using MindReader
 using HiddenMarkovModelReaders
 
 import Flux: cpu, gpu, flatten, leakyrelu
+using DelimitedFiles
+
 ################################################################################
 
 import Parameters: @with_kw
@@ -30,9 +32,21 @@ hmmParams = HMMParams(
 
 ################################################################################
 
-file = "/Users/drivas/Factorem/EEG/data/patientEEG/0001LB.edf"
-winBin = 128
-overlap = 4
+shArgs = Dict(
+  "indir" => "/Users/drivas/Factorem/EEG/data/patientEEG/",
+  "file" => "0001LB.edf",
+  "outdir" => "/Users/drivas/Factorem/MindReader/",
+  "outsvg" => nothing,
+  "outcsv" => nothing,
+  "outscreen" => "/Users/drivas/Factorem/MindReader/",
+  "outhmm" => "/Users/drivas/Factorem/MindReader/",
+  "window-size" => 128,
+  "bin-overlap" => 4,
+)
+
+# file = "/Users/drivas/Factorem/EEG/data/patientEEG/0001LB.edf"
+# winBin = 128
+# overlap = 4
 
 # #  argument parser
 # include( "Utilities/argParser.jl" );
@@ -42,11 +56,13 @@ overlap = 4
 #  read data
 begin
   # read edf file
-  edfDf, startTime, recordFreq = getSignals(file)
+  edfDf, startTime, recordFreq = getSignals( string(shArgs["indir"], shArgs["file"]) )
+  # edfDf, startTime, recordFreq = getSignals(file)
 
   # read xlsx file
-  xfile = replace(file, "edf" => "xlsx")
-  xDf = xread(xfile)
+  xDf = xread( string(shArgs["indir"], replace(shArgs["file"], "edf" => "xlsx")) )
+  # xfile = replace(file, "edf" => "xlsx")
+  # xDf = xread( xfile )
 
   # labels array
   labelAr = annotationCalibrator(
@@ -54,12 +70,13 @@ begin
     startTime = startTime,
     recordFreq = recordFreq,
     signalLength = size(edfDf, 1),
-    binSize = winBin,
-    binOverlap = overlap
+    binSize = shArgs["window-size"],
+    binOverlap = shArgs["bin-overlap"],
   )
 
   # calculate fft
-  freqDc = extractChannelFFT(edfDf, binSize = winBin, binOverlap = overlap)
+  freqDc = extractChannelFFT(edfDf, binSize = shArgs["window-size"], binOverlap = shArgs["bin-overlap"])
+  # freqDc = extractChannelFFT(edfDf, binSize = winBin, binOverlap = overlap)
 end;
 
 ################################################################################
@@ -112,24 +129,29 @@ begin
     ################################################################################
 
   end
+
+  println()
+
 end;
 
 ################################################################################
 
-scr = sensspec(errDc, labelAr)
+# scr = sensspec(errDc, labelAr)
 
-DelimitedFiles.writedlm( string(outscreen, outimg, ".csv"), writePerformance(scr), ", " )
 
-################################################################################
-
-runHeatmap(outimg, outsvg, outcsv, errDc)
+# DelimitedFiles.writedlm( string(outscreen, outimg, ".csv"), writePerformance(scr), ", " )
 
 ################################################################################
 
-writeHMM( string(outhmm, replace(file, ".edf" => "_")), errDc)
+runHeatmap(shArgs, errDc)
+# runHeatmap(shArgs, errDc, labelAr)
 
 ################################################################################
 
-end
+writeHMM( string(shArgs["outhmm"], replace(shArgs["file"], ".edf" => "_")), errDc)
+
+################################################################################
+
+# end
 
 ################################################################################
