@@ -14,8 +14,8 @@ import Parameters: @with_kw
 
 ################################################################################
 
-include("/Users/drivas/Factorem/EEG/src/annotationFunctions/annotationCalibrator.jl")
-include("/Users/drivas/Factorem/EEG/src/annotationFunctions/fileReaderXLSX.jl")
+include("/Users/drivas/Factorem/EEG/src/annotation/functions/annotationCalibrator.jl")
+include("/Users/drivas/Factorem/EEG/src/annotation/functions/fileReaderXLSX.jl")
 
 ################################################################################
 
