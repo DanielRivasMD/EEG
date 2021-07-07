@@ -15,7 +15,7 @@ import Parameters: @with_kw
 # set hyperparameters
 @with_kw mutable struct Params
   η::Float64                   = 1e-3             # learning rate
-  epochs::Int                  = 30               # number of epochs
+  epochs::Int                  = 25               # number of epochs
   batchsize::Int               = 1000             # batch size for training
   throttle::Int                = 5                # throttle timeout
   device::Function             = gpu              # set as gpu, if gpu available
