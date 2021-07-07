@@ -14,6 +14,11 @@ import Parameters: @with_kw
 
 ################################################################################
 
+include("/Users/drivas/Factorem/EEG/src/annotationFunctions/annotationCalibrator.jl")
+include("/Users/drivas/Factorem/EEG/src/annotationFunctions/fileReaderXLSX.jl")
+
+################################################################################
+
 # set hyperparameters
 @with_kw mutable struct Params
   η::Float64                   = 1e-3             # learning rate
@@ -61,12 +66,7 @@ begin
   edfDf, startTime, recordFreq = getSignals(shArgs)
 
   # read xlsx file
-  xDf = xread(
-    string(
-      shArgs["indir"],
-      replace(shArgs["file"], "edf" => "xlsx")
-    )
-  )
+  xDf = xread(shArgs)
 
   # labels array
   labelAr = annotationCalibrator(
@@ -74,8 +74,7 @@ begin
     startTime = startTime,
     recordFreq = recordFreq,
     signalLength = size(edfDf, 1),
-    binSize = shArgs["window-size"],
-    binOverlap = shArgs["bin-overlap"],
+    shParams = shArgs,
   )
 
   # calculate fft

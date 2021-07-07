@@ -14,6 +14,11 @@ import Parameters: @with_kw
 
 ################################################################################
 
+include("/Users/drivas/Factorem/EEG/src/annotationFunctions/annotationCalibrator.jl")
+include("/Users/drivas/Factorem/EEG/src/annotationFunctions/fileReaderXLSX.jl")
+
+################################################################################
+
 # set hyperparameters
 @with_kw mutable struct Params
   η::Float64                   = 1e-3             # learning rate
@@ -79,8 +84,7 @@ fileList = contains.(dirRead, r"edf$") |> p -> getindex(dirRead, p)
         startTime = startTime,
         recordFreq = recordFreq,
         signalLength = size(edfDf, 1),
-        binSize = shArgs["window-size"],
-        binOverlap = shArgs["bin-overlap"],
+        shParams = shArgs,
       )
 
     end
