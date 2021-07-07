@@ -3,6 +3,8 @@
 using MindReader
 using HiddenMarkovModelReaders
 
+################################################################################
+
 import Flux: cpu, gpu, flatten, leakyrelu
 using DelimitedFiles
 
@@ -68,7 +70,7 @@ fileList = contains.(dirRead, r"edf$") |> p -> getindex(dirRead, p)
   #  read data
   begin
     # read edf file
-    edfDf, startTime, recordFreq = getSignals( string(dir, file) )
+    edfDf, startTime, recordFreq = getSignals(shArgs)
 
     if haskey(annotFile, replace(shArgs["file"], ".edf" => ""))
 
@@ -84,7 +86,7 @@ fileList = contains.(dirRead, r"edf$") |> p -> getindex(dirRead, p)
     end
 
     # calculate fft
-    freqDc = extractChannelFFT(edfDf, binSize = shArgs["window-size"], binOverlap = shArgs["bin-overlap"])
+    freqDc = extractFFT(edfDf, shArgs)
   end;
 
   ################################################################################
