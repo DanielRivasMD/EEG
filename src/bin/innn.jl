@@ -27,42 +27,44 @@ end;
 # hidden Markov model parameters
 hmmParams = HMMParams(
   distance = euclDist,
+  verbosity = true,
 )
-# TODO: perhaps pass them together with other Params
 
 ################################################################################
 
+# TODO: modify by command line arguments
 shArgs = Dict(
   "indir" => "/Users/drivas/Factorem/EEG/data/patientEEG/",
-  "file" => "0001LB.edf",
-  "outdir" => "/Users/drivas/Factorem/MindReader/",
+  "file" => "0100MM.edf",
+  # "file" => "0001LB.edf",
+  "outdir" => "/Users/drivas/Factorem/MindReader/tmp/",
   "outsvg" => nothing,
   "outcsv" => nothing,
-  "outscreen" => "/Users/drivas/Factorem/MindReader/",
-  "outhmm" => "/Users/drivas/Factorem/MindReader/",
+  "outscreen" => "/Users/drivas/Factorem/MindReader/tmp/",
+  "outhmm" => "/Users/drivas/Factorem/MindReader/tmp/",
   "window-size" => 128,
   "bin-overlap" => 4,
 )
 
-# file = "/Users/drivas/Factorem/EEG/data/patientEEG/0001LB.edf"
-# winBin = 128
-# overlap = 4
+################################################################################
 
 # #  argument parser
 # include( "Utilities/argParser.jl" );
 
 ################################################################################
 
-#  read data
+# read data
 begin
   # read edf file
   edfDf, startTime, recordFreq = getSignals( string(shArgs["indir"], shArgs["file"]) )
-  # edfDf, startTime, recordFreq = getSignals(file)
 
   # read xlsx file
-  xDf = xread( string(shArgs["indir"], replace(shArgs["file"], "edf" => "xlsx")) )
-  # xfile = replace(file, "edf" => "xlsx")
-  # xDf = xread( xfile )
+  xDf = xread(
+    string(
+      shArgs["indir"],
+      replace(shArgs["file"], "edf" => "xlsx")
+    )
+  )
 
   # labels array
   labelAr = annotationCalibrator(
@@ -76,17 +78,14 @@ begin
 
   # calculate fft
   freqDc = extractChannelFFT(edfDf, binSize = shArgs["window-size"], binOverlap = shArgs["bin-overlap"])
-  # freqDc = extractChannelFFT(edfDf, binSize = winBin, binOverlap = overlap)
 end;
 
 ################################################################################
 
 # build autoencoder & train hidden Markov model
 begin
-  # for d in [Symbol(i, "Dc") for i = [:err, :post, :comp]]
-    # @eval $d = Dict{String, Tuple{Array{Int64, 1}, Array{Array{Float64, 1}, 1}}}()
-  # end
 
+  # create empty dictionary
   errDc = Dict{String, Tuple{Array{Int64, 1}, Array{Array{Float64, 1}, 1}}}()
 
   for (k, f) in freqDc
@@ -123,9 +122,6 @@ begin
       end
     end;
 
-    # # calculate sensitivity & specificity
-    # ssDc[k]['E'] = sensspec(errDc[k][1], labelAr)
-
     ################################################################################
 
   end
@@ -136,22 +132,17 @@ end;
 
 ################################################################################
 
-# scr = sensspec(errDc, labelAr)
+scr = sensitivitySpecificity(errDc, labelAr)
 
-
-# DelimitedFiles.writedlm( string(outscreen, outimg, ".csv"), writePerformance(scr), ", " )
+DelimitedFiles.writedlm( string(shArgs["outscreen"], replace(shArgs["file"], "edf" => "csv")), writePerformance(scr), ", " )
 
 ################################################################################
 
 runHeatmap(shArgs, errDc)
-# runHeatmap(shArgs, errDc, labelAr)
+runHeatmap(shArgs, errDc, labelAr)
 
 ################################################################################
 
 writeHMM( string(shArgs["outhmm"], replace(shArgs["file"], ".edf" => "_")), errDc)
-
-################################################################################
-
-# end
 
 ################################################################################
