@@ -6,11 +6,15 @@ using HiddenMarkovModelReaders
 ################################################################################
 
 import Flux: cpu, gpu, flatten, leakyrelu
-using DelimitedFiles
 
 ################################################################################
 
 import Parameters: @with_kw
+
+################################################################################
+
+# read parameters
+include( "Parameters.jl");
 
 ################################################################################
 
@@ -19,30 +23,16 @@ include("/Users/drivas/Factorem/EEG/src/annotation/functions/fileReaderXLSX.jl")
 
 ################################################################################
 
-# set hyperparameters
-@with_kw mutable struct Params
-  η::Float64                   = 1e-3             # learning rate
-  epochs::Int                  = 25               # number of epochs
-  batchsize::Int               = 1000             # batch size for training
-  throttle::Int                = 5                # throttle timeout
-  device::Function             = gpu              # set as gpu, if gpu available
-  σ::Function                  = leakyrelu        # learning function
-end;
-
-################################################################################
-
-# hidden Markov model parameters
-hmmParams = HMMParams(
-  distance = euclDist,
-  verbosity = true,
-)
+# # argument parser
+# include( "runDataset/argParser.jl" );
 
 ################################################################################
 
 # TODO: modify by command line arguments
 shArgs = Dict(
   "indir" => "/Users/drivas/Factorem/EEG/data/patientEEG/",
-  "file" => "0100MM.edf",
+  "file" => "0104JA.edf",
+  # "file" => "0100MM.edf",
   # "file" => "0001LB.edf",
   "outdir" => "/Users/drivas/Factorem/MindReader/tmp/",
   "outsvg" => nothing,
@@ -55,15 +45,13 @@ shArgs = Dict(
 
 ################################################################################
 
-# #  argument parser
-# include( "Utilities/argParser.jl" );
-
-################################################################################
-
 # read data
 begin
   # read edf file
   edfDf, startTime, recordFreq = getSignals(shArgs)
+
+  # calculate fft
+  freqDc = extractFFT(edfDf, shArgs)
 
   # read xlsx file
   xDf = xread(shArgs)
@@ -76,9 +64,6 @@ begin
     signalLength = size(edfDf, 1),
     shParams = shArgs,
   )
-
-  # calculate fft
-  freqDc = extractFFT(edfDf, shArgs)
 end;
 
 ################################################################################
@@ -89,17 +74,18 @@ begin
   # create empty dictionary
   errDc = Dict{String, Tuple{Array{Int64, 1}, Array{Array{Float64, 1}, 1}}}()
 
-  for (k, f) in freqDc
+  for (κ, υ) ∈ freqDc
     println()
-    @info k
+    @info κ
 
     #  build & train autoencoder
-    freqAr = shifter(f)
-    model = buildAutoencoder(length(freqAr[1]), 100, Params)
-    model = modelTrain(freqAr, model, Params)
+    freqAr = shifter(υ)
+    model = buildAutoencoder(length(freqAr[1]), nnParams = NNParams)
+    model = modelTrain!(model, freqAr, nnParams = NNParams)
 
     ################################################################################
 
+    # calculate post autoencoder
     postAr = cpu(model).(freqAr)
 
     ################################################################################
@@ -107,19 +93,19 @@ begin
     begin
       @info "Creating Hidden Markov Model..."
       # error
-      aErr = reshifter(postAr - freqAr) |> p -> flatten(p) |> permutedims
+      aErr = reshifter(postAr - freqAr) |> π -> flatten(π) |> permutedims
 
       # setup
       hmm = setup(aErr)
 
       # process
-      for i in 1:4
-        errDc[k] = process!(hmm, aErr, true, params = hmmParams)
+      for _ ∈ 1:4
+        errDc[κ] = process!(hmm, aErr, true, params = hmmParams)
       end
 
       # final
-      for i in 1:2
-        errDc[k] = process!(hmm, aErr, false, params = hmmParams)
+      for _ ∈ 1:2
+        errDc[κ] = process!(hmm, aErr, false, params = hmmParams)
       end
     end;
 
@@ -133,17 +119,18 @@ end;
 
 ################################################################################
 
+# write traceback & states
+writeHMM(errDc, shArgs)
+
+################################################################################
+
+# graphic rendering
+mindGraphics(errDc, shArgs, labelAr)
+
+################################################################################
+
+# measure sensitivity & specificity
 scr = sensitivitySpecificity(errDc, labelAr)
-
-DelimitedFiles.writedlm( string(shArgs["outscreen"], replace(shArgs["file"], "edf" => "csv")), writePerformance(scr), ", " )
-
-################################################################################
-
-runHeatmap(shArgs, errDc)
-runHeatmap(shArgs, errDc, labelAr)
-
-################################################################################
-
-writeHMM( string(shArgs["outhmm"], replace(shArgs["file"], ".edf" => "_")), errDc)
+writedlm( string(shArgs["outscreen"], replace(shArgs["file"], "edf" => "csv")), writePerformance(scr), ", " )
 
 ################################################################################
