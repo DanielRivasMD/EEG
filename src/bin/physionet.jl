@@ -101,7 +101,7 @@ begin
     #  build & train autoencoder
     freqAr = shifter(υ)
     model = buildAutoencoder(length(freqAr[1]), nnParams = NNParams)
-    model = modelTrain!(model, freqAr, nnParams = NNParams)
+    modelTrain!(model, freqAr, nnParams = NNParams)
 
     ################################################################################
 
