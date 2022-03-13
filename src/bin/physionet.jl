@@ -7,14 +7,6 @@ end;
 
 ################################################################################
 
-# # load project enviroment
-# using Pkg
-# if Pkg.project().path != string(projDir, "/Project.toml")
-#   Pkg.activate(projDir)
-# end
-
-################################################################################
-
 # load packages
 begin
   using MindReader
@@ -47,25 +39,11 @@ end;
 
 ################################################################################
 
-# # argument parser
-# include( "runDataset/argParser.jl" );
-
-################################################################################
-
-# outsvg = "/Users/drivas/Factorem/MindReader/data/svg/"
-# outcsv = "/Users/drivas/Factorem/MindReader/data/csv/"
-# outscreen = "/Users/drivas/Factorem/MindReader/data/screen/"
-# outhmm = "/Users/drivas/Factorem/MindReader/data/hmm/"
-
 # TODO: modify by command line arguments
 shArgs = Dict(
-  "indir" => "/Users/drivas/Factorem/EEG/data/physionet.org/files/chbmit/1.0.0/chb04/",
-  "file" => "chb04_28.edf",
-  "outdir" => "/Users/drivas/Factorem/MindReader/data/",
-  "outsvg" => "/Users/drivas/Factorem/MindReader/data/svg/",
-  "outcsv" => "/Users/drivas/Factorem/MindReader/data/csv/",
-  "outscreen" => "/Users/drivas/Factorem/MindReader/data/screen/",
-  "outhmm" => "/Users/drivas/Factorem/MindReader/data/hmm/",
+  "input" => "chb04_28.edf",
+  "inputDir" => "/Users/drivas/Factorem/EEG/data/physionet.org/files/chbmit/1.0.0/chb04/",
+  "outDir" => "/Users/drivas/Factorem/MindReader/data/",
   "window-size" => 256,
   "bin-overlap" => 4,
 )
@@ -82,7 +60,6 @@ dirRead = readdir(dir)
 fileList = contains.(dirRead, r"edf$") |> π -> getindex(dirRead, π)
 
 # for file in fileList
-
 @info file
 
 #  read data
@@ -93,9 +70,10 @@ begin
   # calculate fft
   freqDc = extractFFT(edfDf, shArgs)
 
-  if haskey(annotFile, replace(shArgs["file"], ".edf" => ""))
+  # calibrate annotations
+  if haskey(annotFile, replace(shArgs["input"], ".edf" => ""))
     labelAr = annotationCalibrator(
-      annotFile[replace(shArgs["file"], ".edf" => "")],
+      annotFile[replace(shArgs["input"], ".edf" => "")],
       startTime = startTime,
       recordFreq = recordFreq,
       signalLength = size(edfDf, 1),
@@ -110,32 +88,33 @@ end;
 begin
 
   # create empty dictionary
-  hmmDc = Dict{String,HMM}()
+  hmmDc = Dict{String, HMM}()
 
-  for (κ, υ) ∈ freqDc
+  # for (κ, υ) ∈ freqDc
+  begin
+    κ = "P8-O2"
+    υ = freqDc[κ]
 
-  # κ = "P8-O2"
-  # υ = freqDc[κ]
+    println()
+    @info κ
 
-  println()
-  @info κ
+    #  build & train autoencoder
+    freqAr = shifter(υ)
+    model = buildAutoencoder(length(freqAr[1]), nnParams = NNParams)
+    model = modelTrain!(model, freqAr, nnParams = NNParams)
 
-  #  build & train autoencoder
-  freqAr = shifter(υ)
-  model = buildAutoencoder(length(freqAr[1]), nnParams = NNParams)
-  model = modelTrain!(model, freqAr, nnParams = NNParams)
+    ################################################################################
 
-  ################################################################################
+    # calculate post autoencoder
+    postAr = cpu(model).(freqAr)
 
-  # calculate post autoencoder
-  postAr = cpu(model).(freqAr)
-
-  # autoencoder error
-  aErr = reshifter(postAr - freqAr) |> π -> flatten(π) |> π -> permutedims(π)
+    # autoencoder error
+    aErr = reshifter(postAr - freqAr) |> π -> flatten(π) |> π -> permutedims(π)
 
     ################################################################################
 
     begin
+      # TODO: add hmm iteration settings
       @info "Creating Hidden Markov Model..."
 
       # setup
@@ -170,9 +149,17 @@ writeHMM(hmmDc, shArgs)
 
 ################################################################################
 
-if haskey(annotFile, replace(shArgs["file"], ".edf" => ""))
+if haskey(annotFile, replace(shArgs["input"], ".edf" => ""))
 
-  writedlm(string(shArgs["outscreen"], replace(shArgs["file"], "edf" => "csv")), writePerformance(sensitivitySpecificity(hmmDc, labelAr)), ", ")
+  writedlm(
+    string(
+      shArgs["outDir"],
+      "screen/",
+      replace(shArgs["input"], "edf" => "csv"),
+    ),
+    writePerformance(sensitivitySpecificity(hmmDc, labelAr)),
+    ", ",
+  )
 
   ################################################################################
 
