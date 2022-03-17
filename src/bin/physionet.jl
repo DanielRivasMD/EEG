@@ -30,11 +30,15 @@ import Parameters: @with_kw
 # load modules
 begin
   # read parameters
-  include(string(runDataset, "/Parameters.jl"))
+  include(
+    string(runDataset, "/Parameters.jl"),
+  )
 
   # load annotation functions
-  include(string(annotationDir, "/functions/annotationCalibrator.jl"))
-  include(string(annotationDir, "/functions/fileReaderXLSX.jl"))
+  include(
+    string(annotationDir, "/functions/annotationCalibrator.jl"),
+    string(annotationDir, "/functions/fileReaderXLSX.jl"),
+  )
 end;
 
 ################################################################################
@@ -52,17 +56,15 @@ dir = "/Users/drivas/Factorem/EEG/data/physionet.org/files/chbmit/1.0.0/chb04/"
 xfile = "chb04-summary.txt"
 file = "chb04_28.edf"
 
-annotFile = annotationReader(string(dir, xfile))
+annotFile = annotationReader(
+  string(dir, xfile),
+)
 
 ################################################################################
 
-dirRead = readdir(dir)
-fileList = contains.(dirRead, r"edf$") |> π -> getindex(dirRead, π)
-
-# for file in fileList
 @info file
 
-#  read data
+# read data
 begin
   # read edf file
   edfDf, startTime, recordFreq = getSignals(shArgs)
@@ -100,8 +102,17 @@ begin
 
     #  build & train autoencoder
     freqAr = shifter(υ)
-    model = buildAutoencoder(length(freqAr[1]), nnParams = NNParams)
-    modelTrain!(model, freqAr, nnParams = NNParams)
+
+    model = buildAutoencoder(
+      length(freqAr[1]);
+      nnParams = NNParams,
+    )
+
+    modelTrain!(
+      model,
+      freqAr;
+      nnParams = NNParams,
+    )
 
     ################################################################################
 
@@ -122,12 +133,22 @@ begin
 
       # process
       for _ ∈ 1:4
-        process!(hmm, aErr, true, params = hmmParams)
+        process!(
+          hmm,
+          aErr,
+          true;
+          params = hmmParams,
+        )
       end
 
       # final
       for _ ∈ 1:2
-        process!(hmm, aErr, false, params = hmmParams)
+        process!(
+          hmm,
+          aErr,
+          false;
+          params = hmmParams,
+        )
       end
 
       # record hidden Markov model
@@ -152,13 +173,9 @@ writeHMM(hmmDc, shArgs)
 if haskey(annotFile, replace(shArgs["input"], ".edf" => ""))
 
   writedlm(
-    string(
-      shArgs["outDir"],
-      "screen/",
-      replace(shArgs["input"], "edf" => "csv"),
-    ),
+    string(shArgs["outDir"], "screen/", replace(shArgs["input"], "edf" => "csv"), ),
     writePerformance(sensitivitySpecificity(hmmDc, labelAr)),
-    ", ",
+    ",",
   )
 
   ################################################################################
@@ -172,9 +189,5 @@ else
   # mindGraphics(hmmDc, shArgs)
 
 end
-
-################################################################################
-
-# end
 
 ################################################################################
