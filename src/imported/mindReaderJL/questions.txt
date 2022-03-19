@@ -1,0 +1,26 @@
+
+NN
+difference between autoencoder & variational autoencoder
+fully connected neural network
+autoencoder error
+
+
+Design
+C++Wrapper
+
+
+C++
+access to global variables?
+declarations within class
+vector memory allocation
+
+
+HMM
+why print fraction frames?
+how can we use the state?
+
+
+EEG
+how much correlation is expected on contralateral electrodes?
+how much overlap is there among different waves?
+how much influence is there with different manoeuvres during EEG recording, e.g. eyes opening?
