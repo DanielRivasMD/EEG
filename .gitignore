@@ -29,3 +29,6 @@ src/deprecated/
 
 # tar balls
 *.tar
+
+# ignore manifest
+Manifest.toml
