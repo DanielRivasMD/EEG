@@ -15,6 +15,8 @@ begin
   runDataset = string(projDir, "/src/runDataset")
   annotationDir = string(projDir, "/src/annotation")
 
+  utilDir = string(projDir, "/src/utilities")
+
   ################################################################################
 
 end;
