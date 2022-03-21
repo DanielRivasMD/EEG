@@ -11,7 +11,7 @@ library(circlize)
 ################################################################################
 
 # read files
-x <- read_csv('/Users/drivas/Factorem/MindReader/data/csv/sample.csv')
+x <- read_csv(paste0(mindCSV, '/sample.csv')
 
 ################################################################################
 
