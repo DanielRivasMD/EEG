@@ -73,13 +73,35 @@ end
 
 # preallocate matrix
 rangeSize = 100
-toHeat = zeros(size(montageβ))
-extractPoint = 100
 
-# BUG: electrodes is an unipolar dictionary
-# iterate on electrodes
-for (κ, υ) ∈ electrodes
-  toHeat[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .= montageβ[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .* conicMask .* df[extractPoint, κ]
+# defined arbitrary extract points
+extractPoints = [500, 2800, 5000]
+
+################################################################################
+
+# iterate on extract points
+for ι ∈ extractPoints
+
+  # BUG: electrodes is an unipolar dictionary
+  # use arbitrary electrodes to generate image
+  γ = 0
+
+  # redefine matrix
+  toHeat = zeros(size(montageβ))
+
+  # iterate on electrodes
+  for (κ, υ) ∈ electrodes
+    γ += 1
+    toHeat[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .= montageβ[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .* conicMask .* df[ι, γ]
+  end
+
+  # write
+  writedlm(
+    string(mindCSV, "/", "EEGMontage", ι, ".csv"),
+    toHeat,
+    ',',
+  )
+
 end
 
 ################################################################################
