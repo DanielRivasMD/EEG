@@ -6,35 +6,84 @@ source('/Users/drivas/Factorem/EEG/src/config/config.R')
 ################################################################################
 
 # load packages
-library(circlize)
+
+################################################################################
+
+# load colors
+source(paste0(configDir, '/colors.R'))
 
 ################################################################################
 
 # read files
-x <- read_csv(paste0(mindCSV, '/sample.csv')
-
-################################################################################
-
-# extract states
-states <- x %>% apply(FUN = table, MARGIN = 2) %>% rownames
-
-################################################################################
-
-# generate colors
-colors = structure(seq(length(states)), names = states)
+anomalyHm <- read_csv(paste0(mindCSV, '/sample.csv'))
+states <- anomalyHm %>% apply(FUN = table, MARGIN = 2) %>% rownames
 
 ################################################################################
 
 # open plotting device
+pdf(file = paste0(mindPlot, '/sample.pdf'), width = 16, height = 12)
 
+# backup plotting area
+defParMar <- par("mar")
 
-# plot as discrete values
-x %>%
-  apply(FUN = as.character, MARGIN = 1) %>%
+# expand plotting area
+par(mar = c(defParMar[-4], 5))
+
+# plot with image
+anomalyHm %>%
   as.matrix %>%
-  Heatmap(name = 'Predicted\nanomaly\nstates', col = colors, use_raste = F)
+  image(
+    col = hexColors,
+    xaxt = 'n',
+    yaxt = 'n',
+    xlab = 'Time along recording',
+  )
+
+# y axis labels
+axis(
+  2,
+  las = 1,
+  at = seq(from = 0, to = 1, length.out = length(names(anomalyHm))),
+  labels = names(anomalyHm),
+  tick = FALSE,
+)
+
+# activate outside plotting area
+par(xpd = NA)
+
+# annotations rectangles
+annotScale <- 1 / length(states)
+
+for(ix in seq_along(states)) {
+  rect(
+    xleft = (par('usr')[2] * 1.04),
+    ybottom = (par('usr')[4] * (ix - 0.9) * annotScale),
+    xright = (par('usr')[2] * 1.07),
+    ytop = (par('usr')[4] * (ix) * annotScale),
+    border = NA,
+    col = rgb(
+      red = rgbColors[ix, 'r'],
+      green = rgbColors[ix, 'g'],
+      blue = rgbColors[ix, 'b'],
+      max = 255,
+      alpha = 255,
+    )
+  )
+
+  # annotation text
+  text(
+    x = (par('usr')[2] * 1.08),
+    y = (par('usr')[4] * (ix - 0.5) * annotScale),
+    label = paste0('State: ', states[ix]),
+    cex = 0.7,
+    adj = 0,
+  )
+}
+
+# reset plotting area
+par(mar = defParMar)
 
 # close plotting device
-
+dev.off()
 
 ################################################################################

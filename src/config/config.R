@@ -18,5 +18,6 @@ graphDir <- paste0(projDir, '/src/graphics')
 
 # data
 mindCSV = paste0(mindDir, '/data/csv')
+mindPlot = paste0(mindDir, '/data/plot')
 
 ################################################################################
