@@ -22,6 +22,7 @@ begin
 
   # data
   mindCSV = string(mindDir, "/data/csv")
+  mindHMM = string(mindDir, "/data/hmm")
 
   ################################################################################
 

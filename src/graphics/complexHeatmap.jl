@@ -31,19 +31,19 @@ end;
 
 # identify files to load
 states = @chain begin
-  readdir("/Users/drivas/Factorem/MindReader/data/hmm/")
-  filter(χ -> occursin("states", χ), _)
+  readdir(mindHMM)
+  filter(χ -> occursin("chb04_28", χ) && occursin("traceback", χ), _)
 end
 
 ################################################################################
 
 # read files into dataframe array & concatenate
-df = [readdf(string("/Users/drivas/Factorem/MindReader/data/hmm/", ι), ',') for ι ∈ states]
+df = [readdf(string(mindHMM, "/", ι), ',') for ι ∈ states]
 df = hcat(df...)
 
 ################################################################################
 
 # write dataframe
-writedf("/Users/drivas/Factorem/MindReader/data/csv/sample.csv", df, ',')
+writedf(string(mindCSV, "/sample.csv"), df, ',')
 
 ################################################################################
