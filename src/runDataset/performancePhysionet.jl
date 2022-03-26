@@ -25,6 +25,7 @@ end;
 # load modules
 begin
   include(string(utilDir, "/ioDataFrame.jl"))
+  include(string(utilDir, "/performance.jl"))
 end;
 
 ################################################################################
@@ -61,34 +62,15 @@ df = hcat(DataFrame(Electrode = electrode), map(ξ -> ξ = ξ[:, Not(1)], df) |>
 
 ################################################################################
 
-# write dataframe
-writedf(string(mindCSV, "/performace.csv"), df, ',')
+# write performance
+writedf(string(mindCSV, "/performance.csv"), df, ',')
 
 ################################################################################
 
-# calculate stats per recording
-for ι ∈ 2:size(df, 2)
-  @info names(df)[ι]
-  @info df[df[:, ι] .!= 0, ι] |> mean
-  @info df[df[:, ι] .!= 0, ι] |> std
-end
-
-function sensSpec(df, ss)
-  @chain df begin
-    names
-    occursin.(ss, _)
-    df[:, _]
-    Matrix
-    for ι ∈ 1:size(_, 1) - 2
-      @info df[ι, 1]
-      @info _[ι, _[ι, :] .!= 0] |> mean
-      @info _[ι, _[ι, :] .!= 0] |> std
-    end
-  end
-end
-
-# calculate stats per electrode
-sensSpec(df, "Sensitivity")
-sensSpec(df, "Specificity")
+# write channel & record
+ss = channelSS(df)
+writedf(string(mindCSV, "/sensitivity.csv"), ss[1], ',')
+writedf(string(mindCSV, "/specificity.csv"), ss[2], ',')
+writedf(string(mindCSV, "/channel.csv"), recordingSS(df), ',')
 
 ################################################################################
