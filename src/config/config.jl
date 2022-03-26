@@ -21,8 +21,10 @@ begin
   ################################################################################
 
   # data
-  mindCSV = string(mindDir, "/data/csv")
-  mindHMM = string(mindDir, "/data/hmm")
+  mindData = string(mindDir, "/data")
+  mindCSV = string(mindData, "/csv")
+  mindHMM = string(mindData, "/hmm")
+  mindScreen = string(mindData, "/screen")
 
   ################################################################################
 
