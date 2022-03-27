@@ -1,7 +1,7 @@
 ################################################################################
 
 # color names
-colors <- c('black', 'tomato', 'lightsalmon', 'goldenrod', 'darkolivegreen', 'lightseagreen', 'darkslategray', 'steelblue', 'slateblue', 'lavender')
+colorLabs <- c('black', 'tomato', 'lightsalmon', 'goldenrod', 'darkolivegreen', 'lightseagreen', 'darkslategray', 'steelblue', 'slateblue', 'lavender')
 
 ################################################################################
 
@@ -23,7 +23,7 @@ rgbColors <- matrix(
 ) %>% t
 
 colnames(rgbColors) <- c('r', 'g', 'b')
-rownames(rgbColors) <- colors
+rownames(rgbColors) <- colorLabs
 
 ################################################################################
 
@@ -36,6 +36,18 @@ hexColors <- matrix(
 )
 
 colnames(hexColors) <- c('hex')
-rownames(hexColors) <- colors
+rownames(hexColors) <- colorLabs
+
+################################################################################
+
+# HEX
+heatNo <- 4
+hexColors <- matrix(
+  data = c('#000000', heat.colors(heatNo)),
+  ncol = 1,
+)
+
+colnames(hexColors) <- c('hex')
+rownames(hexColors) <- c('black', paste0('heat', heatNo:1))
 
 ################################################################################
