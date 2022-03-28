@@ -21,7 +21,8 @@ states <- anomalyHm %>% apply(FUN = table, MARGIN = 2) %>% rownames
 ################################################################################
 
 # open plotting device
-pdf(file = paste0(mindPlot, '/sample.pdf'), width = 16, height = 12)
+jpeg(file = paste0(mindPlot, '/sample.jpg'), width = 8000, height = 3000, pointsize = 100, quality = 100)
+# pdf(file = paste0(mindPlot, '/sample.pdf'), width = 16, height = 12)
 
 # # backup plotting area
 # defParMar <- par('mar')
