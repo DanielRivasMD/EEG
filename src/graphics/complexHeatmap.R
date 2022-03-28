@@ -38,7 +38,7 @@ anomalyHm[1:1000, ] %>%
     col = hexColors,
     xaxt = 'n',
     yaxt = 'n',
-    xlab = 'Time along recording',
+    main = 'Heatmap representing all channels during length of recording',
   )
 
 # y axis labels
