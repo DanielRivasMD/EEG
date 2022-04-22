@@ -25,6 +25,7 @@ begin
   mindCSV = string(mindData, "/csv")
   mindHMM = string(mindData, "/hmm")
   mindScreen = string(mindData, "/screen")
+  mindPlot = string(mindData, "/plot")
 
   ################################################################################
 
