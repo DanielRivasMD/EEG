@@ -6,13 +6,13 @@ _default:
 ####################################################################################################
 
 # print justfile
-show:
+@show:
   bat .justfile --language make
 
 ####################################################################################################
 
 # edit justfile
-edit:
+@edit:
   micro .justfile
 
 ####################################################################################################
@@ -22,13 +22,13 @@ edit:
 ####################################################################################################
 
 # julia project
-proj:
-  @julia --project
+@proj:
+  julia --project
 
 ####################################################################################################
 
 # julia development
-dev:
-  @julia -i --project --startup no --eval 'include("/Users/drivas/.archive/cerberus/julia/development.jl")'
+@dev:
+  julia -i --project --startup no --eval 'include("/Users/drivas/.archive/cerberus/julia/development.jl")'
 
 ####################################################################################################
