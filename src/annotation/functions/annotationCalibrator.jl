@@ -100,7 +100,7 @@ Calibrate timestamp from summary file [physionet].
 
 See also: [`annotationReader`](@ref), [`labelParser`](@ref)
 """
-function annotationCalibrator(annotations::Vector{Tuple{S, S}}; startTime::Time, recordFreq::Array{T, 1}, signalLength::T, shParams::Dict) where T <: Number where S <: Second
+function annotationCalibrator(annotations::Vector{Tuple{S, S}}; recordFreq::Array{T, 1}, signalLength::T, shParams::Dict) where T <: Number where S <: Second
 
   @info "Calibrating annotations..."
 
