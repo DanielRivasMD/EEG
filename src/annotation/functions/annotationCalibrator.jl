@@ -44,33 +44,29 @@ function annotationReader(summaryFile::S) where S <: String
   ϟ1 = false
   ϟ2 = false
 
-  open(summaryFile) do line
+  for ƒ ∈ eachline(summaryFile)
 
-    while !eof(line)
-
-      ƒ = readline(line)
-      if contains(ƒ, "File Name")
-        lastFile = getSeizureFile(ƒ)
-        ϟ1 = true
-      elseif contains(ƒ, "Number of Seizures")
-        ç = getSeizureNo(ƒ)
-      elseif contains(ƒ, "Seizure") && contains(ƒ, "Start Time")
-        startTime = getSeizureSec(ƒ)
-      elseif contains(ƒ, "Seizure") && contains(ƒ, "End Time")
-        endTime = getSeizureSec(ƒ)
-        push!(timeVc, (startTime, endTime))
-        if length(timeVc) == ç + 1
-          ϟ2 = true
-        end
+    if contains(ƒ, "File Name")
+      lastFile = getSeizureFile(ƒ)
+      ϟ1 = true
+    elseif contains(ƒ, "Number of Seizures")
+      ç = getSeizureNo(ƒ)
+    elseif contains(ƒ, "Seizure") && contains(ƒ, "Start Time")
+      startTime = getSeizureSec(ƒ)
+    elseif contains(ƒ, "Seizure") && contains(ƒ, "End Time")
+      endTime = getSeizureSec(ƒ)
+      push!(timeVc, (startTime, endTime))
+      if length(timeVc) == ç + 1
+        ϟ2 = true
       end
-
-      if ϟ1 && ϟ2
-        ϟ2 = false
-        annotDc[lastFile] = timeVc[2:end]
-        timeVc = [(startTime, endTime)]
-      end
-
     end
+
+    if ϟ1 && ϟ2
+      ϟ2 = false
+      annotDc[lastFile] = timeVc[2:end]
+      timeVc = [(startTime, endTime)]
+    end
+
   end
 
   return annotDc
