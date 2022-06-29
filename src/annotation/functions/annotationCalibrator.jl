@@ -44,13 +44,11 @@ function annotationReader(summaryFile::S) where S <: String
   ϟ1 = false
   ϟ2 = false
 
-  open(summaryFile) do ƒ
-    line = 0
+  open(summaryFile) do line
 
-    while !eof(ƒ)
+    while !eof(line)
 
-      line += 1
-      ƒ = readline(ƒ)
+      ƒ = readline(line)
       if contains(ƒ, "File Name")
         lastFile = getSeizureFile(ƒ)
         ϟ1 = true
