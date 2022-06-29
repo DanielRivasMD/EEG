@@ -32,40 +32,42 @@ Extract anomaly events from summary file [physionet]. Return a dictionary with f
 See also: [`annotationCalibrator`](@ref), [`labelParser`](@ref)
 """
 function annotationReader(summaryFile::S) where S <: String
+
   @info "Reading annotations..."
+
   annotDc = Dict{String, Vector{Tuple{Second, Second}}}()
   lastFile = ""
   startTime = Second(0)
   endTime = Second(0)
   timeVc = [(startTime, endTime)]
-  ν = 0
-  ω = false
-  ζ = false
+  ç = 0
+  ϟ1 = false
+  ϟ2 = false
 
-  open(summaryFile) do Φ
+  open(summaryFile) do ƒ
     line = 0
 
-    while !eof(Φ)
+    while !eof(ƒ)
 
       line += 1
-      φ = readline(Φ)
-      if contains(φ, "File Name")
-        lastFile = getSeizureFile(φ)
-        ω = true
-      elseif contains(φ, "Number of Seizures")
-        ν = getSeizureNo(φ)
-      elseif contains(φ, "Seizure") && contains(φ, "Start Time")
-        startTime = getSeizureSec(φ)
-      elseif contains(φ, "Seizure") && contains(φ, "End Time")
-        endTime = getSeizureSec(φ)
+      ƒ = readline(ƒ)
+      if contains(ƒ, "File Name")
+        lastFile = getSeizureFile(ƒ)
+        ϟ1 = true
+      elseif contains(ƒ, "Number of Seizures")
+        ç = getSeizureNo(ƒ)
+      elseif contains(ƒ, "Seizure") && contains(ƒ, "Start Time")
+        startTime = getSeizureSec(ƒ)
+      elseif contains(ƒ, "Seizure") && contains(ƒ, "End Time")
+        endTime = getSeizureSec(ƒ)
         push!(timeVc, (startTime, endTime))
-        if length(timeVc) == ν + 1
-          ζ = true
+        if length(timeVc) == ç + 1
+          ϟ2 = true
         end
       end
 
-      if ω && ζ
-        ζ = false
+      if ϟ1 && ϟ2
+        ϟ2 = false
         annotDc[lastFile] = timeVc[2:end]
         timeVc = [(startTime, endTime)]
       end
@@ -101,7 +103,9 @@ Calibrate timestamp from summary file [physionet].
 See also: [`annotationReader`](@ref), [`labelParser`](@ref)
 """
 function annotationCalibrator(annotations::Vector{Tuple{S, S}}; startTime::Time, recordFreq::Array{T, 1}, signalLength::T, shParams::Dict) where T <: Number where S <: Second
+
   @info "Calibrating annotations..."
+
   # collect recording frecuency
   recFreq = begin
     recAv = (sum(recordFreq)) / (length(recordFreq))
@@ -155,7 +159,9 @@ Calibrate annotations from XLSX.
 See also: [`annotationReader`](@ref), [`labelParser`](@ref)
 """
 function annotationCalibrator(xDf; startTime::Time, recordFreq::Array{T, 1}, signalLength::T, shParams::Dict) where T <: Number
+
   @info "Calibrating annotations..."
+
   # collect recording frecuency
   recFreq = begin
     recAv = (sum(recordFreq)) / (length(recordFreq))
@@ -186,8 +192,8 @@ function annotationCalibrator(xDf; startTime::Time, recordFreq::Array{T, 1}, sig
     # collect annotations
     for ι ∈ 1:size(xDf[κ], 1)
       if !ismissing(xDf[κ][ι, :START]) & !ismissing(xDf[κ][ι, :END])
-        emSt = xDf[κ][ι, :START] - startTime |> p -> convert(Dates.Second, p) |> p -> p.value * recFreq
-        emEn = xDf[κ][ι, :END] - startTime |> p -> convert(Dates.Second, p) |> (p -> p.value * recFreq) |> p -> p + recFreq
+        emSt = xDf[κ][ι, :START] - startTime |> π -> convert(Dates.Second, π) |> π -> π.value * recFreq
+        emEn = xDf[κ][ι, :END] - startTime |> π -> convert(Dates.Second, π) |> (π -> π.value * recFreq) |> π -> π + recFreq
         signalVec[emSt:emEn, :] .= 1
       else
         @warn "Annotation is not formatted properly & is not reliable"
@@ -212,7 +218,7 @@ end
 
 """
 
-    labelParser(lbAr::Array{T, 2}) where T <: Number
+    labelParser(ɒ::Array{T, 2}) where T <: Number
 
 # Description
 Parse three-column array into binary encoding
@@ -220,16 +226,19 @@ Parse three-column array into binary encoding
 
 See also: [`annotationReader`](@ref), See also: [`annotationCalibrator`](@ref)
 """
-function labelParser(lbAr::Array{T, 2}) where T <: Number
+function labelParser(ɒ::Array{T, 2}) where T <: Number
+
   @info "Parsing annotations..."
-  lbSz = size(lbAr, 1)
+
+  lbSz = size(ɒ, 1)
   tmpAr = Array{String}(undef, lbSz, 1)
   for ι ∈ 1:lbSz
-    tmpAr[ι, 1] = string(lbAr[ι,  1], lbAr[ι, 2], lbAr[ι, 3], )
+    tmpAr[ι, 1] = string(ɒ[ι,  1], ɒ[ι, 2], ɒ[ι, 3], )
   end
-  outAr = parse.(Int64, tmpAr, base = 2)
-  outAr = reshape(outAr, (size(outAr, 1), ))
-  return outAr
+  Ω = parse.(Int64, tmpAr, base = 2)
+  Ω = reshape(Ω, (size(Ω, 1), ))
+
+  return Ω
 end
 
 ################################################################################
