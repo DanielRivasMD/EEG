@@ -16,17 +16,30 @@ end
 
 ####################################################################################################
 
-# TODO: calibrate annotations
-if haskey(annotFile, replace(shArgs["input"], ".edf" => ""))
-  labelAr = annotationCalibrator(
-    annotFile[replace(shArgs["input"], ".edf" => "")];
-    # BUG: annotation probably offset for calling wrong function
-    startTime = startTime,
-    recordFreq = recordFreq,
-    signalLength = size(edfDf, 1),
-    shParams = shArgs,
-  )
-end
+# TODO: read data
+begin
+  # read edf file
+  edfDf, startTime, recordFreq = getSignals(shArgs)
+
+  # calculate fft
+  freqDc = extractFFT(edfDf, shArgs)
+
+  # calibrate annotations
+  if haskey(annotFile, replace(shArgs["input"], ".edf" => ""))
+    labelAr = annotationCalibrator(
+      annotFile[replace(shArgs["input"], ".edf" => "")];
+      # BUG: annotation probably offset for calling wrong function
+      startTime = startTime,
+      recordFreq = recordFreq,
+      signalLength = size(edfDf, 1),
+      shParams = shArgs,
+    )
+  end
+end;
+
+####################################################################################################
+
+# TODO: write edf file metadata
 
 ####################################################################################################
 
