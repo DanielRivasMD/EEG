@@ -16,12 +16,8 @@ end;
 
 ####################################################################################################
 
-# TODO: read annotation
-if haskey(shArgs, "annotation") && haskey(shArgs, "annotDir")
-  annotFile = annotationReader(
-    string(shArgs["annotDir"], shArgs["annotation"]),
-  )
-end
+# read annotation
+annotFile = annotationReader("data/chb21-summary.txt",)
 
 ####################################################################################################
 
