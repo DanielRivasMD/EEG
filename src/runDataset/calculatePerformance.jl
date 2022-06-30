@@ -52,7 +52,22 @@ end;
 
 ####################################################################################################
 
-# TODO: load hmm
+# load hidden Markov model model
+model = @chain begin
+  readdf("data/hmm/chb01_01_C3-P3_model.csv", ',')
+  map(1:size(_, 2)) do μ
+    _[:, μ]
+  end
+end
+
+# load hidden Markov model traceback
+traceback = @chain begin
+  readdf("data/hmm/chb01_01_C3-P3_traceback.csv", ',')
+  _[:, 1]
+end
+
+# reconstruct hidden Markov model with empty data
+hmm = HMM([zeros(0)], model, traceback)
 
 ####################################################################################################
 
