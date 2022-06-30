@@ -38,7 +38,7 @@ _default:
 ####################################################################################################
 
 # collect time stampts
-@collect:
-  source src/runDataset/obtainTimestamps.sh
+@performance:
+  source src/runDataset/performanceControl.sh
 
 ####################################################################################################
