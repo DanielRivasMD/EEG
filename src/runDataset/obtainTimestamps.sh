@@ -13,6 +13,17 @@ database="${dataDir}/chb-mit-scalp-eeg-database-1.0.0.zip"
 
 ####################################################################################################
 
+# iterate on files
+for file in $(unzip -l "${database}" | awk '/summary/ {print $NF}')
+do
+  # log
+  echo "${file/*\/}"
+    # extract
+    unzip -p "${database}" "${file}" > "${dataDir}/${file/*\/}"
+done
+
+####################################################################################################
+
 # declare counter
 ct=0
 
@@ -26,6 +37,7 @@ do
   ((ct+=1))
   if [[ ${ct} == 1 ]]
   then
+    # extract
     unzip -p "${database}" "${file}" > "${dataDir}/${file/*\/}"
   fi
 done
