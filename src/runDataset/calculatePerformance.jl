@@ -7,6 +7,15 @@ end;
 
 ####################################################################################################
 
+# load packages
+begin
+  using Chain: @chain
+
+  using HiddenMarkovModelReaders
+end;
+
+####################################################################################################
+
 # TODO: read annotation
 if haskey(shArgs, "annotation") && haskey(shArgs, "annotDir")
   annotFile = annotationReader(
