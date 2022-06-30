@@ -21,30 +21,29 @@ annotFile = annotationReader("data/chb21-summary.txt",)
 
 ####################################################################################################
 
-# TODO: read data
-begin
-  # read edf file
-  edfDf, startTime, recordFreq = getSignals(shArgs)
+# read data
+for ƒ ∈ readdir() |> π -> contains.(π, "src") |> π -> readdir()[π]
+  @info ƒ
 
-  # calculate fft
-  freqDc = extractFFT(edfDf, shArgs)
+  begin
+    # read edf file
+    edfDf, startTime, recordFreq = getSignals(shArgs)
 
-  # calibrate annotations
-  if haskey(annotFile, replace(shArgs["input"], ".edf" => ""))
-    labelAr = annotationCalibrator(
-      annotFile[replace(shArgs["input"], ".edf" => "")];
-      # BUG: annotation probably offset for calling wrong function
-      startTime = startTime,
-      recordFreq = recordFreq,
-      signalLength = size(edfDf, 1),
-      shParams = shArgs,
-    )
+    # calculate fft
+    freqDc = extractFFT(edfDf, shArgs)
+
+    # calibrate annotations
+    if haskey(annotFile, replace(shArgs["input"], ".edf" => ""))
+      labelAr = annotationCalibrator(
+        annotFile[replace(shArgs["input"], ".edf" => "")];
+        startTime = startTime,
+        recordFreq = recordFreq,
+        signalLength = size(edfDf, 1),
+        shParams = shArgs,
+      )
+    end
   end
-end;
-
-####################################################################################################
-
-# TODO: write edf file metadata
+end
 
 ####################################################################################################
 
@@ -64,10 +63,5 @@ end
 
 # reconstruct hidden Markov model with empty data
 hmm = HMM([zeros(0)], model, traceback)
-
-####################################################################################################
-
-# TODO: calculate accuracy
-sensitivitySpecificity(hmmDc, labelAr)
 
 ####################################################################################################
