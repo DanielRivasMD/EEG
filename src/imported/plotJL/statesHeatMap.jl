@@ -1,11 +1,11 @@
 ################################################################################
 
-import JLD2                         # julia object
-import AbstractPlotting, CairoMakie # plotting libraries
+using JLD2                         # julia object
+using AbstractPlotting, CairoMakie # plotting libraries
 
 ################################################################################
 
-# import julia file
+# using julia file
 JLD2.@load "/Users/drivas/Factorem/EEG/data/objJL/0081MB_errDcChFFTA3.jld2"
 
 file = "/Users/drivas/Factorem/EEG/Data/patientEEG/0081MB.edf"

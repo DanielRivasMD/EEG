@@ -10,7 +10,7 @@ using CUDAapi
 
 if has_cuda()
   # @info "CUDA is on"
-  import CuArrays
+  using CuArrays
   CuArrays.allowscalar(false)
 end
 

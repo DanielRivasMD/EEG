@@ -5,11 +5,11 @@ using HiddenMarkovModelReaders
 
 ################################################################################
 
-import Flux: cpu, gpu, flatten, leakyrelu
+using Flux: cpu, gpu, flatten, leakyrelu
 
 ################################################################################
 
-import Parameters: @with_kw
+using Parameters: @with_kw
 
 ################################################################################
 

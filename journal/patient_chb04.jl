@@ -9,7 +9,7 @@ using RCall
 
 ################################################################################
 
-# import R GenomicFunctions
+# using R GenomicFunctions
 R"library('GenomicFunctions')";
 
 ################################################################################
