@@ -8,8 +8,9 @@ source "${HOME}/Factorem/EEG/src/config/config.sh"
 
 ####################################################################################################
 
-# declare database
+# declarations
 database="${dataDir}/chb-mit-scalp-eeg-database-1.0.0.zip"
+scriptJL="${runDataset}/readMind.jl"
 
 ####################################################################################################
 
@@ -47,18 +48,32 @@ do
     # # extract
     # unzip -p "${database}" "${fulledf}" > "${dataDir}/${edf}"
 
-    # julia \
-    #   --project \
-    #   "/Users/drivas/Factorem/EEG/src/runDataset/readMind.jl" \
-    #   --input "${edf}" \
-    #   --inputDir "${dataDir}/" \
-    #   --annotation "${summary}" \
-    #   --annotDir "${dataDir}/" \
-    #   --outDir "/Users/drivas/Factorem/MindReader/data/" \
-    #   --additional "annotationCalibrator.jl,fileReaderXLSX.jl" \
-    #   --addDir "/Users/drivas/Factorem/EEG/src/annotation/functions/" &> "/Users/drivas/Factorem/MindReader/data/log/${edf/edf/log}"
+    julia \
+      --project \
+      "${scriptJL}" \
+      --input "${edf}" \
+      --inputDir "${dataDir}/" \
+      --params "Parameters.jl" \
+      --paramsDir "${runDataset}/" \
+      --annotation "${summary}" \
+      --annotDir "${dataDir}/" \
+      --outDir "${mindData}" \
+      --additional "annotationCalibrator.jl,fileReaderXLSX.jl" \
+      --addDir "${annotationDir}/functions/" &> "${mindLog}/${edf/edf/log}"
+
+    # remove edf
+    if [[ -f "${dataDir}/${edf}" ]]
+    then
+      rm "${dataDir}/${edf}"
+    fi
 
   done
+
+  # remove summary
+  if [[ -f "${dataDir}/${summary}" ]]
+  then
+    rm "${dataDir}/${summary}"
+  fi
 
 done
 
