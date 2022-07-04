@@ -16,7 +16,7 @@ begin
     d_threshold = NULL
   ) {
 
-    if ( is.null(d_threshold) ) d_threshold <- 1
+    if (is.null(d_threshold)) d_threshold <- 1
     f_seq <- c(0, f_seq, 0)
     f_threseq <- which(f_seq >= d_threshold)
     f_peak_length <- which(f_seq[f_threseq + 1] < d_threshold) - which(f_seq[f_threseq-1] < d_threshold) + 1
@@ -47,25 +47,25 @@ begin
     k = f |> p -> replace(p, "chb04_28_" => "") |> p -> replace(p, "_states.csv" => "")
     @info k
     push!(ly, k)
-    pt[c, :] .= readdlm( string("/Users/drivas/Factorem/MindReader/data/hmm/", f) )[2:end, 1] |> p -> convert.(Int64, p)
+    pt[c, :] .= readdlm(string("/Users/drivas/Factorem/MindReader/data/hmm/", f))[2:end, 1] |> p -> convert.(Int64, p)
   end
 
   utilDir    = "/Users/drivas/Factorem/MindReader/src/Utilities/"
-  include( string(utilDir,    "fileReaderEDF.jl") )
+  include(string(utilDir,    "fileReaderEDF.jl"))
 
   signalDir = "/Users/drivas/Factorem/MindReader/src/SignalProcessing/"
-  include( string(signalDir,  "signalBin.jl") )
+  include(string(signalDir,  "signalBin.jl"))
 
   annotDir   = "/Users/drivas/Factorem/MindReader/src/Annotator/"
-  include( string(annotDir,   "annotationCalibrator.jl") )
+  include(string(annotDir,   "annotationCalibrator.jl"))
 
   dir = "/Users/drivas/Factorem/EEG/data/physionet.org/files/chbmit/1.0.0/chb04/"
   xfile = "chb04-summary.txt"
-  annotFile = annotationReader( string(dir, xfile) )
+  annotFile = annotationReader(string(dir, xfile))
   file = "chb04_28.edf"
   outimg = replace(file, ".edf" => "")
 
-  edfDf, startTime, recordFreq = getSignals( string(dir, file) )
+  edfDf, startTime, recordFreq = getSignals(string(dir, file))
 
   winBin = 256
   overlap = 4

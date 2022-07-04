@@ -6,7 +6,7 @@ peakIden <- function(
   dThreshold = NULL
 ) {
 
-  if ( is.null(dThreshold) ) dThreshold <- 1
+  if (is.null(dThreshold)) dThreshold <- 1
   fSeq <- c(0, fSeq, 0)
   fThreseq <- which(fSeq >= dThreshold)
   fPeakLength <- which(fSeq[fThreseq + 1] < dThreshold) - which(fSeq[fThreseq - 1] < dThreshold) + 1

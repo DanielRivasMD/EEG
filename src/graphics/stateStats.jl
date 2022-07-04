@@ -68,7 +68,7 @@ function plotStatesHeatmap(toSummarize::Array{Float64, 2}, outimg = "groundState
   cbar.ticks = 0:0.1:1
 
   # save rendering
-  CairoMakie.save(string(outdir, "/", outimg, ".svg"), plotFig, )
+  CairoMakie.save(string(outdir, "/", outimg, ".svg"), plotFig,)
 
 end
 

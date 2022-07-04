@@ -173,7 +173,7 @@ writeHMM(hmmDc, shArgs)
 if haskey(annotFile, replace(shArgs["input"], ".edf" => ""))
 
   writedlm(
-    string(shArgs["outDir"], "screen/", replace(shArgs["input"], "edf" => "csv"), ),
+    string(shArgs["outDir"], "screen/", replace(shArgs["input"], "edf" => "csv"),),
     writePerformance(sensitivitySpecificity(hmmDc, labelAr)),
     ",",
   )

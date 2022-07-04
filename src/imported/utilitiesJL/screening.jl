@@ -13,7 +13,7 @@ Calculate sensitivity and specificity from 2 x 2 array
 
 """
 function ss(ar)
-  return (sensitivity = ar[1, 1] / ( ar[1, 1] + ar[2, 1] ), specificity = ar[2, 2] / ( ar[2, 2] + ar[1, 2] ))
+  return (sensitivity = ar[1, 1] / (ar[1, 1] + ar[2, 1]), specificity = ar[2, 2] / (ar[2, 2] + ar[1, 2]))
 end
 
 ################################################################################
@@ -30,7 +30,7 @@ function sensspec(data_loader, model)
   d = data_loader.data[1] |> model |> onecold
   l = data_loader.data[2] |> onecold
 
-  outNamedArray = [( d[l .== 2] |> freqtable |> reverse ) ( d[l .== 1] |> freqtable |> reverse )]
+  outNamedArray = [(d[l .== 2] |> freqtable |> reverse) (d[l .== 1] |> freqtable |> reverse)]
   if size(outNamedArray, 1) == 1
     added = copy(outNamedArray)
     NamedArrays.setnames!(added, [2], 1)

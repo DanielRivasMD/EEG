@@ -14,7 +14,7 @@ import Parameters: @with_kw
 ################################################################################
 
 # read parameters
-include( "Parameters.jl");
+include("Parameters.jl");
 
 ################################################################################
 
@@ -24,7 +24,7 @@ include("/Users/drivas/Factorem/EEG/src/annotation/functions/fileReaderXLSX.jl")
 ################################################################################
 
 # # argument parser
-# include( "runDataset/argParser.jl" );
+# include("runDataset/argParser.jl");
 
 ################################################################################
 
@@ -131,6 +131,6 @@ mindGraphics(errDc, shArgs, labelAr)
 
 # measure sensitivity & specificity
 scr = sensitivitySpecificity(errDc, labelAr)
-writedlm( string(shArgs["outscreen"], replace(shArgs["file"], "edf" => "csv")), writePerformance(scr), ", " )
+writedlm(string(shArgs["outscreen"], replace(shArgs["file"], "edf" => "csv")), writePerformance(scr), ", ")
 
 ################################################################################

@@ -7,7 +7,7 @@ using Flux
 # three-layered autoencoder
 """
 
-    buildAutoencoder(inputLayer, compressedLayer, σ, )
+    buildAutoencoder(inputLayer, compressedLayer, σ,)
 
 Build a three-layered autoencoder
 
@@ -19,7 +19,7 @@ Build a three-layered autoencoder
 `σ` layer identity
 
 """
-function buildAutoencoder(inputLayer::Integer, compressedLayer::Integer, σ, )
+function buildAutoencoder(inputLayer::Integer, compressedLayer::Integer, σ,)
   @info("Building three-layered autoencoder...")
   return Chain(
     Dense(inputLayer, compressedLayer, σ),
@@ -32,7 +32,7 @@ end
 # five-layered autoencoder
 """
 
-    buildAutoencoder(inputLayer, innerLayer1, compressedLayer, σ, )
+    buildAutoencoder(inputLayer, innerLayer1, compressedLayer, σ,)
 
 Build a five-layered autoencoder
 
@@ -46,7 +46,7 @@ Build a five-layered autoencoder
 `σ` layer identity
 
 """
-function buildAutoencoder(inputLayer::Integer, innerLayer1::Integer, compressedLayer::Integer, σ, )
+function buildAutoencoder(inputLayer::Integer, innerLayer1::Integer, compressedLayer::Integer, σ,)
   @info("Building five-layered autoencoder...")
   return Chain(
     Dense(inputLayer, innerLayer1, σ),
@@ -73,7 +73,7 @@ Build a two-layered simple perceptron
 arguments passed as `Params` with `Parameters::@with_kw`
 
 """
-function buildPerceptron(inputLayer::Integer, Params, σ, )
+function buildPerceptron(inputLayer::Integer, Params, σ,)
   args = Params()
 
   @info("Building two-layered simple perceptron...")
@@ -101,7 +101,7 @@ Build a three-layered simple perceptron
 arguments passed as `Params` with `Parameters::@with_kw`
 
 """
-function buildPerceptron(inputLayer::Integer, perceptronLayer1::Integer, Params, σ, )
+function buildPerceptron(inputLayer::Integer, perceptronLayer1::Integer, Params, σ,)
   args = Params()
 
   @info("Building three-layered simple perceptron...")
@@ -130,7 +130,7 @@ Build a four-layered simple perceptron
 `σ` layer identity
 
 """
-function buildPerceptron(inputLayer::Integer, perceptronLayer1::Integer, perceptronLayer2::Integer, Params, σ, )
+function buildPerceptron(inputLayer::Integer, perceptronLayer1::Integer, perceptronLayer2::Integer, Params, σ,)
   args = Params()
 
   @info("Building four-layered simple perceptron...")
@@ -164,7 +164,7 @@ Build a five-layered simple perceptron
 arguments passed as `Params` with `Parameters::@with_kw`
 
 """
-function buildPerceptron(inputLayer::Integer, perceptronLayer1::Integer, perceptronLayer2::Integer, perceptronLayer3::Integer, Params, σ, )
+function buildPerceptron(inputLayer::Integer, perceptronLayer1::Integer, perceptronLayer2::Integer, perceptronLayer3::Integer, Params, σ,)
   args = Params()
 
   @info("Building five-layered simple perceptron...")

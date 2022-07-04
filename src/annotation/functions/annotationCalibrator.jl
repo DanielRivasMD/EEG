@@ -230,10 +230,10 @@ function labelParser(ɒ::Array{T, 2}) where T <: Number
   lbSz = size(ɒ, 1)
   tmpAr = Array{String}(undef, lbSz, 1)
   for ι ∈ 1:lbSz
-    tmpAr[ι, 1] = string(ɒ[ι,  1], ɒ[ι, 2], ɒ[ι, 3], )
+    tmpAr[ι, 1] = string(ɒ[ι,  1], ɒ[ι, 2], ɒ[ι, 3],)
   end
   Ω = parse.(Int64, tmpAr, base = 2)
-  Ω = reshape(Ω, (size(Ω, 1), ))
+  Ω = reshape(Ω, (size(Ω, 1),))
 
   return Ω
 end

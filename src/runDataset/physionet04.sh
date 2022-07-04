@@ -4,14 +4,14 @@
 ################################################################################
 
 # iterate on patient directories
-for patient in $( command find /Users/drivas/Factorem/EEG/data/physionet.org/files/chbmit/1.0.0/* -type d -name 'chb1[9]' -o -name 'chb2[0-4]' )
+for patient in $(command find /Users/drivas/Factorem/EEG/data/physionet.org/files/chbmit/1.0.0/* -type d -name 'chb1[9]' -o -name 'chb2[0-4]')
 do
 
   # identify annotation file
-  annotation=$( command find "${patient}" -name '*summary.txt' -type f  )
+  annotation=$(command find "${patient}" -name '*summary.txt' -type f)
 
   # iterate on recordings
-  for edf in $( command find "${patient}" -name '*edf' -type f )
+  for edf in $(command find "${patient}" -name '*edf' -type f)
   do
 
     # echo input file

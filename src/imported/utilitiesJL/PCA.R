@@ -11,7 +11,7 @@
 #   ylab = ''
 # )
 #
-# for ( c in seq_along(states) ) {
+# for (c in seq_along(states)) {
 #   points(xr[seq(from = c, to = dim(xr)[1], by = length(states)), ], pch = seq_along(electrodeID), col = c)
 # }
 

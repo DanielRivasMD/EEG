@@ -26,7 +26,7 @@ for k in elecID
     @info k
   end
 end
-UnicodePlots.heatmap(toHeat, border = :none, height = 19, width = 150, )
+UnicodePlots.heatmap(toHeat, border = :none, height = 19, width = 150,)
 
 
 

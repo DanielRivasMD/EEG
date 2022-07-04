@@ -9,9 +9,9 @@ idAr = [
 ]
 
 for id in idAr
-  s = readdlm( string("screen/", id, ".csv"), ',')
-  p = readdlm( string("permutation/U", id, ".csv"), ',')
-  w = readdlm( string("permutation/W", id, ".csv"), ',')
+  s = readdlm(string("screen/", id, ".csv"), ',')
+  p = readdlm(string("permutation/U", id, ".csv"), ',')
+  w = readdlm(string("permutation/W", id, ".csv"), ',')
 
   spw = [s p w]
 

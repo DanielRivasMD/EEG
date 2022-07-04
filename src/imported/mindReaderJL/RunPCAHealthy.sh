@@ -11,13 +11,13 @@ i=0
 while read line
 do
   fls[ $i ]="$line"
-  (( i++ ))
+  ((i++))
 done < <(ls ${eegDir}/*xlsx)
 
 # loop through healthy files
 healthy0=0
 healthy1=20
-for (( i = ${healthy0}; i < ${healthy1}; i++ ))
+for ((i = ${healthy0}; i < ${healthy1}; i++))
 do
   xlsxFile=${fls[$i]}
   edfFile=${xlsxFile/xlsx/edf}
