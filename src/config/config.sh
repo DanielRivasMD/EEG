@@ -21,7 +21,10 @@ graphDir="${srcDir}/graphics"
 ####################################################################################################
 
 # data
-mindCSV="${mindDir}/data/csv"
-mindPlot="${mindDir}/data/plot"
+mindData="${mindDir}/data"
+mindCSV="${mindData}/csv"
+mindHMM="${mindData}/hmm"
+mindScreen="${mindData}/screen"
+mindPlot="${mindData}/plot"
 
 ####################################################################################################

@@ -10,7 +10,10 @@ begin
 
   ####################################################################################################
 
-  # source
+  # data
+  dataDir = string(projDir, "/data")
+
+# source
   srcDir = string(projDir, "/src")
   binDir = string(srcDir, "/bin")
   configDir = string(srcDir, "/config")
