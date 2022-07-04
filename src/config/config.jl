@@ -11,12 +11,13 @@ begin
   ####################################################################################################
 
   # source
-  binDir = string(projDir, "/src/bin")
-  configDir = string(projDir, "/src/config")
-  runDataset = string(projDir, "/src/runDataset")
-  annotationDir = string(projDir, "/src/annotation")
-  utilDir = string(projDir, "/src/utilities")
-  graphDir = string(projDir, "/src/graphics")
+  srcDir = string(projDir, "/src")
+  binDir = string(srcDir, "/bin")
+  configDir = string(srcDir, "/config")
+  runDataset = string(srcDir, "/runDataset")
+  annotationDir = string(srcDir, "/annotation")
+  utilDir = string(srcDir, "/utilities")
+  graphDir = string(srcDir, "/graphics")
 
   ####################################################################################################
 

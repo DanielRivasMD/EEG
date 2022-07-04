@@ -10,12 +10,13 @@ mindDir="/Users/drivas/Factorem/MindReader"
 dataDir="${projDir}/data"
 
 # source
-binDir="${projDir}/src/bin"
-configDir="${projDir}/src/config"
-runDataset="${projDir}/src/runDataset"
-annotationDir="${projDir}/src/annotation"
-utilDir="${projDir}/src/utilities"
-graphDir="${projDir}/src/graphics"
+srcDir="${projDir}/src"
+binDir="${srcDir}/bin"
+configDir="${srcDir}/config"
+runDataset="${srcDir}/runDataset"
+annotationDir="${srcDir}/annotation"
+utilDir="${srcDir}/utilities"
+graphDir="${srcDir}/graphics"
 
 ####################################################################################################
 

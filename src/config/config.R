@@ -7,12 +7,13 @@ mindDir <- '/Users/drivas/Factorem/MindReader'
 ####################################################################################################
 
 # source
-binDir <- paste0(projDir, '/src/bin')
-configDir <- paste0(projDir, '/src/config')
-runDataset <- paste0(projDir, '/src/runDataset')
-annotationDir <- paste0(projDir, '/src/annotation')
-utilDir <- paste0(projDir, '/src/utilities')
-graphDir <- paste0(projDir, '/src/graphics')
+srcDir <- paste0(projDir, '/src')
+binDir <- paste0(srcDir, '/bin')
+configDir <- paste0(srcDir, '/config')
+runDataset <- paste0(srcDir, '/runDataset')
+annotationDir <- paste0(srcDir, '/annotation')
+utilDir <- paste0(srcDir, '/utilities')
+graphDir <- paste0(srcDir, '/graphics')
 
 ####################################################################################################
 
