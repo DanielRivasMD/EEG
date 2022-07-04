@@ -21,10 +21,10 @@ do
   fullsummary="$(unzip -l "${database}" | awk -v ix="$(printf %02d $ix)" '{if ($NF ~ ix && $NF ~ "summary") {print $NF}}')"
 
   # declare summary
-  summary="${summary/*\/}"
+  summary="${fullsummary/*\/}"
 
   # log
-  echo "SUMMARY: ${summary}"
+  echo "\nSUMMARY: ${summary}\n"
 
   # # extract
   # unzip -p "${database}" "${fullsummary}" > "${dataDir}/${summary}"
@@ -32,7 +32,7 @@ do
   ####################################################################################################
 
   # iterate on files
-  for fulledf in "$(unzip -l "${database}" | awk -v ix="$(printf %02d $ix)" '{if ($NF  ~ "chb"ix && $NF ~ "edf$") {print $NF}}')"
+  for fulledf in $(unzip -l "${database}" | awk -v ix="$(printf %02d $ix)" '{if ($NF  ~ "chb"ix && $NF ~ "edf$") {print $NF}}')
   do
 
     # declare edf
