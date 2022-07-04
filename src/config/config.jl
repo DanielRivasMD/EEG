@@ -28,6 +28,7 @@ begin
   mindData = string(mindDir, "/data")
   mindCSV = string(mindData, "/csv")
   mindHMM = string(mindData, "/hmm")
+  mindLog = string(mindData, "/log")
   mindScreen = string(mindData, "/screen")
   mindPlot = string(mindData, "/plot")
 

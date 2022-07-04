@@ -24,6 +24,7 @@ graphDir="${srcDir}/graphics"
 mindData="${mindDir}/data"
 mindCSV="${mindData}/csv"
 mindHMM="${mindData}/hmm"
+mindLog="${mindData}/log"
 mindScreen="${mindData}/screen"
 mindPlot="${mindData}/plot"
 
