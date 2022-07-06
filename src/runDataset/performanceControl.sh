@@ -27,8 +27,8 @@ do
   # log
   echo "\nSUMMARY: ${summary}\n"
 
-  # # extract
-  # unzip -p "${database}" "${fullsummary}" > "${dataDir}/${summary}"
+  # extract
+  unzip -p "${database}" "${fullsummary}" > "${dataDir}/${summary}"
 
   ####################################################################################################
 
@@ -45,8 +45,8 @@ do
 
     echo "LOG: /Users/drivas/Factorem/MindReader/data/log/${edf/edf/log}"
 
-    # # extract
-    # unzip -p "${database}" "${fulledf}" > "${dataDir}/${edf}"
+    # extract
+    unzip -p "${database}" "${fulledf}" > "${dataDir}/${edf}"
 
     julia \
       --project \
