@@ -152,8 +152,17 @@ end;
 
 # ####################################################################################################
 
+# read available channels
+channels = @chain begin
+  readdir(mindHMM)
+  filter(χ -> contains(χ, "chb01_01"), _)
+  filter(χ -> contains(χ, "model"), _)
+  replace.(_, "chb01_01_" => "")
+  replace.(_, "_model.csv" => "")
+end
+
 # load hmm
-# TODO: build & using hmm reconstruction
+hmmDc = reconstructHMM(mindHMM, "/chb01_01", channels)
 
 ####################################################################################################
 
