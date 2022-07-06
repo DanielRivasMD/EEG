@@ -126,7 +126,6 @@ function annotationCalibrator(annotations::Vector{Tuple{Sc, Sc}}; recordFreq::Ar
     binVec = extractSignalBin(signalVec, binSize = shParams["window-size"], binOverlap = shParams["bin-overlap"])
     binVec = sum(binVec, dims = 2)
     replace!(ρ -> ρ >= 1 ? 1 : 0, binVec)
-    # binVec = convert.(Int64, binVec)
     binVec[:, 1]
   end
 

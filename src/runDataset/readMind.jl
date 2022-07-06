@@ -31,18 +31,14 @@ include("/Users/drivas/Factorem/EEG/src/imported/utilitiesJL/argParser.jl");
 ####################################################################################################
 
 # load parameters
-include(
-  string(shArgs["paramsDir"], shArgs["params"]),
-)
+include(string(shArgs["paramsDir"], shArgs["params"]))
 
 ####################################################################################################
 
 # include additional protocols
 if haskey(shArgs, "additional") && haskey(shArgs, "addDir")
   for ι ∈ split(shArgs["additional"], ",")
-    include(
-      string(shArgs["addDir"], ι),
-    )
+    include(string(shArgs["addDir"], ι))
   end
 end
 
@@ -50,9 +46,7 @@ end
 
 # read annotation
 if haskey(shArgs, "annotation") && haskey(shArgs, "annotDir")
-  annotFile = annotationReader(
-    string(shArgs["annotDir"], shArgs["annotation"]),
-  )
+  annotFile = annotationReader(shArgs["annotDir"], shArgs["annotation"])
 end
 
 ####################################################################################################
@@ -69,7 +63,6 @@ begin
   if haskey(annotFile, replace(shArgs["input"], ".edf" => ""))
     labelAr = annotationCalibrator(
       annotFile[replace(shArgs["input"], ".edf" => "")];
-      startTime = startTime,
       recordFreq = recordFreq,
       signalLength = size(edfDf, 1),
       shParams = shArgs,
@@ -166,7 +159,7 @@ end;
 
 if haskey(annotFile, replace(shArgs["input"], ".edf" => ""))
   writedlm(
-    string(shArgs["outDir"], "screen/", replace(shArgs["input"], "edf" => "csv")),
+    string(shArgs["outDir"], "/", "screen/", replace(shArgs["input"], "edf" => "csv")),
     writePerformance(sensitivitySpecificity(hmmDc, labelAr)),
     ", ",
   )
