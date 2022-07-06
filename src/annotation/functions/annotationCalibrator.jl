@@ -26,7 +26,8 @@ end
 
 """
 
-    annotationReader(summaryFile::S) where S <: String
+    annotationReader(path::S, summaryFile::S)
+    where S <: String
 
 # Description
 Extract anomaly events from summary file [physionet]. Return a dictionary with files as keys.
@@ -34,7 +35,7 @@ Extract anomaly events from summary file [physionet]. Return a dictionary with f
 
 See also: [`annotationCalibrator`](@ref), [`labelParser`](@ref)
 """
-function annotationReader(summaryFile::S) where S <: String
+function annotationReader(path::S, summaryFile::S) where S <: String
 
   @info "Reading annotations..."
 
@@ -47,7 +48,7 @@ function annotationReader(summaryFile::S) where S <: String
   ϟ1 = false
   ϟ2 = false
 
-  for ƒ ∈ eachline(summaryFile)
+  for ƒ ∈ eachline(string(path, summaryFile))
 
     if contains(ƒ, "File Name")
       lastFile = getSeizureFile(ƒ)
@@ -79,16 +80,17 @@ end
 
 """
 
-    annotationCalibrator(annotations::Vector{Tuple{S, S}};
-    startTime::Time, recordFreq::Array{T, 1}, signalLength::T, shParams::Dict) where T <: Number where S <: Second
+    annotationCalibrator(annotations::Vector{Tuple{Sc, Sc}};
+    recordFreq::Array{T, 1}, signalLength::T, shParams::D)
+    where Sc <: Second
+    where T <: Number
+    where D <: Dict
 
 # Description
 Calibrate timestamp from summary file [physionet].
 
 # Arguments
 `annotations` annotations summary [physionet].
-
-`startTime` signal start time.
 
 `recordFreq` recording frecuency.
 
@@ -99,7 +101,7 @@ Calibrate timestamp from summary file [physionet].
 
 See also: [`annotationReader`](@ref), [`labelParser`](@ref)
 """
-function annotationCalibrator(annotations::Vector{Tuple{S, S}}; recordFreq::Array{T, 1}, signalLength::T, shParams::Dict) where T <: Number where S <: Second
+function annotationCalibrator(annotations::Vector{Tuple{Sc, Sc}}; recordFreq::Array{T, 1}, signalLength::T, shParams::D) where Sc <: Second where T <: Number where D <: Dict
 
   @info "Calibrating annotations..."
 
@@ -124,7 +126,7 @@ function annotationCalibrator(annotations::Vector{Tuple{S, S}}; recordFreq::Arra
     binVec = extractSignalBin(signalVec, binSize = shParams["window-size"], binOverlap = shParams["bin-overlap"])
     binVec = sum(binVec, dims = 2)
     replace!(ρ -> ρ >= 1 ? 1 : 0, binVec)
-    binVec = convert.(Int64, binVec)
+    # binVec = convert.(Int64, binVec)
     binVec[:, 1]
   end
 
@@ -136,7 +138,10 @@ end
 """
 
     annotationCalibrator(xDf;
-    startTime::Time, recordFreq::Array{T, 1}, signalLength::T, shParams::Dict) where T <: Number
+    startTime::Tm, recordFreq::Array{T, 1}, signalLength::T, shParams::D)
+    where Tm <: Time
+    where T <: Number
+    where D <: Dict
 
 # Description
 Calibrate annotations from XLSX.
@@ -155,7 +160,7 @@ Calibrate annotations from XLSX.
 
 See also: [`annotationReader`](@ref), [`labelParser`](@ref)
 """
-function annotationCalibrator(xDf; startTime::Time, recordFreq::Array{T, 1}, signalLength::T, shParams::Dict) where T <: Number
+function annotationCalibrator(xDf; startTime::Tm, recordFreq::Array{T, 1}, signalLength::T, shParams::D) where Tm <: Time where T <: Number where D <: Dict
 
   @info "Calibrating annotations..."
 
