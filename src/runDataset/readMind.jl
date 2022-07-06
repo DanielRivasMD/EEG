@@ -11,7 +11,10 @@ end;
 begin
   using Chain: @chain
 
+  # mind reader
   using MindReader
+
+  # hidden Markov model
   using HiddenMarkovModelReaders
 
   using DelimitedFiles
@@ -26,7 +29,7 @@ end;
 ####################################################################################################
 
 # argument parser
-include("/Users/drivas/Factorem/EEG/src/imported/utilitiesJL/argParser.jl");
+include(string(importDir, "/utilitiesJL/argParser.jl"));
 
 ####################################################################################################
 
