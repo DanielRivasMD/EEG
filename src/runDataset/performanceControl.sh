@@ -41,9 +41,6 @@ do
 
     # log
     echo "EDF: ${edf}"
-    echo "OUT: ${dataDir}/${edf}"
-
-    echo "LOG: /Users/drivas/Factorem/MindReader/data/log/${edf/edf/log}"
 
     # extract
     unzip -p "${database}" "${fulledf}" > "${dataDir}/${edf}"
