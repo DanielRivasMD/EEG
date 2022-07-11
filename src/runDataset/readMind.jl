@@ -79,6 +79,8 @@ end
 
 ####################################################################################################
 
+edf = replace(shArgs["input"], ".edf" => "")
+
 # read data
 begin
 
@@ -89,9 +91,9 @@ begin
   freqDc = extractFFT(edfDf, shArgs)
 
   # calibrate annotations
-  if haskey(annotFile, replace(shArgs["input"], ".edf" => ""))
+  if haskey(annotFile, edf)
     labelAr = annotationCalibrator(
-      annotFile[replace(shArgs["input"], ".edf" => "")];
+      annotFile[edf];
       recordFreq = recordFreq,
       signalLength = size(edfDf, 1),
       shParams = shArgs,
@@ -105,24 +107,27 @@ end;
 # read available channels
 channels = @chain begin
   readdir(mindHMM)
-  filter(χ -> contains(χ, "chb01_01"), _)
+  filter(χ -> contains(χ, edf), _)
   filter(χ -> contains(χ, "model"), _)
-  replace.(_, "chb01_01_" => "")
+  replace.(_, string(edf, "_") => "")
   replace.(_, "_model.csv" => "")
 end
 
 # load hmm
-hmmDc = reconstructHMM(mindHMM, "/chb01_01", channels)
+hmmDc = reconstructHMM(string(mindHMM, "/"), edf, channels)
 
 ####################################################################################################
 
 # calculate performance unfiltered
-if haskey(annotFile, replace(shArgs["input"], ".edf" => ""))
+if haskey(annotFile, edf)
+
   writedlm(
     string(shArgs["outDir"], "/", "screen/", replace(shArgs["input"], "edf" => "csv")),
     writePerformance(sensitivitySpecificity(hmmDc, labelAr)),
     ", ",
   )
+
+end
 
 ####################################################################################################
 
@@ -152,14 +157,13 @@ end
 ####################################################################################################
 
 # calculate performance filtered
-if haskey(annotFile, replace(shArgs["input"], ".edf" => ""))
+if haskey(annotFile, edf)
+
   writedlm(
     string(shArgs["outDir"], "/", "filterScreen/", replace(shArgs["input"], "edf" => "csv")),
     writePerformance(sensitivitySpecificity(hmmDc, labelAr)),
     ", ",
   )
-
-else
 
 end
 
