@@ -1,4 +1,4 @@
-################################################################################
+####################################################################################################
 
 # TODO: add test
 function stateStats(stateAr::Array{Float64, 2}, numState = 5)
@@ -21,7 +21,7 @@ function stateStats(stateAr::Array{Float64, 2}, numState = 5)
   return statsAr
 end
 
-################################################################################
+####################################################################################################
 
 function summarizeStats(fileList::Array{String, 1}, maxChannel = 25)
   collectAr = zeros(Float64, length(fileList), maxChannel)
@@ -37,13 +37,13 @@ function summarizeStats(fileList::Array{String, 1}, maxChannel = 25)
   return collectAr
 end
 
-################################################################################
+####################################################################################################
 
 function groundStateRatio(stateAr)
   stateAr[1, :] ./ sum(stateAr, dims = 1)'
 end
 
-################################################################################
+####################################################################################################
 
 function plotStatesHeatmap(toSummarize::Array{Float64, 2}, outimg = "groundStateRatio")
 
@@ -72,4 +72,4 @@ function plotStatesHeatmap(toSummarize::Array{Float64, 2}, outimg = "groundState
 
 end
 
-################################################################################
+####################################################################################################
