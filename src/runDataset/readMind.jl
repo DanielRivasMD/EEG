@@ -20,9 +20,6 @@ begin
   using DelimitedFiles
   using RCall
 
-  # flux
-  using Flux: cpu, gpu, flatten, leakyrelu
-
   # parameters
   using Parameters: @with_kw
 end;
