@@ -13,7 +13,8 @@ require(tidyverse)
 
 ####################################################################################################
 
-for (ƒ in list.files(mindScreen)) {
+# for (ƒ in list.files(mindScreen)) {
+for (ƒ in list.files(paste0(mindData, '/filterScreen'))) {
 
   # log
   print(ƒ)
