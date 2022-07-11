@@ -56,19 +56,19 @@ begin
     ψ = ƒ |> π -> replace(π, "chb04_28_" => "") |> π -> replace(π, "_states.csv" => "")
     @info ψ
     push!(ly, ψ)
-    pt[ι, :] .= readdlm(string("/Users/drivas/Factorem/MindReader/data/hmm/", ƒ))[2:end, 1] |> π -> convert.(Int64, π)
+    pt[ι, :] .= readdlm(string(mindHMM, "/", ƒ))[2:end, 1] |> π -> convert.(Int64, π)
   end
 
-  utilDir    = "/Users/drivas/Factorem/MindReader/src/Utilities/"
-  include(string(utilDir,    "fileReaderEDF.jl"))
+  utilDir = string(mindDir, "/src/Utilities/")
+  include(string(utilDir, "fileReaderEDF.jl"))
 
-  signalDir = "/Users/drivas/Factorem/MindReader/src/SignalProcessing/"
-  include(string(signalDir,  "signalBin.jl"))
+  signalDir = string(mindDir, "/src/SignalProcessing/")
+  include(string(signalDir, "signalBin.jl"))
 
-  annotDir   = "/Users/drivas/Factorem/MindReader/src/Annotator/"
-  include(string(annotDir,   "annotationCalibrator.jl"))
+  annotDir = string(mindDir, "/src/Annotator/")
+  include(string(annotDir, "annotationCalibrator.jl"))
 
-  dir = "/Users/drivas/Factorem/EEG/data/physionet.org/files/chbmit/1.0.0/chb04/"
+  dir = string(dataDir, "/physionet.org/files/chbmit/1.0.0/chb04/")
   xfile = "chb04-summary.txt"
   annotFile = annotationReader(string(dir, xfile))
   file = "chb04_28.edf"
@@ -89,18 +89,18 @@ begin
   )
 
   frThres = 120
-  ct = 0
-  for r ∈ eachrow(pt)
-    R"tmp <- peak_iden($r, 2)"
+  ç = 0
+  for ρ ∈ eachrow(pt)
+    R"tmp <- peak_iden($ρ, 2)"
     @rget tmp
-    global ct += 1
-    insertcols!(tmp, :channel => ct)
-    pgTmp = filter(:peak_length_ix => x -> x >= frThres, tmp)
-    if r == pt[1, :]
-      global df = tmp
+    global ç += 1
+    insertcols!(tmp, :channel => ç)
+    pgTmp = filter(:peak_length_ix => χ -> χ >= frThres, tmp)
+    if ρ == pt[1, :]
+      global δ = tmp
       global pgDf = pgTmp
     else
-      df = [df; tmp]
+      δ = [δ; tmp]
       pgDf = [pgDf; pgTmp]
     end
   end
