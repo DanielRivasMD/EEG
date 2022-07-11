@@ -146,7 +146,7 @@ for (κ, υ) ∈ hmmDc
 
   # assign peak values
   for ρ ∈ eachrow(filter(:peak_length_ix => χ -> χ >= timeThres, peakDf))
-      υ.traceback[Int(ρ[:, :lower_lim_ix]):Int(ρ[:, :upper_lim_ix])] .= 10.
+    υ.traceback[Int(ρ[:lower_lim_ix]):Int(ρ[:upper_lim_ix])] .= 10.
   end
 
 end
