@@ -79,8 +79,9 @@ end
 
 ####################################################################################################
 
-#  read data
+# read data
 begin
+
   # read edf file
   edfDf, startTime, recordFreq = getSignals(shArgs)
 
@@ -96,6 +97,7 @@ begin
       shParams = shArgs,
     )
   end
+
 end;
 
 ####################################################################################################
@@ -114,10 +116,7 @@ hmmDc = reconstructHMM(mindHMM, "/chb01_01", channels)
 
 ####################################################################################################
 
-# TODO: add post processing filter
-
-####################################################################################################
-
+# calculate performance unfiltered
 if haskey(annotFile, replace(shArgs["input"], ".edf" => ""))
   writedlm(
     string(shArgs["outDir"], "/", "screen/", replace(shArgs["input"], "edf" => "csv")),
@@ -125,7 +124,40 @@ if haskey(annotFile, replace(shArgs["input"], ".edf" => ""))
     ", ",
   )
 
-  ####################################################################################################
+####################################################################################################
+
+# declare time threshold
+timeThres = 120
+
+# iterate on dictionary
+for (κ, υ) ∈ hmmDc
+
+  # declare traceback
+  tb = υ.traceback
+
+  # identify peak
+  # R"peakDf <- peak_iden($tb, 2)"
+  @rget peakDf
+
+  # reset traceback
+  υ.traceback = ones(υ.traceback |> length)
+
+  # assign peak values
+  for ρ ∈ eachrow(filter(:peak_length_ix => χ -> χ >= timeThres, peakDf))
+      υ.traceback[Int(ρ[:, :lower_lim_ix]):Int(ρ[:, :upper_lim_ix])] .= 10.
+  end
+
+end
+
+####################################################################################################
+
+# calculate performance filtered
+if haskey(annotFile, replace(shArgs["input"], ".edf" => ""))
+  writedlm(
+    string(shArgs["outDir"], "/", "filterScreen/", replace(shArgs["input"], "edf" => "csv")),
+    writePerformance(sensitivitySpecificity(hmmDc, labelAr)),
+    ", ",
+  )
 
 else
 
