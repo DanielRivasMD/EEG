@@ -89,6 +89,10 @@ hmmDc = reconstructHMM(mindHMM, "/chb01_01", channels)
 
 ####################################################################################################
 
+# TODO: add post processing filter
+
+####################################################################################################
+
 if haskey(annotFile, replace(shArgs["input"], ".edf" => ""))
   writedlm(
     string(shArgs["outDir"], "/", "screen/", replace(shArgs["input"], "edf" => "csv")),

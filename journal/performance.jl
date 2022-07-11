@@ -1,11 +1,20 @@
+####################################################################################################
 
+# declarations
+begin
+  include("/Users/drivas/Factorem/EEG/src/config/config.jl")
+end;
+
+####################################################################################################
 
 # load packages
-using DelimitedFiles
-using Plots
-using RCall
+begin
+  using DelimitedFiles
+  using Plots
+  using RCall
+end;
 
-
+####################################################################################################
 
 begin
   # declare peak identification function
@@ -29,13 +38,13 @@ begin
   "
 end;
 
-
+####################################################################################################
 
 begin
   # load data
-  d = readdir("/Users/drivas/Factorem/MindReader/data/hmm")
+  files = readdir(mindHMM)
 
-  files = d |> p -> match.(r"chb04_28_(.*)states", p) |> p -> findall(!isnothing, p) |> p -> getindex(d, p)
+  file = files |> π -> match.(r"chb04_28_(.*)states", π) |> π -> findall(!isnothing, π) |> π -> getindex(files, π)
 
   smp = 57692
 
@@ -43,11 +52,11 @@ begin
   lx = 1:smp |> collect
   ly = Vector{String}()
 
-  for (c, f) ∈ enumerate(files)
-    k = f |> p -> replace(p, "chb04_28_" => "") |> p -> replace(p, "_states.csv" => "")
-    @info k
-    push!(ly, k)
-    pt[c, :] .= readdlm(string("/Users/drivas/Factorem/MindReader/data/hmm/", f))[2:end, 1] |> p -> convert.(Int64, p)
+  for (ι, ƒ) ∈ enumerate(file)
+    ψ = ƒ |> π -> replace(π, "chb04_28_" => "") |> π -> replace(π, "_states.csv" => "")
+    @info ψ
+    push!(ly, ψ)
+    pt[ι, :] .= readdlm(string("/Users/drivas/Factorem/MindReader/data/hmm/", ƒ))[2:end, 1] |> π -> convert.(Int64, π)
   end
 
   utilDir    = "/Users/drivas/Factorem/MindReader/src/Utilities/"
@@ -123,7 +132,7 @@ begin
   )
 end;
 
-
+####################################################################################################
 
 hmASJ = heatmap(labelSJ |> permutedims, framestyle = :none, leg = :none, title = "SanJuan / Angel Annotations")
 hmAPh = heatmap(labelAr |> permutedims, framestyle = :none, leg = :none, title = "Physionet Annotations")
@@ -131,7 +140,8 @@ hmRec = heatmap(lx, ly, pt, framestyle = :semi, leg = :none)
 hmMas = heatmap(lx, ly, ms, framestyle = :semi, leg = :none)
 plot(hmASJ, hmAPh, hmRec, hmMas, layout = grid(4, 1, heights = [0.05, 0.05, 0.45, 0.45]), dpi = 300)
 
+####################################################################################################
 
+δ |> π -> sort(π, :peak_length_ix, rev = true) |> π -> bar(π[:, :peak_length_ix], leg = :none, dpi = 300)
 
-df |> p -> sort(p, :peak_length_ix, rev = true) |> p -> bar(p[:, :peak_length_ix], leg = :none, dpi = 300)
-
+####################################################################################################
