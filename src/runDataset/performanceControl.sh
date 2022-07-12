@@ -86,7 +86,7 @@ do
   done
 
   # print counter
-  echo "${edf},${patient}" >> "${dataDir}/log.txt"
+  echo "${summary/-summary.txt/},${patient}" >> "${dataDir}/log.txt"
 
   # remove summary
   if [[ -f "${dataDir}/${summary}" ]]
