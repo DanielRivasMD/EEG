@@ -101,6 +101,14 @@ end;
 
 ####################################################################################################
 
+# record time points
+writedlm(
+  string(mindData, "/", "time", "/", edf, ".txt"),
+  [size(edfDf, 1)],
+)
+
+####################################################################################################
+
 # read available channels
 channels = @chain begin
   readdir(mindHMM)
@@ -117,13 +125,11 @@ hmmDc = reconstructHMM(string(mindHMM, "/"), edf, channels)
 
 # calculate performance unfiltered
 if haskey(annotFile, edf)
-
   writedlm(
     string(shArgs["outDir"], "/", "screen/", replace(shArgs["input"], "edf" => "csv")),
     writePerformance(sensitivitySpecificity(hmmDc, labelAr)),
     ", ",
   )
-
 end
 
 ####################################################################################################
@@ -155,13 +161,11 @@ end
 
 # calculate performance filtered
 if haskey(annotFile, edf)
-
   writedlm(
     string(shArgs["outDir"], "/", "filterScreen/", replace(shArgs["input"], "edf" => "csv")),
     writePerformance(sensitivitySpecificity(hmmDc, labelAr)),
     ", ",
   )
-
 end
 
 ####################################################################################################
