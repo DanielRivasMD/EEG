@@ -14,6 +14,9 @@ scriptJL="${runDataset}/readMind.jl"
 
 ####################################################################################################
 
+# declare counter
+ct=0
+
 # iterate on records
 for ix in {1..24}
 do
@@ -35,6 +38,9 @@ do
   # iterate on files
   for fulledf in $(unzip -l "${database}" | awk -v ix="$(printf %02d $ix)" '{if ($NF  ~ "chb"ix && $NF ~ "edf$") {print $NF}}')
   do
+
+    # increase counter
+    ((ct++))
 
     # declare edf
     edf="${fulledf/*\/}"
@@ -73,5 +79,8 @@ do
   fi
 
 done
+
+# print counter
+echo "Total number of files: ${ct}" > log.txt
 
 ####################################################################################################
