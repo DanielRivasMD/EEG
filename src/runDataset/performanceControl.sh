@@ -15,11 +15,23 @@ scriptJL="${runDataset}/readMind.jl"
 ####################################################################################################
 
 # declare counter
-ct=0
+total=0
+
+# purge log file
+if [[ -f "${dataDir}/log.txt" ]]
+then
+  rm "${dataDir}/log.txt"
+fi
+
+# create log file
+touch "${dataDir}/log.txt"
 
 # iterate on records
 for ix in {1..24}
 do
+
+  # declare counter
+  patient=0
 
   # select summary
   fullsummary="$(unzip -l "${database}" | awk -v ix="$(printf %02d $ix)" '{if ($NF ~ ix && $NF ~ "summary") {print $NF}}')"
@@ -39,8 +51,9 @@ do
   for fulledf in $(unzip -l "${database}" | awk -v ix="$(printf %02d $ix)" '{if ($NF  ~ "chb"ix && $NF ~ "edf$") {print $NF}}')
   do
 
-    # increase counter
-    ((ct++))
+    # increase counters
+    ((total++))
+    ((patient++))
 
     # declare edf
     edf="${fulledf/*\/}"
@@ -72,6 +85,9 @@ do
 
   done
 
+  # print counter
+  echo "${edf},${patient}" >> "${dataDir}/log.txt"
+
   # remove summary
   if [[ -f "${dataDir}/${summary}" ]]
   then
@@ -81,6 +97,6 @@ do
 done
 
 # print counter
-echo "Total number of files: ${ct}" > log.txt
+echo "total,${total}" >> "${dataDir}/log.txt"
 
 ####################################################################################################
