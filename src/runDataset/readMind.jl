@@ -65,9 +65,6 @@ begin
   # read edf file
   edfDf, startTime, recordFreq = getSignals(shArgs)
 
-  # calculate fft
-  freqDc = extractFFT(edfDf, shArgs)
-
   # calibrate annotations
   if haskey(annotFile, edf)
     labelAr = annotationCalibrator(
