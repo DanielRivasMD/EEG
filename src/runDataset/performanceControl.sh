@@ -64,6 +64,7 @@ do
     # extract
     unzip -p "${database}" "${fulledf}" > "${dataDir}/${edf}"
 
+    # calculate performance
     julia \
       --project \
       "${scriptJL}" \

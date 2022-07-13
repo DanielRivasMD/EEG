@@ -122,7 +122,7 @@ for (κ, υ) ∈ hmmDc
   tb = υ.traceback
 
   # identify peak
-  R"peakDf <- peak_iden($tb, 2)"
+  R" peakDf <- peak_iden($tb, 2) "
   @rget peakDf
 
   # reset traceback
