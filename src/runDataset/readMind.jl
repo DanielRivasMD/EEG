@@ -31,11 +31,6 @@ include(string(importDir, "/utilitiesJL/argParser.jl"));
 
 ####################################################################################################
 
-# load parameters
-include(string(shArgs["paramsDir"], shArgs["params"]))
-
-####################################################################################################
-
 # include additional protocols
 if haskey(shArgs, "additional") && haskey(shArgs, "addDir")
   for ι ∈ split(shArgs["additional"], ",")
