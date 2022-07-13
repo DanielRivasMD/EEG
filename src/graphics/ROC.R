@@ -21,7 +21,7 @@ for (ƒ in list.files(paste0(mindData, '/filterScreen'))) {
 
   # load file
   csv <- read_csv(paste0(
-    mindScreen, '/', ƒ),
+    paste0(mindData, '/filterScreen'), '/', ƒ),
     show_col_types = FALSE,
   )
 
