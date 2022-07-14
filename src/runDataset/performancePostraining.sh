@@ -77,7 +77,7 @@ do
       --annotDir "${dataDir}/" \
       --outDir "${mindData}" \
       --additional "annotationCalibrator.jl,fileReaderXLSX.jl" \
-      --addDir "${annotationDir}/functions/" &> "${mindLog}/${edf/edf/log}"
+      --addDir "${annotationDir}/functions/" &> "${mindLog}/${edf/.edf/.log}"
 
     # remove edf
     if [[ -f "${dataDir}/${edf}" ]]
