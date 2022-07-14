@@ -129,12 +129,11 @@ end
 
 ####################################################################################################
 
-  # TODO: calculate performance unfiltered
-  writedlm(
-    string(shArgs["outDir"], "/", "screen/", replace(shArgs["input"], "edf" => "csv")),
-    writePerformance(sensitivitySpecificity(hmmDc, labelAr)),
-    ", ",
-  )
+writedlm(
+  string(shArgs["outDir"], "/", "screen/", replace(shArgs["annotation"], "-summary.txt" => "")),
+  writePerformance(sensitivitySpecificity(msHmmDc, msLabelAr)),
+  ", ",
+)
 
 ####################################################################################################
 
@@ -163,11 +162,10 @@ end
 
 ####################################################################################################
 
-# TODO: calculate performance filtered
-  writedlm(
-    string(shArgs["outDir"], "/", "filterScreen/", replace(shArgs["input"], "edf" => "csv")),
-    writePerformance(sensitivitySpecificity(hmmDc, labelAr)),
-    ", ",
-  )
+writedlm(
+  string(shArgs["outDir"], "/", "filterScreen/", replace(shArgs["annotation"], "-summary.txt" => "")),
+  writePerformance(sensitivitySpecificity(msHmmDc, msLabelAr)),
+  ", ",
+)
 
 ####################################################################################################
