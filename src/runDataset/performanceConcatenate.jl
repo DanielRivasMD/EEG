@@ -32,7 +32,7 @@ include(string(importDir, "/utilitiesJL/argParser.jl"));
 ####################################################################################################
 
 # split parameter into vector
-shArgs["input"] = shArgs["input"] |> π -> split(π, ",")
+shArgs["input"] = shArgs["input"] |> π -> split(π, ",") |> π -> π[1:end - 1]
 
 # declare artificial state
 artificialState = 10.
