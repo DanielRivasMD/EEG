@@ -260,7 +260,7 @@ function annotationSummaryChannels(path::S, summaryFile::S) where S <: String
 
   for ł ∈ eachline(string(path, summaryFile))
     if contains(ł, "Channel ")
-      push!(Ω, ł)
+      push!(Ω, split(ł, " ")[end])
     end
   end
 
