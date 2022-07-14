@@ -1,5 +1,6 @@
 #!/bin/bash
 # set -euo pipefail
+# DOC: control model training on physionet. call MindReader ReadMind.jl
 
 ####################################################################################################
 

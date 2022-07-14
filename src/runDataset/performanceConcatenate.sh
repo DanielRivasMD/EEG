@@ -1,5 +1,6 @@
 #!/bin/bash
 # set -euo pipefail
+# DOC: concatenate patient models & measure performance. call performanceConcatenate.jl
 
 ####################################################################################################
 
