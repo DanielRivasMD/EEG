@@ -65,8 +65,8 @@ channels = annotationSummaryChannels(shArgs["annotDir"], shArgs["annotation"])
 ####################################################################################################
 
 # declare master datatypes
-msLabelAr = Vector{Number}
-msHmmDc = Dict{HMM}
+msLabelAr = Vector{Float64}(undef, 0)
+msHmmDc = Dict{String, HMM}(χ => HMM(Array{Float64}(undef, 0), Array{Float64}(undef, 0), Array{Int32}(undef, 0)) for χ = channels)
 
 ####################################################################################################
 
