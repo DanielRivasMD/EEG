@@ -96,7 +96,7 @@ for ƒ ∈ shArgs["input"]
       )
     # declare an empty vector
     else
-      labelAr = zeros(1)
+      labelAr = zeros(convert.(Int64, size(edfDf, 1) / (shArgs["window-size"] / shArgs["bin-overlap"])))
     end
 
   end;
@@ -116,15 +116,12 @@ for ƒ ∈ shArgs["input"]
 
   ####################################################################################################
 
-
   # concatenate labels
   append!(msLabelAr, labelAr)
 
   # concatenate hidden Markov model traceback
   for (κ, υ) ∈ hmmDc
-
     append!(msHmmDc[κ].traceback, υ.traceback)
-
   end
 
   ####################################################################################################
