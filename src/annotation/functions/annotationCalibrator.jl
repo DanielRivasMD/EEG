@@ -48,17 +48,17 @@ function annotationReader(path::S, summaryFile::S) where S <: String
   ϟ1 = false
   ϟ2 = false
 
-  for ƒ ∈ eachline(string(path, summaryFile))
+  for ł ∈ eachline(string(path, summaryFile))
 
-    if contains(ƒ, "File Name")
-      lastFile = getSeizureFile(ƒ)
+    if contains(ł, "File Name")
+      lastFile = getSeizureFile(ł)
       ϟ1 = true
-    elseif contains(ƒ, "Number of Seizures")
-      ç = getSeizureNo(ƒ)
-    elseif contains(ƒ, "Seizure") && contains(ƒ, "Start Time")
-      startTime = getSeizureSec(ƒ)
-    elseif contains(ƒ, "Seizure") && contains(ƒ, "End Time")
-      endTime = getSeizureSec(ƒ)
+    elseif contains(ł, "Number of Seizures")
+      ç = getSeizureNo(ł)
+    elseif contains(ł, "Seizure") && contains(ł, "Start Time")
+      startTime = getSeizureSec(ł)
+    elseif contains(ł, "Seizure") && contains(ł, "End Time")
+      endTime = getSeizureSec(ł)
       push!(timeVc, (startTime, endTime))
       if length(timeVc) == ç + 1
         ϟ2 = true
