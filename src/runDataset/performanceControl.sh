@@ -10,7 +10,7 @@ source "${HOME}/Factorem/EEG/src/config/config.sh"
 
 # declarations
 database="${dataDir}/chb-mit-scalp-eeg-database-1.0.0.zip"
-scriptJL="${runDataset}/readMind.jl"
+scriptJL="${runDataset}/performancePostraining.jl"
 
 ####################################################################################################
 
