@@ -71,7 +71,7 @@ do
   julia \
     --project \
     "${scriptJL}" \
-    --input "${edf}" \
+    --input $(unzip -l "${database}" | awk -v ix="$(printf %02d $ix)" 'BEGIN{ORS = ","} {if ($NF  ~ "chb"ix && $NF ~ "edf$") {gsub("[\-.a-z0-9]*/", "", $NF); print $NF}}') \
     --inputDir "${dataDir}/" \
     --params "Parameters.jl" \
     --paramsDir "${runDataset}/" \
@@ -79,7 +79,7 @@ do
     --annotDir "${dataDir}/" \
     --outDir "${mindData}" \
     --additional "annotationCalibrator.jl,fileReaderXLSX.jl" \
-    --addDir "${annotationDir}/functions/" &> "${mindLog}/${edf/edf/log}"
+    --addDir "${annotationDir}/functions/" &> "${mindLog}/${summary/-summary.txt/.log}"
 
   # iterate on files
   for fulledf in $(unzip -l "${database}" | awk -v ix="$(printf %02d $ix)" '{if ($NF  ~ "chb"ix && $NF ~ "edf$") {print $NF}}')
