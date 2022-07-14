@@ -55,6 +55,11 @@ end
 
 ####################################################################################################
 
+# read channels from summary
+channels = annotationSummaryChannels(shArgs["annotDir"], shArgs["annotation"])
+
+####################################################################################################
+
 # declare master datatypes
 msLabelAr = Vector{Number}
 msHmmDc = Dict{HMM}
@@ -101,15 +106,6 @@ for ƒ ∈ shArgs["input"]
   )
 
   ####################################################################################################
-
-  # read available channels
-  channels = @chain begin
-    readdir(mindHMM)
-    filter(χ -> contains(χ, edf), _)
-    filter(χ -> contains(χ, "model"), _)
-    replace.(_, string(edf, "_") => "")
-    replace.(_, "_model.csv" => "")
-  end
 
   # load hmm
   hmmDc = reconstructHMM(string(mindHMM, "/"), edf, channels)
