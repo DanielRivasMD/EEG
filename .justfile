@@ -39,6 +39,6 @@ _default:
 
 # collect time stampts
 @L-performance:
-  source src/runDataset/performanceControl.sh
+  source src/runDataset/performanceConcatenate.sh
 
 ####################################################################################################
