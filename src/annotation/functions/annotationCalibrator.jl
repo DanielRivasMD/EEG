@@ -243,3 +243,28 @@ function labelParser(ɒ::Array{T, 2}) where T <: Number
 end
 
 ####################################################################################################
+
+"""
+
+    annotationSummaryChannels(path::S, summaryFile::S)
+    where S <: String
+
+# Description
+Extract channels from summary file [physionet]. Return a vector of strings.
+
+
+See also: [`annotationCalibrator`](@ref), [`labelParser`](@ref)
+"""
+function annotationSummaryChannels(path::S, summaryFile::S) where S <: String
+  Ω = Vector{String}(undef, 0)
+
+  for ł ∈ eachline(string(path, summaryFile))
+    if contains(ł, "Channel ")
+      push!(Ω, ł)
+    end
+  end
+
+  return Ω
+end
+
+####################################################################################################
