@@ -29,8 +29,12 @@ end;
 # argument parser
 include(string(importDir, "/utilitiesJL/argParser.jl"));
 
+####################################################################################################
+
 # split parameter into vector
 shArgs["input"] = shArgs["input"] |> π -> split(π, " ")
+# declare artificial state
+artificialState = 10.
 
 ####################################################################################################
 
@@ -155,7 +159,7 @@ for (κ, υ) ∈ msHmmDc
 
   # assign peak values
   for ρ ∈ eachrow(filter(:peak_length_ix => χ -> χ >= timeThres, peakDf))
-    υ.traceback[Int(ρ[:lower_lim_ix]):Int(ρ[:upper_lim_ix])] .= 10.
+    υ.traceback[Int(ρ[:lower_lim_ix]):Int(ρ[:upper_lim_ix])] .= artificialState
   end
 
 end
