@@ -9,19 +9,19 @@ end;
 
 # load packages
 begin
-  # using Chain: @chain
+  using Chain: @chain
 
-  # # mind reader
-  # using MindReader
+  # mind reader
+  using MindReader
 
-  # # hidden Markov model
-  # using HiddenMarkovModelReaders
+  # hidden Markov model
+  using HiddenMarkovModelReaders
 
-  # using DelimitedFiles
-  # using RCall
+  using DelimitedFiles
+  using RCall
 
-  # # parameters
-  # using Parameters: @with_kw
+  # parameters
+  using Parameters: @with_kw
 end;
 
 ####################################################################################################
