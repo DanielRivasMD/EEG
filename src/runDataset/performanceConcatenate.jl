@@ -60,24 +60,19 @@ end
 
 ####################################################################################################
 
-# preallocate channel vector
-channels = Vector{String}
+# trim file extension
+annot = replace(shArgs["annotation"], "-summary.txt" => "")
 
-# iterate on file vector
-for ƒ ∈ shArgs["input"]
-
-  # trim file extension
-  edf = replace(ƒ, ".edf" => "")
-
-  # read available channels
-  channels = @chain begin
-    readdir(mindHMM)
-    filter(χ -> contains(χ, edf), _)
-    filter(χ -> contains(χ, "model"), _)
-    replace.(_, string(edf, "_") => "")
-    replace.(_, "_model.csv" => "")
-  end
-
+# read available channels
+channels = @chain begin
+  readdir(mindHMM)
+  filter(χ -> contains(χ, annot), _)
+  filter(χ -> contains(χ, "model"), _)
+  replace.(annot => "")
+  replace.(r"\d\d" => "")
+  replace.("model.csv" => "")
+  replace.("_" => "")
+  unique()
 end
 
 ####################################################################################################
