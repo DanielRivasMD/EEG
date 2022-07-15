@@ -60,13 +60,24 @@ end
 
 ####################################################################################################
 
-# read available channels
-channels = @chain begin
-  readdir(mindHMM)
-  filter(χ -> contains(χ, edf), _)
-  filter(χ -> contains(χ, "model"), _)
-  replace.(_, string(edf, "_") => "")
-  replace.(_, "_model.csv" => "")
+# preallocate channel vector
+channels = Vector{String}
+
+# iterate on file vector
+for ƒ ∈ shArgs["input"]
+
+  # trim file extension
+  edf = replace(ƒ, ".edf" => "")
+
+  # read available channels
+  channels = @chain begin
+    readdir(mindHMM)
+    filter(χ -> contains(χ, edf), _)
+    filter(χ -> contains(χ, "model"), _)
+    replace.(_, string(edf, "_") => "")
+    replace.(_, "_model.csv" => "")
+  end
+
 end
 
 ####################################################################################################
@@ -85,6 +96,7 @@ for ƒ ∈ shArgs["input"]
 
   ####################################################################################################
 
+  # trim file extension
   edf = replace(ƒ, ".edf" => "")
 
   # read data
