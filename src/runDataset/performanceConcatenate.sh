@@ -85,6 +85,9 @@ do
   for fulledf in $(unzip -l "${database}" | awk -v ix="$(printf %02d $ix)" '{if ($NF  ~ "chb"ix && $NF ~ "edf$") {print $NF}}')
   do
 
+    # declare edf
+    edf="${fulledf/*\/}"
+
     # remove edf
     if [[ -f "${dataDir}/${edf}" ]]
     then
