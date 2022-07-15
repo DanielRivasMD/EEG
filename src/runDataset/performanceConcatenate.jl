@@ -60,8 +60,14 @@ end
 
 ####################################################################################################
 
-# read channels from summary
-channels = annotationSummaryChannels(shArgs["annotDir"], shArgs["annotation"])
+# read available channels
+channels = @chain begin
+  readdir(mindHMM)
+  filter(χ -> contains(χ, edf), _)
+  filter(χ -> contains(χ, "model"), _)
+  replace.(_, string(edf, "_") => "")
+  replace.(_, "_model.csv" => "")
+end
 
 ####################################################################################################
 
