@@ -255,15 +255,15 @@ Extract channels from summary file [physionet]. Return a vector of strings.
 
 See also: [`annotationCalibrator`](@ref), [`labelParser`](@ref)
 """
-function annotationSummaryChannels(path::S, summaryFile::S) where S <: String
+function annotationSummaryChannels(path::S, summaryFile::S; lineCount = 50) where S <: String
   Ω = Vector{String}(undef, 0)
-
+  ç = 0
   for ł ∈ eachline(string(path, summaryFile))
-    if contains(ł, "Channel ")
+    ç += 1
+    if contains(ł, "Channel ") && ç <= lineCount
       push!(Ω, split(ł, " ")[end])
     end
   end
-
   return Ω
 end
 
