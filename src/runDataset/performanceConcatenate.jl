@@ -132,7 +132,7 @@ end
 ####################################################################################################
 
 writedlm(
-  string(shArgs["outDir"], "/", "screen/", replace(shArgs["annotation"], "-summary.txt" => "")),
+  string(shArgs["outDir"], "/", "screen/", replace(shArgs["annotation"], "-summary.txt" => ".csv")),
   writePerformance(sensitivitySpecificity(msHmmDc, msLabelAr)),
   ", ",
 )
@@ -165,7 +165,7 @@ end
 ####################################################################################################
 
 writedlm(
-  string(shArgs["outDir"], "/", "filterScreen/", replace(shArgs["annotation"], "-summary.txt" => "")),
+  string(shArgs["outDir"], "/", "filterScreen/", replace(shArgs["annotation"], "-summary.txt" => ".csv")),
   writePerformance(sensitivitySpecificity(msHmmDc, msLabelAr)),
   ", ",
 )
