@@ -69,9 +69,10 @@ channels = @chain begin
   filter(χ -> contains(χ, annot), _)
   filter(χ -> contains(χ, "model"), _)
   replace.(annot => "")
-  replace.(r"_\d\d_" => "")
+  replace.(r"_\d\d" => "")
   replace.("model.csv" => "")
   replace.("_" => "")
+  replace.("+" => "")
   unique()
 end
 
