@@ -87,8 +87,8 @@ channels = @chain begin
   readdir(mindHMM)
   filter(χ -> contains(χ, edf), _)
   filter(χ -> contains(χ, "model"), _)
-  replace.(_, string(edf, "_") => "")
-  replace.(_, "_model.csv" => "")
+  replace.(string(edf, "_") => "")
+  replace.("_model.csv" => "")
 end
 
 # load hmm
