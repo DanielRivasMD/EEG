@@ -26,8 +26,9 @@ end
 
 """
 
-    annotationReader(path::S, summaryFile::S)
+    annotationReader(path::S, summaryFile::S; verbose::B = false)
     where S <: String
+    where B <: Bool
 
 # Description
 Extract anomaly events from summary file [physionet]. Return a dictionary with files as keys.
@@ -35,9 +36,10 @@ Extract anomaly events from summary file [physionet]. Return a dictionary with f
 
 See also: [`annotationCalibrator`](@ref), [`labelParser`](@ref)
 """
-function annotationReader(path::S, summaryFile::S) where S <: String
+function annotationReader(path::S, summaryFile::S; verbose::B = false) where S <: String where B <: Bool
 
-  @info "Reading annotations..."
+  # verbose
+  if verbose @info "Reading annotations..." end
 
   annotDc = Dict{String, Vector{Tuple{Second, Second}}}()
   lastFile = ""
@@ -48,8 +50,10 @@ function annotationReader(path::S, summaryFile::S) where S <: String
   ϟ1 = false
   ϟ2 = false
 
+  # read file by lines
   for ł ∈ eachline(string(path, summaryFile))
 
+    # identify lines
     if contains(ł, "File Name")
       lastFile = getSeizureFile(ł)
       ϟ1 = true
@@ -65,6 +69,7 @@ function annotationReader(path::S, summaryFile::S) where S <: String
       end
     end
 
+    # collect on switches
     if ϟ1 && ϟ2
       ϟ2 = false
       annotDc[lastFile] = timeVc[2:end]
@@ -80,11 +85,14 @@ end
 
 """
 
-    annotationCalibrator(annotations::Vector{Tuple{Sc, Sc}};
-    recordFreq::Array{T, 1}, signalLength::T, shParams::D)
+    annotationCalibrator(annotations::VT;
+    recordFreq::V, signalLength::N, shParams::D, verbose::B = false)
+    where VT <: Vector{Tuple{Sc, Sc}}
     where Sc <: Second
-    where T <: Number
+    where V <: Vector{N}
+    where N <: Number
     where D <: Dict
+    where B <: Bool
 
 # Description
 Calibrate timestamp from summary file [physionet].
@@ -98,12 +106,15 @@ Calibrate timestamp from summary file [physionet].
 
 `shParams` dictionary with command line arguments to extract: `binSize` window bin size and `binOverlap` overlap.
 
+`verbose` set verbosity.
+
 
 See also: [`annotationReader`](@ref), [`labelParser`](@ref)
 """
-function annotationCalibrator(annotations::Vector{Tuple{Sc, Sc}}; recordFreq::Array{T, 1}, signalLength::T, shParams::D) where Sc <: Second where T <: Number where D <: Dict
+function annotationCalibrator(annotations::VT; recordFreq::V, signalLength::N, shParams::D, verbose::B = false) where VT <: Vector{Tuple{Sc, Sc}} where Sc <: Second where V <: Vector{N} where N <: Number where D <: Dict where B <: Bool
 
-  @info "Calibrating annotations..."
+  # verbose
+  if verbose @info "Calibrating annotations..." end
 
   # collect recording frecuency
   recFreq = begin
@@ -137,10 +148,12 @@ end
 """
 
     annotationCalibrator(xDf;
-    startTime::Tm, recordFreq::Array{T, 1}, signalLength::T, shParams::D)
+    startTime::Tm, recordFreq::V, signalLength::N, shParams::D, verbose::B = false)
     where Tm <: Time
-    where T <: Number
+    where V <: Vector{N}
+    where N <: Number
     where D <: Dict
+    where B <: Bool
 
 # Description
 Calibrate annotations from XLSX.
@@ -156,12 +169,15 @@ Calibrate annotations from XLSX.
 
 `shParams` dictionary with command line arguments to extract: `binSize` window bin size and `binOverlap` overlap.
 
+`verbose` set verbosity.
+
 
 See also: [`annotationReader`](@ref), [`labelParser`](@ref)
 """
-function annotationCalibrator(xDf; startTime::Tm, recordFreq::Array{T, 1}, signalLength::T, shParams::D) where Tm <: Time where T <: Number where D <: Dict
+function annotationCalibrator(xDf; startTime::Tm, recordFreq::V, signalLength::N, shParams::D, verbose::B = false) where Tm <: Time where V <: Vector{N} where N <: Number where D <: Dict where B <: Bool
 
-  @info "Calibrating annotations..."
+  # verbose
+  if verbose @info "Calibrating annotations..." end
 
   # collect recording frecuency
   recFreq = begin
@@ -219,17 +235,22 @@ end
 
 """
 
-    labelParser(ɒ::Array{T, 2}) where T <: Number
+    labelParser(ɒ::M;
+    verbose::B = false)
+    where M <: Matrix{N}
+    where N <: Number
+    where B <: Bool
 
 # Description
-Parse three-column array into binary encoding
+Parse three-column array into binary encoding.
 
 
 See also: [`annotationReader`](@ref), See also: [`annotationCalibrator`](@ref)
 """
-function labelParser(ɒ::Array{T, 2}) where T <: Number
+function labelParser(ɒ::M; verbose::B = false) where M <: Matrix{N} where N <: Number where B <: Bool
 
-  @info "Parsing annotations..."
+  # verbose
+  if verbose @info "Parsing annotations..." end
 
   lbSz = size(ɒ, 1)
   tmpAr = Array{String}(undef, lbSz, 1)
