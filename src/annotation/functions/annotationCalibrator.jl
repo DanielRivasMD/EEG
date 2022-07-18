@@ -10,8 +10,8 @@ end;
 """
 
     annotationReader(path::S, summaryFile::S; verbose::B = false)
-    where S <: String
-    where B <: Bool
+      where S <: String
+      where B <: Bool
 
 # Description
 Extract anomaly events from summary file [physionet]. Return a dictionary with files as keys.
@@ -69,13 +69,14 @@ end
 """
 
     annotationCalibrator(annotations::VT;
-    recordFreq::V, signalLength::N, shParams::D, verbose::B = false)
-    where VT <: Vector{Tuple{Sc, Sc}}
-    where Sc <: Second
-    where V <: Vector{N}
-    where N <: Number
-    where D <: Dict
-    where B <: Bool
+    recordFreq::V, signalLength::I, shParams::D, verbose::B = false)
+      where VT <: Vector{Tuple{Sc, Sc}}
+      where Sc <: Second
+      where V <: Vector{N}
+      where N <: Number
+      where I <: Int64
+      where D <: Dict
+      where B <: Bool
 
 # Description
 Calibrate timestamp from summary file [physionet].
@@ -94,7 +95,7 @@ Calibrate timestamp from summary file [physionet].
 
 See also: [`annotationReader`](@ref), [`labelParser`](@ref)
 """
-function annotationCalibrator(annotations::VT; recordFreq::V, signalLength::N, shParams::D, verbose::B = false) where VT <: Vector{Tuple{Sc, Sc}} where Sc <: Second where V <: Vector{N} where N <: Number where D <: Dict where B <: Bool
+function annotationCalibrator(annotations::VT; recordFreq::V, signalLength::I, shParams::D, verbose::B = false) where VT <: Vector{Tuple{Sc, Sc}} where Sc <: Second where V <: Vector{N} where N <: Number where I <: Int64 where D <: Dict where B <: Bool
 
   # verbose
   if verbose @info "Calibrating annotations..." end
@@ -132,11 +133,11 @@ end
 
     annotationCalibrator(xDf;
     startTime::Tm, recordFreq::V, signalLength::N, shParams::D, verbose::B = false)
-    where Tm <: Time
-    where V <: Vector{N}
-    where N <: Number
-    where D <: Dict
-    where B <: Bool
+      where Tm <: Time
+      where V <: Vector{N}
+      where N <: Number
+      where D <: Dict
+      where B <: Bool
 
 # Description
 Calibrate annotations from XLSX.
@@ -220,9 +221,9 @@ end
 
     labelParser(ɒ::M;
     verbose::B = false)
-    where M <: Matrix{N}
-    where N <: Number
-    where B <: Bool
+      where M <: Matrix{N}
+      where N <: Number
+      where B <: Bool
 
 # Description
 Parse three-column array into binary encoding.
@@ -251,7 +252,7 @@ end
 """
 
     annotationSummaryChannels(path::S, summaryFile::S)
-    where S <: String
+      where S <: String
 
 # Description
 Extract channels from summary file [physionet]. Return a vector of strings.
