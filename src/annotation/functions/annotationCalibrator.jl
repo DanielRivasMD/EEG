@@ -7,23 +7,6 @@ end;
 
 ####################################################################################################
 
-"obtain seizure time [physionet]"
-function getSeizureSec(annot::S) where S <: String
-  annot |> π -> findfirst(':', π) |> π -> getindex(annot, π + 2:length(annot)) |> π -> replace(π, " seconds" => "") |> Second
-end
-
-"obtain number seizure events [physionet]"
-function getSeizureNo(annot::S) where S <: String
-  annot |> π -> replace(π, "Number of Seizures in File: " => "") |> π -> parse(Int64, π)
-end
-
-"obtain file name [physionet]"
-function getSeizureFile(annot::S) where S <: String
-  annot |> π -> replace(π, "File Name: " => "") |> π -> replace(π, ".edf" => "")
-end
-
-####################################################################################################
-
 """
 
     annotationReader(path::S, summaryFile::S; verbose::B = false)
@@ -286,6 +269,23 @@ function annotationSummaryChannels(path::S, summaryFile::S; lineCount = 50) wher
     end
   end
   return Ω
+end
+
+####################################################################################################
+
+"obtain seizure time [physionet]"
+function getSeizureSec(annot::S) where S <: String
+  annot |> π -> findfirst(':', π) |> π -> getindex(annot, π + 2:length(annot)) |> π -> replace(π, " seconds" => "") |> Second
+end
+
+"obtain number seizure events [physionet]"
+function getSeizureNo(annot::S) where S <: String
+  annot |> π -> replace(π, "Number of Seizures in File: " => "") |> π -> parse(Int64, π)
+end
+
+"obtain file name [physionet]"
+function getSeizureFile(annot::S) where S <: String
+  annot |> π -> replace(π, "File Name: " => "") |> π -> replace(π, ".edf" => "")
 end
 
 ####################################################################################################
