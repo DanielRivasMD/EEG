@@ -5,6 +5,9 @@
 # declarations
 source('/Users/drivas/Factorem/EEG/src/config/config.R')
 
+# electrodes
+source(paste0(importDir, '/utilitiesR/electrodeID.R'))
+
 ####################################################################################################
 
 # load packages
