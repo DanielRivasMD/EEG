@@ -87,8 +87,8 @@ msHmmDc = Dict{String, HMM}(χ => HMM(Array{Float64}(undef, 0), Array{Float64}(u
 # iterate on file vector
 for ƒ ∈ shArgs["input"]
 
-  # log
-  @info ƒ
+  # # log
+  # @info ƒ
 
   ####################################################################################################
 
