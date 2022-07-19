@@ -39,7 +39,19 @@ for (ι in 1:24) {
   # check for non-empty dataframe
   if (dim(csv)[1] > 0) {
 
+    # add columns for ggplot
+    csv %<>% add_column('True Positive Rate' = csv[['Sensitivity']])
+    csv %<>% add_column('False Positive Rate' = 1 - csv[['Specificity']])
 
+    # assign planes
+    csv$plane <- NA
+
+    csv[csv[['Electrode']] %in% templeft, 'plane'] <- 'Temporal Left'
+    csv[csv[['Electrode']] %in% midleft, 'plane'] <- 'Central Left'
+    csv[csv[['Electrode']] %in% tempright, 'plane'] <- 'Temporal Right'
+    csv[csv[['Electrode']] %in% midright, 'plane'] <- 'Central Right'
+    csv[csv[['Electrode']] %in% mid, 'plane'] <- 'Central'
+    csv[csv[['Electrode']] %in% other, 'plane'] <- 'Other'
 
   }
 
