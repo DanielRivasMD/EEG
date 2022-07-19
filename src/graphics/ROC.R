@@ -14,7 +14,15 @@ require(tidyverse)
 ####################################################################################################
 
 # for (ƒ in list.files(mindScreen)) {
-for (ƒ in list.files(paste0(mindData, '/filterScreen'))) {
+# for (ƒ in list.files(paste0(mindData, '/filterScreen'))) {
+for (ι in 1:24) {
+
+  # adjust digits
+  if (ι < 10) {
+    ƒ <- paste0('chb', '0', ι, '.csv')
+  } else {
+    ƒ <- paste0('chb', ι, '.csv')
+  }
 
   # log
   print(ƒ)
