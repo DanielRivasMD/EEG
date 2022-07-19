@@ -53,6 +53,24 @@ for (ι in 1:24) {
     csv[csv[['Electrode']] %in% mid, 'plane'] <- 'Central'
     csv[csv[['Electrode']] %in% other, 'plane'] <- 'Other'
 
+    # ggplot
+    csv %>% ggplot(
+      aes(`False Positive Rate`, `True Positive Rate`)
+    ) +
+
+    geom_point(
+      aes(shape = plane)
+    ) +
+
+    theme_classic() +
+
+    ylim(0, 1) +
+
+    xlim(0, 1)
+
+    # save plot
+    ggsave(paste0(mindData, '/plot/', str_replace(ƒ, '.csv', '.png')), width = 16, height = 16)
+
   }
 
 }
