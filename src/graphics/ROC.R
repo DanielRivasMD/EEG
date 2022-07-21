@@ -11,8 +11,8 @@ source(paste0(importDir, '/utilitiesR/electrodeID.R'))
 ####################################################################################################
 
 # load packages
-require(magrittr)
-require(tidyverse)
+library(magrittr)
+library(tidyverse)
 
 ####################################################################################################
 
@@ -58,15 +58,29 @@ for (ι in 1:24) {
       aes(`False Positive Rate`, `True Positive Rate`)
     ) +
 
+    # points
     geom_point(
-      aes(shape = plane)
+      aes(
+        shape = plane,
+        size = 10,
+      ),
+      show.legend = FALSE,
     ) +
 
-    theme_classic() +
+    # in situ labels
+    directlabels::geom_dl(
+      aes(
+        label = plane,
+      ),
+      method = 'smart.grid',
+    ) +
 
+    # limits
     ylim(0, 1) +
+    xlim(0, 1) +
 
-    xlim(0, 1)
+    # theme
+    theme_classic()
 
     # save plot
     ggsave(paste0(mindData, '/plot/', str_replace(ƒ, '.csv', '.png')), width = 16, height = 16)
