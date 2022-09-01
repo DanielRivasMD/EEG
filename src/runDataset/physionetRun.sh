@@ -10,7 +10,7 @@
 # for bt in ${arr[@]}
 # do
 
-  bt=1..6
+  bt=1..12
 
   # iterate on patients
   for ix in {$bt}
