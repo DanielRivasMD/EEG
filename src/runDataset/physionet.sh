@@ -30,7 +30,7 @@ do
       --annotDir "${patient}/" \
       --outDir "/Users/drivas/Factorem/MindReader/data/" \
       --additional "annotationCalibrator.jl,fileReaderXLSX.jl" \
-      --addDir "/Users/drivas/Factorem/EEG/src/annotation/functions/" &> "/Users/drivas/Factorem/MindReader/data/log/${${edf//*\/}/edf/log}"
+      --addDir "/Users/drivas/Factorem/EEG/src/annotation/functions/" 1> "/Users/drivas/Factorem/MindReader/data/log/${${edf//*\/}/edf/log}" 2> "/Users/drivas/Factorem/MindReader/data/err/${${edf//*\/}/edf/err}"
 
   done
 done
