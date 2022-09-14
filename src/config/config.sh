@@ -26,6 +26,7 @@ mindData="${mindDir}/data"
 mindCSV="${mindData}/csv"
 mindHMM="${mindData}/hmm"
 mindLog="${mindData}/log"
+mindErr="${mindData}/err"
 mindScreen="${mindData}/screen"
 mindPlot="${mindData}/plot"
 
