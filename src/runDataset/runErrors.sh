@@ -15,6 +15,12 @@ do
   # declare edf
   edf="${err/err/edf}"
 
+  # patch directory
+  dir="${${edf//*\/}/_*/_}"
+  dir="${dir/a_/_}"
+  dir="${dir/b_/_}"
+  dir="${dir/_/}"
+
   # echo input file
   echo "EDF: ${${edf//*\/}/.edf/}"
 
@@ -23,7 +29,7 @@ do
     --project \
     "/Users/drivas/Factorem/MindReader/src/ReadMind.jl" \
     --input "${edf//*\/}" \
-    --inputDir "${patient}/" \
+    --inputDir "/Volumes/G/EEG/physionet.org/files/chbmit/1.0.0/${dir}/" \
     --params "Parameters.jl" \
     --paramsDir "/Users/drivas/Factorem/EEG/src/runDataset/" \
     --annotation "${annotation//*\/}" \
