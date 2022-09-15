@@ -4,8 +4,13 @@
 
 ####################################################################################################
 
+# collect arguments
+recordNumber=$1
+
+####################################################################################################
+
 # iterate on patient directories
-for patient in $(command find /Volumes/G/EEG/physionet.org/files/chbmit/1.0.0/* -type d -name "chb${1}")
+for patient in $(command find /Volumes/G/EEG/physionet.org/files/chbmit/1.0.0/* -type d -name "chb${recordNumber}")
 do
 
   # identify annotation file
