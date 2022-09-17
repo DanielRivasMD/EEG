@@ -9,7 +9,9 @@ end;
 
 # load packages
 begin
+  using DataFrames
   using DelimitedFiles
+  using EDF
   using Plots
   using RCall
 end;
@@ -60,17 +62,17 @@ begin
   end
 
   utilDir = string(mindDir, "/src/Utilities/")
-  include(string(utilDir, "fileReaderEDF.jl"))
+  include(string(utilDir, "readEDF.jl"))
 
   signalDir = string(mindDir, "/src/SignalProcessing/")
   include(string(signalDir, "signalBin.jl"))
 
-  annotDir = string(mindDir, "/src/Annotator/")
+  annotDir = string(srcDir, "/annotation/functions/")
   include(string(annotDir, "annotationCalibrator.jl"))
 
   dir = string(dataDir, "/physionet.org/files/chbmit/1.0.0/chb04/")
   xfile = "chb04-summary.txt"
-  annotFile = annotationReader(string(dir, xfile))
+  annotFile = annotationReader(dir, xfile)
   file = "chb04_28.edf"
   outimg = replace(file, ".edf" => "")
 
@@ -80,18 +82,23 @@ begin
   overlap = 4
 
   labelAr = annotationCalibrator(
-    annotFile[outimg],
-    startTime = startTime,
+    annotFile[outimg];
     recordFreq = recordFreq,
     signalLength = size(edfDf, 1),
-    binSize = winBin,
-    binOverlap = overlap
+    shParams = Dict(
+      "window-size" => winBin,
+      "bin-overlap" => overlap,
+    )
   )
 
   frThres = 120
   ç = 0
   for ρ ∈ eachrow(pt)
-    R"tmp <- peak_iden($ρ, 2)"
+
+    R"
+    tmp <- peak_iden($ρ, 2)
+    "
+
     @rget tmp
     global ç += 1
     insertcols!(tmp, :channel => ç)
@@ -124,11 +131,12 @@ begin
 
   labelSJ= annotationCalibrator(
     annotSJ,
-    startTime = startTime,
     recordFreq = recordFreq,
     signalLength = size(edfDf, 1),
-    binSize = winBin,
-    binOverlap = overlap
+    shParams = Dict(
+      "window-size" => winBin,
+      "bin-overlap" => overlap,
+    )
   )
 end;
 
