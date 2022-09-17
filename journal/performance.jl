@@ -43,17 +43,30 @@ end;
 ####################################################################################################
 
 begin
-  # load data
+
+  # read available files
   files = readdir(mindHMM)
 
+  # load data
   file = files |> π -> match.(r"chb04_28_(.*)states", π) |> π -> findall(!isnothing, π) |> π -> getindex(files, π)
 
-  smp = 57692
+  # declare variables
+  begin
+    smp = 57692
+    pt = Matrix{Int64}(undef, 22, 57692)
+    lx = 1:smp |> collect
+    ly = Vector{String}()
 
-  pt = Matrix{Int64}(undef, 22, 57692)
-  lx = 1:smp |> collect
-  ly = Vector{String}()
+    dir = string(dataDir, "/physionet.org/files/chbmit/1.0.0/chb04/")
+    xfile = "chb04-summary.txt"
+    file = "chb04_28.edf"
+    outimg = replace(file, ".edf" => "")
 
+    winBin = 256
+    overlap = 4
+  end;
+
+  # load channels
   for (ι, ƒ) ∈ enumerate(file)
     ψ = ƒ |> π -> replace(π, "chb04_28_" => "") |> π -> replace(π, "_states.csv" => "")
     @info ψ
@@ -61,26 +74,23 @@ begin
     pt[ι, :] .= readdlm(string(mindHMM, "/", ƒ))[2:end, 1] |> π -> convert.(Int64, π)
   end
 
-  utilDir = string(mindDir, "/src/Utilities/")
-  include(string(utilDir, "readEDF.jl"))
+  # load functions
+  begin
+    utilDir = string(mindDir, "/src/Utilities/")
+    include(string(utilDir, "readEDF.jl"))
 
-  signalDir = string(mindDir, "/src/SignalProcessing/")
-  include(string(signalDir, "signalBin.jl"))
+    signalDir = string(mindDir, "/src/SignalProcessing/")
+    include(string(signalDir, "signalBin.jl"))
 
-  annotDir = string(srcDir, "/annotation/functions/")
-  include(string(annotDir, "annotationCalibrator.jl"))
+    annotDir = string(srcDir, "/annotation/functions/")
+    include(string(annotDir, "annotationCalibrator.jl"))
+  end;
 
-  dir = string(dataDir, "/physionet.org/files/chbmit/1.0.0/chb04/")
-  xfile = "chb04-summary.txt"
-  annotFile = annotationReader(dir, xfile)
-  file = "chb04_28.edf"
-  outimg = replace(file, ".edf" => "")
-
+  # read edf file
   edfDf, startTime, recordFreq = getSignals(string(dir, file))
 
-  winBin = 256
-  overlap = 4
-
+  # read annotation
+  annotFile = annotationReader(dir, xfile)
   labelAr = annotationCalibrator(
     annotFile[outimg];
     recordFreq = recordFreq,
@@ -91,15 +101,18 @@ begin
     )
   )
 
+  # filter frames
   frThres = 120
   ç = 0
   for ρ ∈ eachrow(pt)
 
+    # identify peaks
     R"
     tmp <- peak_iden($ρ, 2)
     "
-
     @rget tmp
+
+    # load into dataframe
     global ç += 1
     insertcols!(tmp, :channel => ç)
     pgTmp = filter(:peak_length_ix => χ -> χ >= frThres, tmp)
@@ -112,23 +125,28 @@ begin
     end
   end
 
+  # prepare canvas matrix
   ms = ones(Int64, size(pt))
 
-  for r ∈ eachrow(pgDf)
-    ms[r.channel, convert(Int64, r.lower_lim_ix):convert.(Int64, r.upper_lim_ix)] .= 2
+  # load canvas matrix
+  for ρ ∈ eachrow(pgDf)
+    ms[ρ.channel, convert(Int64, ρ.lower_lim_ix):convert.(Int64, ρ.upper_lim_ix)] .= 2
   end
 
+  # declare manual annotations
   annotSJTime = [
-             "00:09:50"
-             "00:15:40"
-             "00:28:30"
-             "00:32:35"
-             "01:07:43"
-            ]
+    "00:09:50"
+    "00:15:40"
+    "00:28:30"
+    "00:32:35"
+    "01:07:43"
+  ]
 
+  # format annotations
   annotSJSec = Dates.Time.(annotSJTime) .- Dates.Time("0") |> p -> convert.(Second, p)
   annotSJ = [(annotSJSec[i], annotSJSec[i] + Second(60)) for i = eachindex(annotSJTime)]
 
+  # load manual annotations
   labelSJ= annotationCalibrator(
     annotSJ,
     recordFreq = recordFreq,
@@ -138,18 +156,21 @@ begin
       "bin-overlap" => overlap,
     )
   )
+
 end;
 
 ####################################################################################################
 
-hmASJ = heatmap(labelSJ |> permutedims, framestyle = :none, leg = :none, title = "SanJuan / Angel Annotations")
-hmAPh = heatmap(labelAr |> permutedims, framestyle = :none, leg = :none, title = "Physionet Annotations")
-hmRec = heatmap(lx, ly, pt, framestyle = :semi, leg = :none)
-hmMas = heatmap(lx, ly, ms, framestyle = :semi, leg = :none)
+# plot heatmaps
+hmASJ = heatmap(labelSJ |> permutedims, framestyle = :none, leg = :none, title = "SanJuan / Angel Annotations");
+hmAPh = heatmap(labelAr |> permutedims, framestyle = :none, leg = :none, title = "Physionet Annotations");
+hmRec = heatmap(lx, ly, pt, framestyle = :semi, leg = :none);
+hmMas = heatmap(lx, ly, ms, framestyle = :semi, leg = :none);
 plot(hmASJ, hmAPh, hmRec, hmMas, layout = grid(4, 1, heights = [0.05, 0.05, 0.45, 0.45]), dpi = 300)
 
 ####################################################################################################
 
+# barplot peak distribution
 δ |> π -> sort(π, :peak_length_ix, rev = true) |> π -> bar(π[:, :peak_length_ix], leg = :none, dpi = 300)
 
 ####################################################################################################
