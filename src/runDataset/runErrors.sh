@@ -4,7 +4,7 @@
 ####################################################################################################
 
 # declare batches
-arr=(annotation bounds inexact)
+arr=(annotation bounds inexact last)
 
 # iterate on error batches
 for bt in ${arr[@]}
