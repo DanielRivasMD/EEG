@@ -24,6 +24,7 @@ do
   dir="${${edf//*\/}/_*/_}"
   dir="${dir/a_/_}"
   dir="${dir/b_/_}"
+  dir="${dir/c_/_}"
   dir="${dir/_/}"
 
   # echo input file

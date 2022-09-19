@@ -14,6 +14,7 @@ mkdir "${mindData}/typeErr/annotation"
 mkdir "${mindData}/typeErr/inexact"
 mkdir "${mindData}/typeErr/bounds"
 mkdir "${mindData}/typeErr/last"
+mkdir "${mindData}/typeErr/patch"
 
 ####################################################################################################
 
@@ -75,8 +76,7 @@ done
 
 ####################################################################################################
 
-# after first round had been completed
-# select remainding errors
+# run failed due to lag on updating scripts related to empty channel error
 # iterate on errors
 for err in $(command find "${mindErr}" -type f)
 do
@@ -91,6 +91,27 @@ do
   if [[ ! -z "$errGrep" ]]
   then
     mv "${err}" "${mindData}/typeErr/last/"
+  fi
+
+done
+
+####################################################################################################
+
+# run failed due to suffx
+# iterate on errors
+for err in $(command find "${mindErr}" -type f)
+do
+
+  # echo err file
+  echo "${err}"
+
+  # grep errors
+  errGrep=$(grep -w ERROR "${err}")
+
+  # check error
+  if [[ ! -z "$errGrep" ]]
+  then
+    mv "${err}" "${mindData}/typeErr/patch/"
   fi
 
 done
