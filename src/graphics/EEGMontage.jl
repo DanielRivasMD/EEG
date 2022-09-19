@@ -65,7 +65,7 @@ end
 
 # conic mask
 conicMask = @chain begin
-  range(0, 3, length=101)
+  range(0, 3, length = 101)
   [sin(ι) * sin(ο) for ι ∈ _, ο ∈ _]
 end
 
