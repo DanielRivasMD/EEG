@@ -17,6 +17,7 @@ begin
   # hidden Markov model
   using HiddenMarkovModelReaders
 
+  # dependencies
   using DelimitedFiles
   using RCall
 
@@ -68,6 +69,9 @@ channels = @chain begin
   readdir(mindHMM)
   filter(χ -> contains(χ, annot), _)
   filter(χ -> contains(χ, "model"), _)
+  filter(χ -> !contains(χ, "_VNS_"), _)
+  filter(χ -> !contains(χ, "_-_"), _)
+  filter(χ -> !contains(χ, "_._"), _)
   replace.(annot => "")
   replace.(r"_\d\d" => "")
   replace.("model.csv" => "")
