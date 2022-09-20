@@ -29,6 +29,7 @@ for (ι in 1:24) {
 
   # load file
   csv <- read_csv(paste0(
+    # paste0(mindData, '/screen'), '/', ƒ),
     paste0(mindData, '/filterScreen'), '/', ƒ),
     show_col_types = FALSE,
   )
@@ -50,7 +51,8 @@ for (ι in 1:24) {
       las = 1,
       xlab = 'False Positive Rate',
       ylab = 'True Positive Rate',
-      main = 'Receiver Operating Characteristic (ROC) curve',
+      # main = 'Receiver Operating Characteristic (ROC) curve UNFILTERED',
+      main = 'Receiver Operating Characteristic (ROC) curve FILTERED',
       sub = ƒ %>% str_replace('.csv', ''),
     )
 
