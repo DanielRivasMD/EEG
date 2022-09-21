@@ -35,9 +35,6 @@ include(string(importDir, "/utilitiesJL/argParser.jl"));
 # split parameter into vector
 shArgs["input"] = shArgs["input"] |> π -> split(π, ",") |> π -> π[1:end - 1]
 
-# declare artificial state
-artificialState = 10.
-
 ####################################################################################################
 
 # include additional protocols
@@ -165,41 +162,10 @@ for (κ, υ) ∈ msHmmDc
 end
 
 ####################################################################################################
+
+# measure performance
 writedlm(
   string(shArgs["outDir"], "/", "screen/", replace(shArgs["annotation"], "-summary.txt" => ".csv")),
-  writePerformance(sensitivitySpecificity(msHmmDc, msLabelAr)),
-  ", ",
-)
-
-####################################################################################################
-
-# declare time threshold
-timeThres = 120
-
-# iterate on dictionary
-for (κ, υ) ∈ msHmmDc
-
-  # declare traceback
-  tb = υ.traceback
-
-  # identify peak
-  R" peakDf <- peak_iden($tb, 2) "
-  @rget peakDf
-
-  # reset traceback
-  υ.traceback = ones(υ.traceback |> length)
-
-  # assign peak values
-  for ρ ∈ eachrow(filter(:peak_length_ix => χ -> χ >= timeThres, peakDf))
-    υ.traceback[Int(ρ[:lower_lim_ix]):Int(ρ[:upper_lim_ix])] .= artificialState
-  end
-
-end
-
-####################################################################################################
-
-writedlm(
-  string(shArgs["outDir"], "/", "filterScreen/", replace(shArgs["annotation"], "-summary.txt" => ".csv")),
   writePerformance(sensitivitySpecificity(msHmmDc, msLabelAr)),
   ", ",
 )
