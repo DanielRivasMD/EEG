@@ -13,54 +13,61 @@ require(tidyverse)
 
 ####################################################################################################
 
-# for (ƒ in list.files(mindScreen)) {
-# for (ƒ in list.files(paste0(mindData, '/filterScreen'))) {
-for (ι in 1:24) {
+# ROC plotting function
+ROCplot <- function(path) {
 
-  # adjust digits
-  if (ι < 10) {
-    ƒ <- paste0('chb', '0', ι, '.csv')
-  } else {
-    ƒ <- paste0('chb', ι, '.csv')
-  }
+  # iterate on numbers
+  for (ι in 1:24) {
 
-  # log
-  print(ƒ)
+    # adjust digits
+    if (ι < 10) {
+      ο <- paste0('0', ι)
+    } else {
+      ο <- paste0(ι)
+    }
 
-  # load file
-  csv <- read_csv(paste0(
-    # paste0(mindData, '/screen'), '/', ƒ),
-    paste0(mindData, '/filterScreen'), '/', ƒ),
-    show_col_types = FALSE,
-  )
+    # declare file
+    ƒ <- paste0('chb', ο, '.csv')
 
-  # check for non-empty dataframe
-  if (dim(csv)[1] > 0) {
+    # log
+    print(ƒ)
 
-    # new device
-    quartz()
-
-    # plot
-    plot(
-      x = (1 - csv[['Specificity']]),
-      y = csv[['Sensitivity']],
-      pch = 16,
-      col = 'navyblue',
-      xlim = c(0, 1),
-      ylim = c(0, 1),
-      las = 1,
-      xlab = 'False Positive Rate',
-      ylab = 'True Positive Rate',
-      # main = 'Receiver Operating Characteristic (ROC) curve UNFILTERED',
-      main = 'Receiver Operating Characteristic (ROC) curve FILTERED',
-      sub = ƒ %>% str_replace('.csv', ''),
+    # load file
+    csv <- read_csv(paste0(mindData, '/', path, '/', ƒ),
+      show_col_types = FALSE,
     )
 
-    lines(
-      x = 0:1,
-      y = 0:1,
-      col = 'red',
-    )
+    # check for non-empty dataframe
+    if (dim(csv)[1] > 0) {
+
+      # open device
+      png(paste0(mindPlot, '/', 'chb', ο, '.png'), width = 15, height = 12, units = 'in', res = 900)
+
+      # plot
+      plot(
+        x = (1 - csv[['Specificity']]),
+        y = csv[['Sensitivity']],
+        pch = 16,
+        col = 'navyblue',
+        xlim = c(0, 1),
+        ylim = c(0, 1),
+        las = 1,
+        xlab = 'False Positive Rate',
+        ylab = 'True Positive Rate',
+        main = 'Receiver Operating Characteristic (ROC) curve',
+        sub = ƒ %>% str_replace('.csv', ''),
+      )
+
+      # add diagonal line
+      lines(
+        x = 0:1,
+        y = 0:1,
+        col = 'red',
+      )
+
+      # close device
+      dev.off()
+    }
   }
 }
 
