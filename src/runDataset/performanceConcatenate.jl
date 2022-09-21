@@ -83,8 +83,8 @@ end
 ####################################################################################################
 
 # declare master datatypes
-msLabelAr = Vector{Float64}(undef, 0)
-msHmmDc = Dict{String, HMM}(χ => HMM(Array{Float64}(undef, 0), Array{Float64}(undef, 0), Array{Float64}(undef, 0)) for χ = channels)
+msLabelAr = Vector{Int64}(undef, 0)
+msHmmDc = Dict{String, HMM}(χ => HMM(Array{Float64}(undef, 0), Array{Float64}(undef, 0), Array{Int64}(undef, 0)) for χ = channels)
 
 ####################################################################################################
 
