@@ -159,6 +159,12 @@ end
 
 ####################################################################################################
 
+# write concatenated traceback
+for (κ, υ) ∈ msHmmDc
+  writeHMM(string(mindHMM, "/", annot, "_", κ, "_traceback", ".csv"), υ.traceback, κ)
+end
+
+####################################################################################################
 writedlm(
   string(shArgs["outDir"], "/", "screen/", replace(shArgs["annotation"], "-summary.txt" => ".csv")),
   writePerformance(sensitivitySpecificity(msHmmDc, msLabelAr)),
