@@ -11,7 +11,7 @@ source "${HOME}/Factorem/EEG/src/config/config.sh"
 
 # declarations
 database="${dataDir}/chb-mit-scalp-eeg-database-1.0.0.zip"
-scriptJL="${runDataset}/performanceConcatenate.jl"
+scriptJL="${binDir}/julia/performanceConcatenate.jl"
 
 ####################################################################################################
 
@@ -74,7 +74,7 @@ do
     --input $(unzip -l "${database}" | awk -v ix="$(printf %02d $ix)" 'BEGIN{ORS = ","} {if ($NF  ~ "chb"ix && $NF ~ "edf$") {gsub("[\-.a-z0-9]*/", "", $NF); print $NF}}') \
     --inputDir "${dataDir}/" \
     --params "Parameters.jl" \
-    --paramsDir "${runDataset}/" \
+    --paramsDir "${binDir}/julia/" \
     --annotation "${summary}" \
     --annotDir "${dataDir}/" \
     --outDir "${mindData}" \
