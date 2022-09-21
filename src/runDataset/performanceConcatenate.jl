@@ -131,7 +131,17 @@ for ƒ ∈ shArgs["input"]
   ####################################################################################################
 
   # load hmm
-  hmmDc = reconstructHMM(string(mindHMM, "/"), edf, channels)
+  # hmmDc = reconstructHMM(string(mindHMM, "/"), edf, channels)
+
+  # load manually. catch non-present files
+  hmmDc = Dict{String, HMM}()
+  for κ ∈ channels
+    try
+      hmmDc[κ] = reconstructHMM(string(mindHMM, "/"), string(edf, "_", κ))
+    catch
+      hmmDc[κ] = HMM([zeros(0)], [zeros(0)], zeros(Int(size(edfDf, 1) / (shArgs["window-size"] / shArgs["bin-overlap"]))))
+    end
+  end
 
   ####################################################################################################
 
