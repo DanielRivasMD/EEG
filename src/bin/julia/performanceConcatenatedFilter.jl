@@ -84,6 +84,17 @@ end
 
 ####################################################################################################
 
+# load hidden Markov model
+msHmmDc = Dict{String, HMM}()
+for κ ∈ channels
+  msHmmDc[κ] = HMM([zeros(0)], [zeros(0)], HiddenMarkovModelReaders.readHMMtraceback(string(mindHMM, "/"), string(annot, "_", κ)))
+end
+
+# load labels
+msLabelAr = readdlm(string(mindLabel, "/", annot, ".csv"))[2:end] .|> Int
+
+####################################################################################################
+
 # iterate on dictionary
 for (κ, υ) ∈ msHmmDc
 
