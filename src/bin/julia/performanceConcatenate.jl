@@ -18,6 +18,7 @@ begin
   using HiddenMarkovModelReaders
 
   # dependencies
+  using CSV
   using DelimitedFiles
   using RCall
 
@@ -88,8 +89,8 @@ msHmmDc = Dict{String, HMM}(χ => HMM(Array{Float64}(undef, 0), Array{Float64}(u
 # iterate on file vector
 for ƒ ∈ shArgs["input"]
 
-  # # log
-  # @info ƒ
+  # log
+  @info ƒ
 
   ####################################################################################################
 
@@ -160,6 +161,9 @@ end
 for (κ, υ) ∈ msHmmDc
   writeHMM(string(mindHMM, "/", annot, "_", κ, "_traceback", ".csv"), υ.traceback, κ)
 end
+
+# write concatenated labels
+CSV.write(string(mindLabel, "/", annot, ".csv"), Tables.table(msLabelAr, header = [annot]))
 
 ####################################################################################################
 
