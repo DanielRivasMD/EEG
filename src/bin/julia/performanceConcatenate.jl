@@ -47,11 +47,6 @@ end
 
 ####################################################################################################
 
-# load peak identification function
-R" source(paste0($utilDir, '/peakIden.R')) "
-
-####################################################################################################
-
 # read annotation
 if haskey(shArgs, "annotation") && haskey(shArgs, "annotDir")
   annotFile = annotationReader(shArgs["annotDir"], shArgs["annotation"])
@@ -75,7 +70,7 @@ channels = @chain begin
   replace.("model.csv" => "")
   replace.("_" => "")
   replace.("+" => "")
-  unique()
+  unique(_)
 end
 
 ####################################################################################################
@@ -127,9 +122,6 @@ for ƒ ∈ shArgs["input"]
   )
 
   ####################################################################################################
-
-  # load hmm
-  # hmmDc = reconstructHMM(string(mindHMM, "/"), edf, channels)
 
   # load manually. catch non-present files
   hmmDc = Dict{String, HMM}()
