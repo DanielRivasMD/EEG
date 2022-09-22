@@ -32,18 +32,57 @@ include(string(importDir, "/utilitiesJL/argParser.jl"));
 
 ####################################################################################################
 
-# split parameter into vector
-shArgs["input"] = shArgs["input"] |> π -> split(π, ",") |> π -> π[1:end - 1]
+# include additional protocols
+if haskey(shArgs, "additional") && haskey(shArgs, "addDir")
+  for ι ∈ split(shArgs["additional"], ",")
+    include(string(shArgs["addDir"], ι))
+  end
+end
+
+####################################################################################################
+
+# read annotation
+if haskey(shArgs, "annotation") && haskey(shArgs, "annotDir")
+  annotFile = annotationReader(shArgs["annotDir"], shArgs["annotation"])
+end
+
+####################################################################################################
+
+# load peak identification function
+R" source(paste0($utilDir, '/peakIden.R')) "
+
+####################################################################################################
 
 # declare artificial state
 artificialState = 10.
-
-####################################################################################################
 
 # since sample per record = 256, window size = 256, & overlap = 4
 # then each bin represents 1 second of recording with 1 quarter of second offset
 # declare time threshold
 timeThres = 120
+
+####################################################################################################
+
+# trim file extension
+annot = replace(shArgs["annotation"], "-summary.txt" => "")
+
+# read available channels
+channels = @chain begin
+  readdir(mindHMM)
+  filter(χ -> contains(χ, annot), _)
+  filter(χ -> contains(χ, "model"), _)
+  filter(χ -> !contains(χ, "_VNS_"), _)
+  filter(χ -> !contains(χ, "_-_"), _)
+  filter(χ -> !contains(χ, "_._"), _)
+  replace.(annot => "")
+  replace.(r"_\d\d" => "")
+  replace.("model.csv" => "")
+  replace.("_" => "")
+  replace.("+" => "")
+  unique(_)
+end
+
+####################################################################################################
 
 # iterate on dictionary
 for (κ, υ) ∈ msHmmDc
