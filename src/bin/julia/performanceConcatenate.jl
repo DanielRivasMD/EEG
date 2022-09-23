@@ -21,6 +21,7 @@ begin
   using CSV
   using DelimitedFiles
   using RCall
+  using Tables
 
   # parameters
   using Parameters: @with_kw
@@ -68,6 +69,9 @@ channels = @chain begin
   replace.(annot => "")
   replace.(r"_\d\d" => "")
   replace.("model.csv" => "")
+  replace.("a" => "")
+  replace.("b" => "")
+  replace.("c" => "")
   replace.("_" => "")
   replace.("+" => "")
   unique(_)
