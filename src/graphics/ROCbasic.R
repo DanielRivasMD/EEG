@@ -41,7 +41,7 @@ ROCplot <- function(path) {
     if (dim(csv)[1] > 0) {
 
       # open device
-      png(paste0(mindPlot, '/', 'chb', ο, '.png'), width = 15, height = 12, units = 'in', res = 900)
+      png(paste0(mindPlot, '/', path, '/', 'chb', ο, '.png'), width = 15, height = 12, units = 'in', res = 900)
 
       # plot
       plot(
