@@ -12,12 +12,12 @@ function shArgParser(args)
 
         "--input", "-i"
         arg_type = String
-        required = true
+        required = false
         help = "`edf` file to read"
 
         "--inputDir", "-I"
         arg_type = String
-        required = true
+        required = false
         help = "`edf` file directory"
 
         "--params", "-p"
