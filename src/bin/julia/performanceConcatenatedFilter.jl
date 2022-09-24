@@ -59,7 +59,7 @@ artificialState = 10.
 # since sample per record = 256, window size = 256, & overlap = 4
 # then each bin represents 1 second of recording with 1 quarter of second offset
 # declare time threshold
-timeThres = 120
+timeThresholds = [120, 100, 80, 60, 40, 20]
 
 ####################################################################################################
 
@@ -87,44 +87,55 @@ end
 
 ####################################################################################################
 
-# load hidden Markov model
-msHmmDc = Dict{String, HMM}()
-for κ ∈ channels
-  msHmmDc[κ] = HMM([zeros(0)], [zeros(0)], HiddenMarkovModelReaders.readHMMtraceback(string(mindHMM, "/"), string(annot, "_", κ)))
-end
-
 # load labels
 msLabelAr = readdlm(string(mindLabel, "/", annot, ".csv"))[2:end] .|> Int
 
 ####################################################################################################
 
-# iterate on dictionary
-for (κ, υ) ∈ msHmmDc
+# iterate on thresholds
+for timeThres ∈ timeThresholds
 
-  # declare traceback
-  tb = υ.traceback
+  ####################################################################################################
 
-  # identify peak
-  R" peakDf <- peak_iden($tb, 2) "
-  @rget peakDf
-
-  # reset traceback
-  υ.traceback = ones(υ.traceback |> length)
-
-  # assign peak values
-  for ρ ∈ eachrow(filter(:peak_length_ix => χ -> χ >= timeThres, peakDf))
-    υ.traceback[Int(ρ[:lower_lim_ix]):Int(ρ[:upper_lim_ix])] .= artificialState
+  # load hidden Markov model
+  msHmmDc = Dict{String, HMM}()
+  for κ ∈ channels
+    msHmmDc[κ] = HMM([zeros(0)], [zeros(0)], HiddenMarkovModelReaders.readHMMtraceback(string(mindHMM, "/"), string(annot, "_", κ)))
   end
 
+  ####################################################################################################
+
+  # iterate on dictionary
+  for (κ, υ) ∈ msHmmDc
+
+    # declare traceback
+    tb = υ.traceback
+
+    # identify peak
+    R" peakDf <- peak_iden($tb, 2) "
+    @rget peakDf
+
+    # reset traceback
+    υ.traceback = ones(υ.traceback |> length)
+
+    # assign peak values
+    for ρ ∈ eachrow(filter(:peak_length_ix => χ -> χ >= timeThres, peakDf))
+      υ.traceback[Int(ρ[:lower_lim_ix]):Int(ρ[:upper_lim_ix])] .= artificialState
+    end
+
+  end
+
+  ####################################################################################################
+
+  # measure performance
+  writedlm(
+    string(shArgs["outDir"], "/", "roc/", timeThres, "/", replace(shArgs["annotation"], "-summary.txt" => ".csv")),
+    writePerformance(sensitivitySpecificity(msHmmDc, msLabelAr)),
+    ", ",
+  )
+
+  ####################################################################################################
+
 end
-
-####################################################################################################
-
-# measure performance
-writedlm(
-  string(shArgs["outDir"], "/", "filterScreen/", replace(shArgs["annotation"], "-summary.txt" => ".csv")),
-  writePerformance(sensitivitySpecificity(msHmmDc, msLabelAr)),
-  ", ",
-)
 
 ####################################################################################################
