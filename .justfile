@@ -53,8 +53,8 @@ _default:
 
 ####################################################################################################
 
-# collect time stampts
-@Vesta-performance:
+# concatenate model traceback & calculate performance
+@Vesta-concatenate:
   source src/bin/shell/performanceConcatenate.sh
 
 ####################################################################################################
