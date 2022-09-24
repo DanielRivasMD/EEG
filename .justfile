@@ -58,3 +58,9 @@ _default:
   source src/bin/shell/performanceConcatenate.sh
 
 ####################################################################################################
+
+# apply post processing filter & calculate performance
+@Vesta-filter:
+  source src/bin/shell/performanceConcatenatedFilter.sh
+
+####################################################################################################
