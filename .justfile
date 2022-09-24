@@ -64,3 +64,9 @@ _default:
   source src/bin/shell/performanceConcatenatedFilter.sh
 
 ####################################################################################################
+
+# plot roc curve performance
+@Vesta-plot:
+  R --vanilla --slave src/graphics/ROCbasic.R
+
+####################################################################################################
