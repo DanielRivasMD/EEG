@@ -32,43 +32,56 @@ ROCplot <- function(path) {
     # log
     print(ƒ)
 
-    # load file
-    csv <- read_csv(paste0(mindData, '/', path, '/', ƒ),
-      show_col_types = FALSE,
-    )
+    if (file.exists(paste0(mindData, '/', 'roc', '/', path, '/', ƒ))) {
 
-    # check for non-empty dataframe
-    if (dim(csv)[1] > 0) {
-
-      # open device
-      png(paste0(mindPlot, '/', path, '/', 'chb', ο, '.png'), width = 15, height = 12, units = 'in', res = 900)
-
-      # plot
-      plot(
-        x = (1 - csv[['Specificity']]),
-        y = csv[['Sensitivity']],
-        pch = 16,
-        col = 'navyblue',
-        xlim = c(0, 1),
-        ylim = c(0, 1),
-        las = 1,
-        xlab = 'False Positive Rate',
-        ylab = 'True Positive Rate',
-        main = 'Receiver Operating Characteristic (ROC) curve',
-        sub = ƒ %>% str_replace('.csv', ''),
+      # load file
+      csv <- read_csv(paste0(mindData, '/', 'roc', '/', path, '/', ƒ),
+        show_col_types = FALSE,
       )
 
-      # add diagonal line
-      lines(
-        x = 0:1,
-        y = 0:1,
-        col = 'red',
-      )
+      # check for non-empty dataframe
+      if (dim(csv)[1] > 0) {
 
-      # close device
-      dev.off()
+        # open device
+        png(paste0(mindPlot, '/', path, '/', 'chb', ο, '.png'), width = 15, height = 12, units = 'in', res = 900)
+
+        # plot
+        plot(
+          x = (1 - csv[['Specificity']]),
+          y = csv[['Sensitivity']],
+          pch = 16,
+          col = 'navyblue',
+          xlim = c(0, 1),
+          ylim = c(0, 1),
+          las = 1,
+          xlab = 'False Positive Rate',
+          ylab = 'True Positive Rate',
+          main = 'Receiver Operating Characteristic (ROC) curve',
+          sub = ƒ %>% str_replace('.csv', ''),
+        )
+
+        # add diagonal line
+        lines(
+          x = 0:1,
+          y = 0:1,
+          col = 'red',
+        )
+
+        # close device
+        dev.off()
+      }
     }
   }
+}
+
+####################################################################################################
+
+# declare filters
+timeThresholds <- c(120, 100, 80, 60, 40, 20)
+
+# iterate on filters
+for (ft in timeThresholds) {
+  ROCplot(ft)
 }
 
 ####################################################################################################
