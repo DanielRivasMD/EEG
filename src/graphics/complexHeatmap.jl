@@ -33,7 +33,8 @@ end;
 # identify files to load
 states = @chain begin
   readdir(mindHMM)
-  filter(χ -> occursin("chb04_28", χ) && occursin("states", χ), _)
+  filter(χ -> occursin("chb04_28", χ), _)
+  filter(χ -> occursin("traceback", χ), _)
 end
 
 ####################################################################################################

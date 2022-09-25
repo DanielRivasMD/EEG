@@ -18,6 +18,9 @@ end
 # load packages
 begin
   using Images
+
+  # Makie
+  using CairoMakie
 end;
 
 ####################################################################################################
@@ -30,8 +33,18 @@ end;
 
 ####################################################################################################
 
-# load backtrace dataframe
-df = readdf("/Users/drivas/Factorem/MindReader/data/csv/sample.csv", ',')
+# identify files to load
+states = @chain begin
+  readdir(mindHMM)
+  filter(χ -> occursin("chb04_28", χ), _)
+  filter(χ -> occursin("traceback", χ), _)
+end
+
+####################################################################################################
+
+# read files into dataframe array & concatenate
+df = [readdf(string(mindHMM, "/", ι), ',') for ι ∈ states]
+df = hcat(df...)
 
 ####################################################################################################
 
