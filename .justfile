@@ -34,10 +34,10 @@ _default:
 ####################################################################################################
 
 ####################################################################################################
-# local analysis
+# Vesta
 ####################################################################################################
 
-# Vesta is the virgin goddess of the hearth, home, and family in Roman religion.
+# Vesta (Classical Latin: [ˈu̯ɛs̠t̪ä]) is the virgin goddess of the hearth, home, and family in Roman religion.
 # She was rarely depicted in human form, and was more often represented by the fire of her temple in the Forum Romanum.
 # Entry to her temple was permitted only to her priestesses, the Vestal Virgins, who guarded particular sacred objects within, prepared flour and sacred salt (mola salsa) for official sacrifices, and tended Vesta's sacred fire at the temple hearth.
 # Their virginity was thought essential to Rome's survival; if found guilty of inchastity, they were punished by burial alive.
@@ -50,6 +50,14 @@ _default:
 # Vesta was among the Dii Consentes, twelve of the most honored gods in the Roman pantheon.
 # She was the daughter of Saturn and Ops, and sister of Jupiter, Neptune, Pluto, Juno, and Ceres.
 # Her Greek equivalent is Hestia.
+
+# In Ancient Greek religion and mythology, Hestia (/ˈhɛstiə, ˈhɛstʃə/; Greek: Ἑστία, "hearth" or "fireside") is the virgin goddess of the hearth, the right ordering of domesticity, the family, the home, and the state.
+# In myth, she is the firstborn child of the Titans Cronus and Rhea.[1]
+
+# Greek custom required that as the goddess of sacrificial fire, Hestia should receive the first offering at every sacrifice in the household.
+# In the public domain, the hearth of the prytaneum functioned as her official sanctuary.
+# Whenever a new colony was established, a flame from Hestia's public hearth in the mother city would be carried to the new settlement.
+# The goddess Vesta is her Roman equivalent.
 
 ####################################################################################################
 
