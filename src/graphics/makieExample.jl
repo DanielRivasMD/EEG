@@ -107,19 +107,27 @@ colgap!(gb, 10)
 rowgap!(gb, 10)
 
 ################################################################################
+
+# load data
 brain = load(assetpath("brain.stl"))
 
+# panel C layout & title
 ax3d = Axis3(gc[1, 1], title = "Brain activation")
+
+# render mesh
 m = mesh!(
-    ax3d,
-    brain,
-    color = [tri[1][2] for tri in brain for i in 1:3],
-    colormap = Reverse(:magma),
+  ax3d,
+  brain,
+  color = [tri[1][2] for tri ∈ brain for i ∈ 1:3],
+  colormap = Reverse(:magma),
 )
+
+# annotation
 Colorbar(gc[1, 2], m, label = "BOLD level")
 
 axs = [Axis(gd[row, col]) for row in 1:3, col in 1:2]
 hidedecorations!.(axs, grid = false, label = false)
+################################################################################
 
 for row in 1:3, col in 1:2
     xrange = col == 1 ? (0:0.1:6pi) : (0:0.1:10pi)
