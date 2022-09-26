@@ -168,17 +168,18 @@ n_day_2 = length(0:0.1:10pi)
 colsize!(gd, 1, Auto(n_day_1))
 colsize!(gd, 2, Auto(n_day_2))
 
-for (label, layout) in zip(["A", "B", "C", "D"], [ga, gb, gc, gd])
-    Label(layout[1, 1, TopLeft()], label,
-        textsize = 26,
-        font = "TeX Gyre Heros Bold",
-        padding = (0, 5, 5, 0),
-        halign = :right)
 ################################################################################
+
+# overall layout
+for (label, layout) ∈ zip(["A", "B", "C", "D"], [ga, gb, gc, gd])
+  Label(layout[1, 1, TopLeft()], label, textsize = 26, padding = (0, 5, 5, 0), halign = :right)
 end
 
-colsize!(f.layout, 1, Auto(0.5))
+# layout size
+colsize!(φ.layout, 1, Auto(0.5))
+rowsize!(g_cd, 1, Auto(1.5))
 
-rowsize!(gcd, 1, Auto(1.5))
+# save plot
+save("data/layoutTutorial.svg", φ)
 
-f
+################################################################################
