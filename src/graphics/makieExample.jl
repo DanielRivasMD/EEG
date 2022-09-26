@@ -125,39 +125,46 @@ m = mesh!(
 # annotation
 Colorbar(gc[1, 2], m, label = "BOLD level")
 
-axs = [Axis(gd[row, col]) for row in 1:3, col in 1:2]
-hidedecorations!.(axs, grid = false, label = false)
 ################################################################################
 
-for row in 1:3, col in 1:2
-    xrange = col == 1 ? (0:0.1:6pi) : (0:0.1:10pi)
+# panel D layout
+axs = [MakieLayout.Axis(gd[row, col]) for row ∈ 1:3, col ∈ 1:2]
 
-    eeg = [sum(sin(pi * rand() + k * x) / k for k in 1:10)
-        for x in xrange] .+ 0.1 .* randn.()
+# panel title
+Label(gd[1, :, Top()], "EEG traces", valign = :bottom, padding = (0, 0, 5, 0))
 
-    lines!(axs[row, col], eeg, color = (:black, 0.5))
+# hide decorations
+hidedecorations!.(axs, grid = false, label = false)
+
+# render line plots
+for row ∈ 1:3, col ∈ 1:2
+  xrange = col == 1 ? (0:0.1:6pi) : (0:0.1:10pi)
+  eeg = [sum(sin(pi * rand() + k * x) / k for k ∈ 1:10) for x ∈ xrange] .+ 0.1 .* randn.()
+  lines!(axs[row, col], eeg, color = (:black, 0.5))
 end
 
+# axes labels
 axs[3, 1].xlabel = "Day 1"
 axs[3, 2].xlabel = "Day 2"
 
-Label(gd[1, :, Top()], "EEG traces", valign = :bottom,
-    font = "TeX Gyre Heros Bold",
-    padding = (0, 0, 5, 0))
-
+# spacing
 rowgap!(gd, 10)
 colgap!(gd, 10)
 
-for (i, label) in enumerate(["sleep", "awake", "test"])
-    Box(gd[i, 3], color = :gray90)
-    Label(gd[i, 3], label, rotation = pi/2, tellheight = false)
+# axes labels
+for (i, label) ∈ enumerate(["sleep", "awake", "test"])
+  Box(gd[i, 3], color = :gray90)
+  Label(gd[i, 3], label, rotation = pi/2, tellheight = false)
 end
 
+# spacing
 colgap!(gd, 2, 0)
 
+# plot size
 n_day_1 = length(0:0.1:6pi)
 n_day_2 = length(0:0.1:10pi)
 
+# layout size
 colsize!(gd, 1, Auto(n_day_1))
 colsize!(gd, 2, Auto(n_day_2))
 
@@ -167,6 +174,7 @@ for (label, layout) in zip(["A", "B", "C", "D"], [ga, gb, gc, gd])
         font = "TeX Gyre Heros Bold",
         padding = (0, 5, 5, 0),
         halign = :right)
+################################################################################
 end
 
 colsize!(f.layout, 1, Auto(0.5))
