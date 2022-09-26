@@ -66,32 +66,47 @@ rowgap!(ga, 10)
 
 ################################################################################
 
+# declare panel B ranges
 xs = LinRange(0.5, 6, 50)
 ys = LinRange(0.5, 6, 50)
-data1 = [sin(x^1.5) * cos(y^0.5) for x in xs, y in ys] .+ 0.1 .* randn.()
-data2 = [sin(x^0.8) * cos(y^1.5) for x in xs, y in ys] .+ 0.1 .* randn.()
 
-ax1, hm = contourf(gb[1, 1], xs, ys, data1,
-    levels = 6)
+# create random data
+data1 = [sin(x ^ 1.5) * cos(y ^ 0.5) for x ∈ xs, y ∈ ys] .+ 0.1 .* randn.()
+data2 = [sin(x ^ 0.8) * cos(y ^ 1.5) for x ∈ xs, y ∈ ys] .+ 0.1 .* randn.()
+
+# declare upper layout
+ax1, hm = contourf(gb[1, 1], xs, ys, data1, levels = 6)
+
+# title
 ax1.title = "Histological analysis"
+
+# render heatmap
 contour!(ax1, xs, ys, data1, levels = 5, color = :black)
+
+# hide decorations
 hidexdecorations!(ax1)
 
-ax2, hm2 = contourf(gb[2, 1], xs, ys, data2,
-    levels = 6)
+# declare lower layout
+ax2, hm2 = contourf(gb[2, 1], xs, ys, data2, levels = 6)
+
+# render heatmap
 contour!(ax2, xs, ys, data2, levels = 5, color = :black)
 
+# color annotations
 cb = Colorbar(gb[1:2, 2], hm, label = "cell group")
 low, high = extrema(data1)
 edges = range(low, high, length = 7)
 centers = (edges[1:6] .+ edges[2:7]) .* 0.5
 cb.ticks = (centers, string.(1:6))
 
+# annotation alignment
 cb.alignmode = Mixed(right = 0)
 
+# spacing
 colgap!(gb, 10)
 rowgap!(gb, 10)
 
+################################################################################
 brain = load(assetpath("brain.stl"))
 
 ax3d = Axis3(gc[1, 1], title = "Brain activation")
