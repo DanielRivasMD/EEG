@@ -1,47 +1,70 @@
+################################################################################
+
+# load modules
 using CairoMakie
 using Makie.FileIO
+using Images
 
-f = Figure(backgroundcolor = RGBf(0.98, 0.98, 0.98),
-    resolution = (1000, 700))
-ga = f[1, 1] = GridLayout()
-gb = f[2, 1] = GridLayout()
-gcd = f[1:2, 2] = GridLayout()
-gc = gcd[1, 1] = GridLayout()
-gd = gcd[2, 1] = GridLayout()
-axtop = Axis(ga[1, 1])
-axmain = Axis(ga[2, 1], xlabel = "before", ylabel = "after")
-axright = Axis(ga[2, 2])
+################################################################################
 
+# declare canvas
+φ = Figure(backgroundcolor = RGB(0.98, 0.98, 0.98), resolution = (1000, 700))
+
+# declare general layout
+ga = φ[1, 1] = GridLayout()
+gb = φ[2, 1] = GridLayout()
+g_cd = φ[1:2, 2] = GridLayout()
+gc = g_cd[1, 1] = GridLayout()
+gd = g_cd[2, 1] = GridLayout()
+
+################################################################################
+
+# create random data
+data = randn(3, 100, 2) .+ [1, 3, 5]
+
+# declare panel A layout
+axtop = MakieLayout.Axis(ga[1, 1])
+axmain = MakieLayout.Axis(ga[2, 1], xlabel = "before", ylabel = "after")
+axright = MakieLayout.Axis(ga[2, 2])
+
+# panel title
+Label(ga[1, 1:2, Top()], "Stimulus ratings", valign = :bottom, padding = (0, 0, 5, 0))
+
+# link axes
 linkyaxes!(axmain, axright)
 linkxaxes!(axmain, axtop)
 
+# declare labels
 labels = ["treatment", "placebo", "control"]
-data = randn(3, 100, 2) .+ [1, 3, 5]
 
-for (label, col) in zip(labels, eachslice(data, dims = 1))
-    scatter!(axmain, col, label = label)
-    density!(axtop, col[:, 1])
-    density!(axright, col[:, 2], direction = :y)
+# render plot
+for (label, col) ∈ zip(labels, eachslice(data, dims = 1))
+  scatter!(axmain, col, label = label)
+  density!(axtop, col[:, 1])
+  density!(axright, col[:, 2], direction = :y)
 end
 
+# axes limitis
 ylims!(axtop, low = 0)
 xlims!(axright, low = 0)
 
+# explitic ticks
 axmain.xticks = 0:3:9
 axtop.xticks = 0:3:9
 
+# figure legend
 leg = Legend(ga[1, 2], axmain)
-
-hidedecorations!(axtop, grid = false)
-hidedecorations!(axright, grid = false)
 leg.tellheight = true
 
+# hide decorations
+hidedecorations!(axtop, grid = false)
+hidedecorations!(axright, grid = false)
+
+# spacing
 colgap!(ga, 10)
 rowgap!(ga, 10)
 
-Label(ga[1, 1:2, Top()], "Stimulus ratings", valign = :bottom,
-    font = "TeX Gyre Heros Bold",
-    padding = (0, 0, 5, 0))
+################################################################################
 
 xs = LinRange(0.5, 6, 50)
 ys = LinRange(0.5, 6, 50)
