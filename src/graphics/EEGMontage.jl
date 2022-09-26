@@ -49,7 +49,21 @@ df = hcat(df...)
 ####################################################################################################
 
 # load image & permute dimensions
-img = load("assets/EEGMontage.png") |> permutedims
+img = load("assets/EEGMontage.png") |> permutedims |> π -> π[:, end:-1:1]
+
+φ = Figure()
+
+gl = φ[1, 1] = GridLayout()
+render = MakieLayout.Axis(gl[1, 1])
+
+# render image
+image!(render, img)
+
+# hide decorations
+hidedecorations!(render)
+
+# save figure
+save("data/img.svg", φ)
 
 ####################################################################################################
 
