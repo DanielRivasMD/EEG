@@ -119,7 +119,7 @@ end
 rangeSize = 100
 
 # defined arbitrary extract points
-extractPoints = [500, 2800, 5000]
+extractPoints = [1215, 2800, 5000]
 
 ####################################################################################################
 
@@ -128,15 +128,15 @@ for ι ∈ extractPoints
 
   # BUG: electrodes is an unipolar dictionary
   # use arbitrary electrodes to generate image
-  γ = 0
+  ç = 0
 
   # redefine matrix
   toHeat = zeros(size(montageβ))
 
   # iterate on electrodes
   for (κ, υ) ∈ electrodes
-    γ += 1
-    toHeat[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .= montageβ[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .* conicMask .* df[ι, γ]
+    ç += 1
+    toHeat[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .= montageβ[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .* conicMask .* df[ι, ç]
   end
 
   # write
