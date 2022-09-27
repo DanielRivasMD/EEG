@@ -19,6 +19,9 @@ end
 begin
   using Images
 
+  # ai models
+  using AImodels
+
   # Makie
   using CairoMakie
 end;
@@ -147,5 +150,28 @@ for ι ∈ extractPoints
   )
 
 end
+
+####################################################################################################
+
+# normalize by min-max
+normHeat = minMax(toHeat)
+
+# clone image
+heatβ = copy(img)
+
+# iterate on rows & cols
+for ι ∈ eachindex(eachrow(heatβ)), ο ∈ eachindex(eachcol(heatβ))
+  # substitute electrode positions
+  if toHeat[ι, ο] > 0
+    val = abs(normHeat[ι, ο] - 1)
+    val > 1 && @info ι, ο, normHeat[ι, ο]
+    heatβ[ι, ο] = RGBA(val, val, val, img[ι, ο].alpha)
+  end
+end
+
+####################################################################################################
+
+# render image
+renderImg(heatβ, "data/img.svg")
 
 ####################################################################################################
