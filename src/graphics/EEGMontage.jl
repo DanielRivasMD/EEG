@@ -87,14 +87,12 @@ end
 ####################################################################################################
 
 # image post masking
-imgβ = Array{RGBA,2}(undef, size(img))
-for ι ∈ 1:(size(imgβ, 1))
-  for ο ∈ 1:(size(imgβ, 2))
-    if !(montageβ[ι, ο] |> π -> convert(Bool, π))
-      imgβ[ι, ο] = RGBA(img[ι, ο].r, img[ι, ο].g, img[ι, ο].b, img[ι, ο].alpha)
-    else
-      imgβ[ι, ο] = RGBA(0, 0, 0, 0)
-    end
+imgβ = Array{RGBA, 2}(undef, size(img))
+for ι ∈ eachindex(eachrow(imgβ)), ο ∈ eachindex(eachcol(imgβ))
+  if !(montageβ[ι, ο] |> π -> convert(Bool, π))
+    imgβ[ι, ο] = RGBA(img[ι, ο].r, img[ι, ο].g, img[ι, ο].b, img[ι, ο].alpha)
+  else
+    imgβ[ι, ο] = RGBA(0, 0, 0, 0)
   end
 end
 
