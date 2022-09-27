@@ -17,6 +17,8 @@ end
 
 # load packages
 begin
+  using ImageTransformations
+
   # Makie
   using CairoMakie
 end;
@@ -64,7 +66,7 @@ writedf(string(mindCSV, "/chb04_28.csv"), df, ',')
 # plot matrix
 heatmap!(
   ξ,
-  df |> Matrix,
+  df |> Matrix |> π -> imresize(π, (Int(size(df, 1) / 4), size(df, 2))),
   colormap = :cherry,
 )
 
