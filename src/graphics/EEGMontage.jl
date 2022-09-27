@@ -28,6 +28,29 @@ end;
 
 ####################################################################################################
 
+"wrapper over Makie image"
+function renderImg(mt, out)
+
+  # declare figure
+  φ = Figure()
+
+  # customize layout
+  gl = φ[1, 1] = GridLayout()
+  render = MakieLayout.Axis(gl[1, 1])
+
+  # render image
+  image!(render, mt)
+
+  # hide decorations
+  hidedecorations!(render)
+
+  # save figure
+  save(out, φ)
+
+end
+
+####################################################################################################
+
 # load modules
 begin
   include(string(utilDir, "/ioDataFrame.jl"))
@@ -51,41 +74,18 @@ df = hcat(df...)
 
 ####################################################################################################
 
-# sample row
-# DataFrameRow
-#   Row │ C3-P3    C4-P4    CZ-PZ    F3-C3    F4-C4    F7-T7    F8-T8    FP1-F3   FP1-F7   FP2-F4   FP2-F8   FT10-T8  FT9-FT10  FZ-CZ    P3-O1    P4-O2    P7-O1    P7-T7    P8-O2    T7-FT9   T7-P7    T8-P8
-#       │ Float64  Float64  Float64  Float64  Float64  Float64  Float64  Float64  Float64  Float64  Float64  Float64  Float64   Float64  Float64  Float64  Float64  Float64  Float64  Float64  Float64  Float64
-# ──────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-#  1215 │     3.0      1.0      1.0      4.0      3.0      2.0      2.0      2.0      5.0      2.0      3.0      2.0       2.0      2.0      2.0      2.0      2.0      2.0      2.0      2.0      3.0      2.0
-sampleRow = [3.0, 1.0, 1.0, 4.0, 3.0, 2.0, 2.0, 2.0, 5.0, 2.0, 3.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 3.0, 2.0]
+# # sample row 1215
+# # DataFrameRow
+# #   Row │ C3-P3    C4-P4    CZ-PZ    F3-C3    F4-C4    F7-T7    F8-T8    FP1-F3   FP1-F7   FP2-F4   FP2-F8   FT10-T8  FT9-FT10  FZ-CZ    P3-O1    P4-O2    P7-O1    P7-T7    P8-O2    T7-FT9   T7-P7    T8-P8
+# #       │ Float64  Float64  Float64  Float64  Float64  Float64  Float64  Float64  Float64  Float64  Float64  Float64  Float64   Float64  Float64  Float64  Float64  Float64  Float64  Float64  Float64  Float64
+# # ──────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+# #  1215 │     3.0      1.0      1.0      4.0      3.0      2.0      2.0      2.0      5.0      2.0      3.0      2.0       2.0      2.0      2.0      2.0      2.0      2.0      2.0      2.0      3.0      2.0
+# sampleRow = [3.0, 1.0, 1.0, 4.0, 3.0, 2.0, 2.0, 2.0, 5.0, 2.0, 3.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 3.0, 2.0]
 
  ####################################################################################################
 
 # load image & permute dimensions
 img = load("assets/EEGMontage.png") |> permutedims |> π -> π[:, end:-1:1]
-
-function renderImg(mt, out)
-
-  # declare figure
-  φ = Figure()
-
-  # customize layout
-  gl = φ[1, 1] = GridLayout()
-  render = MakieLayout.Axis(gl[1, 1])
-
-  # render image
-  image!(render, mt)
-
-  # hide decorations
-  hidedecorations!(render)
-
-  # save figure
-  save(out, φ)
-
-end
-
-# render image
-renderImg(img, "data/img.svg")
 
 ####################################################################################################
 
@@ -94,18 +94,6 @@ montageβ = @chain img begin
   map(χ -> findall(χ.b > 0), _)
   sum.(_)
   convert.(Float64, _)
-end
-
-####################################################################################################
-
-# image post masking
-imgβ = Array{RGBA, 2}(undef, size(img))
-for ι ∈ eachindex(eachrow(imgβ)), ο ∈ eachindex(eachcol(imgβ))
-  if !(montageβ[ι, ο] |> π -> convert(Bool, π))
-    imgβ[ι, ο] = RGBA(img[ι, ο].r, img[ι, ο].g, img[ι, ο].b, img[ι, ο].alpha)
-  else
-    imgβ[ι, ο] = RGBA(0, 0, 0, 0)
-  end
 end
 
 ####################################################################################################
