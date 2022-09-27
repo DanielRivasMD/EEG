@@ -61,6 +61,8 @@ writedf(string(mindCSV, "/chb04_28.csv"), df, ',')
   title = "Heatmap representing all channels during length of recording",
   xlabel = "Time along EEG recording",
   yticks = (1:size(df, 2), df |> names),
+  xticksvisible = false,
+  xticklabelsvisible = false,
 )
 
 # plot matrix
