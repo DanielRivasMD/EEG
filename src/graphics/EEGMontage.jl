@@ -104,8 +104,7 @@ for ι ∈ extractPoints
 
   ####################################################################################################
 
-  # BUG: electrodes is an unipolar dictionary
-  # use arbitrary electrodes to generate image
+  # column counter
   ç = 0
 
   # redefine matrix
@@ -114,7 +113,11 @@ for ι ∈ extractPoints
   # iterate on electrodes
   for (κ, υ) ∈ electrodes
     ç += 1
-    toHeat[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .= montageβ[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .* conicMask .* df[ι, ç]
+    if df[ι, ç] == 1
+      toHeat[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .= montageβ[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .* -1
+    else
+      toHeat[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .= montageβ[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .* conicMask .* df[ι, ç]
+    end
   end
 
   ####################################################################################################
@@ -131,7 +134,7 @@ for ι ∈ extractPoints
     if toHeat[ι, ο] > 0
       val = abs(normHeat[ι, ο] - 1)
       val > 1 && @info ι, ο, normHeat[ι, ο]
-      heatβ[ι, ο] = RGBA(val, val, val, img[ι, ο].alpha)
+      heatβ[ι, ο] = RGBA(1, val, val, img[ι, ο].alpha)
     end
   end
 
