@@ -7,14 +7,6 @@ end;
 
 ####################################################################################################
 
-# load project enviroment
-using Pkg
-if Pkg.project().path != string(projDir, "/Project.toml")
-  Pkg.activate(projDir)
-end
-
-####################################################################################################
-
 # load packages
 begin
   using Statistics
