@@ -56,7 +56,7 @@ artificialState = 10.
 # since sample per record = 256, window size = 256, & overlap = 4
 # then each bin represents 1 second of recording with 1 quarter of second offset
 # declare time threshold
-timeThres = 40
+timeThres = 60
 
 # apply filter
 for ι ∈ 1:size(df, 2)
