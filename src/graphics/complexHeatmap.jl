@@ -97,7 +97,7 @@ end
 heatmap!(
   ξ,
   df |> Matrix |> π -> imresize(π, (Int(size(df, 1) / 4), size(df, 2))),
-  colormap = :cherry,
+  colormap = ["#ffffff", "#ff0000"],
 )
 
 # save figure
