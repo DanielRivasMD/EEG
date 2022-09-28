@@ -84,7 +84,7 @@ end
 φ = Figure()
 
 # assign axes labels
-ξ = Axis(
+ξ = CairoMakie.Axis(
   φ[1, 1],
   title = "Heatmap representing all channels during length of recording",
   xlabel = "Time along EEG recording",
