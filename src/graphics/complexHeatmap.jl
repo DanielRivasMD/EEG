@@ -59,7 +59,7 @@ artificialState = 10.
 timeThres = 60
 
 # apply filter
-for ι ∈ 1:size(df, 2)
+for ι ∈ axes(df, 2)
 
   # declare traceback
   ψ = df[:, ι]
