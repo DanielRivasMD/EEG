@@ -48,3 +48,25 @@ function renderROC(df, out)
 end
 
 ####################################################################################################
+
+# list directories
+rocList = readdir(string(mindData, "/", "roc"))
+
+# iterate on directories
+for tier ∈ rocList
+
+  csvList = readdir(string(mindData, "/", "roc", "/", tier))
+
+  # iterate on files
+  for csv ∈ csvList
+
+    # read csv file
+    df = CSV.read(string(mindData, "/roc/", tier, "/", csv), DataFrame)
+
+  # plot
+  renderROC(df, string(mindPlot, "/", tier, "/", replace(csv, ".csv" => ""), ".png"))
+
+  end
+end
+
+####################################################################################################
