@@ -75,7 +75,7 @@ _default:
 
 # plot roc curve performance
 @Vesta-roc:
-  R --vanilla --slave src/graphics/ROCbasic.R
+  julia --project src/graphics/ROC.jl
 
 ####################################################################################################
 
