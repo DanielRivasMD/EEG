@@ -163,9 +163,12 @@ CSV.write(string(mindLabel, "/", annot, ".csv"), Tables.table(msLabelAr, header 
 
 ####################################################################################################
 
+# declare no threshold
+timeThres = 0
+
 # measure performance
 writedlm(
-  string(shArgs["outDir"], "/", "screen/", replace(shArgs["annotation"], "-summary.txt" => ".csv")),
+  string(shArgs["outDir"], "/", "roc/", timeThres, "/", replace(shArgs["annotation"], "-summary.txt" => ".csv")),
   writePerformance(sensitivitySpecificity(msHmmDc, msLabelAr)),
   ", ",
 )
