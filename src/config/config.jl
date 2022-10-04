@@ -26,6 +26,7 @@ mindCSV = string(mindData, "/csv")
 mindHMM = string(mindData, "/hmm")
 mindLabel = string(mindData, "/label")
 mindLog = string(mindData, "/log")
+mindErr = string(mindData, "/err")
 mindScreen = string(mindData, "/screen")
 mindPlot = string(mindData, "/plot")
 
