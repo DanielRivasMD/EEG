@@ -81,6 +81,25 @@ channels = @chain begin
 end
 
 ####################################################################################################
+# patch patient 12 containing different montages
+####################################################################################################
+
+# select unipolar
+unipolar12 = @chain channels begin
+  filter(χ -> !contains(χ, "-"), _)
+end
+
+####################################################################################################
+
+# second bipokar set chb12
+secBipolar12 = ["F7-CS2", "T7-CS2", "P7-CS2", "FP1-CS2", "F3-CS2", "C3-CS2", "P3-CS2", "O1-CS2", "FZ-CS2", "CZ-CS2", "PZ-CS2", "FP2-CS2", "F4-CS2", "C4-CS2", "P4-CS2", "O2-CS2", "F8-CS2", "T8-CS2", "P8-CS2", "C2-CS2", "C6-CS2", "CP2-CS2", "CP4-CS2", "CP6-CS2"]
+
+####################################################################################################
+
+# patch channels
+channels = channels[channels .∉ [[unipolar12; secBipolar12]]]
+
+####################################################################################################
 
 # declare master datatypes
 msLabelAr = Vector{Int64}(undef, 0)
