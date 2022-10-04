@@ -22,36 +22,48 @@ end;
 
 ####################################################################################################
 
-# declare collected dataframe
-sensDf = DataFrame(Electrode = String[])
+# performance
+performance = [:Sensitivity, :Specificity]
 
 # list directories
 rocList = readdir(string(mindROC))
 
-# # iterate on directories
-# for tier ∈ rocList
+# iterate on directories
+for tier ∈ rocList
 
-  # list records
-  csvList = readdir(string(mindROC, "/", tier))
+  # iterate on performance
+  for Π ∈ performance
 
-  # iterate on files
-  for csv ∈ csvList
+    # declare symbols
+    Df = Symbol(Π, "Df")
 
-    # read csv file
-    df = CSV.read(string(mindROC, "/", tier, "/", csv), DataFrame)
+    # declare collected dataframe
+    @eval $Df = DataFrame(Electrode = String[])
 
-    # remove missing rows by index
-    df = df[Not(ismissing.(df[:, :Electrode])), :]
+    # list records
+    csvList = readdir(string(mindROC, "/", tier))
 
-    # join dataframes
-    global sensDf = outerjoin(sensDf, df[:, [:Electrode, :Sensitivity]]; on = :Electrode)
-    rename!(sensDf, :Sensitivity => Symbol(replace(csv, ".csv" => "")))
+    # iterate on files
+    for csv ∈ csvList
+
+      # read csv file
+      df = CSV.read(string(mindROC, "/", tier, "/", csv), DataFrame)
+
+      # remove missing rows by index
+      df = df[Not(ismissing.(df[:, :Electrode])), :]
+
+      # join dataframes
+      @eval global $Df = outerjoin($Df, $df[:, ["Electrode", $(string(Π))]]; on = :Electrode)
+      @eval rename!($Df, $(string(Π)) => Symbol(replace($csv, ".csv" => "")))
+
+    end
+
+    # write dataframe
+    @eval dir = $(string(Π)) |> lowercase
+    @eval writedf(string(mindData, "/", dir, "/", "filter", $tier, ".csv"), $Df, ',')
 
   end
 
-  # write dataframe
-  writedf(string(mindData, "/", "sensitivity", "/", "filter", tier, ".csv"), sensDf, ',')
-
-# end
+end
 
 ####################################################################################################
