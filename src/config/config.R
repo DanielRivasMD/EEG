@@ -28,6 +28,7 @@ mindLabel <- paste0(mindData, '/label')
 mindLog <- paste0(mindData, '/log')
 mindErr <- paste0(mindData, '/err')
 mindScreen <- paste0(mindData, '/screen')
+mindROC <- paste0(mindData, '/roc')
 mindPlot <- paste0(mindData, '/plot')
 
 ####################################################################################################

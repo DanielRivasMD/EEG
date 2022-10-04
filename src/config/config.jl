@@ -28,6 +28,7 @@ mindLabel = string(mindData, "/label")
 mindLog = string(mindData, "/log")
 mindErr = string(mindData, "/err")
 mindScreen = string(mindData, "/screen")
+mindROC = string(mindData, "/roc")
 mindPlot = string(mindData, "/plot")
 
 ####################################################################################################

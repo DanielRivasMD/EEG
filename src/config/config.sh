@@ -28,6 +28,7 @@ mindLabel="${mindData}/label"
 mindLog="${mindData}/log"
 mindErr="${mindData}/err"
 mindScreen="${mindData}/screen"
+mindROC="${mindData}/roc"
 mindPlot="${mindData}/plot"
 
 ####################################################################################################

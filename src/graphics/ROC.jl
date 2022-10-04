@@ -50,18 +50,18 @@ end
 ####################################################################################################
 
 # list directories
-rocList = readdir(string(mindData, "/", "roc"))
+rocList = readdir(string(mindROC))
 
 # iterate on directories
 for tier ∈ rocList
 
-  csvList = readdir(string(mindData, "/", "roc", "/", tier))
+  csvList = readdir(string(mindROC, "/", tier))
 
   # iterate on files
   for csv ∈ csvList
 
     # read csv file
-    df = CSV.read(string(mindData, "/roc/", tier, "/", csv), DataFrame)
+    df = CSV.read(string(mindROC, "/", tier, "/", csv), DataFrame)
 
     # plot
     renderROC(df, string(mindPlot, "/", tier, "/", replace(csv, ".csv" => ""), ".png"))
