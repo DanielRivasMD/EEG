@@ -48,6 +48,10 @@ rocList = readdir(string(mindROC))
     rename!(sensDf, :Sensitivity => Symbol(replace(csv, ".csv" => "")))
 
   end
+
+  # write dataframe
+  writedf(string(mindData, "/", "sensitivity", "/", "filter", tier, ".csv"), sensDf, ',')
+
 # end
 
 ####################################################################################################
