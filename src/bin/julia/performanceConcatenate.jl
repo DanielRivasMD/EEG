@@ -97,8 +97,8 @@ secBipolar = channels[channels .∈ [staticBipolar]]
 
 ####################################################################################################
 
-# patch channels
-channels = channels[channels .∉ [[unipolar12; secBipolar12]]]
+# reference channels
+refChannels = filter(χ -> contains(χ, "Ref"), channels)
 
 ####################################################################################################
 
