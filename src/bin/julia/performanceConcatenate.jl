@@ -107,80 +107,104 @@ mainBipolar = channels[channels .∉ [[unipolar; secBipolar; refChannels]]]
 
 ####################################################################################################
 
-# iterate on file vector
-for ƒ ∈ shArgs["input"]
+# montages
+montages = [:mainBipolar, :secBipolar, :unipolar, :refChannels]
 
-  # log
-  @info ƒ
+# iterate on montages
+for montage ∈ montages
+
+  # declare variables
+  @eval montageSt = $(string(montage))
+
+  @info montageSt
+
+  @eval montageLen = length($montage)
+
+  # check for empty vector
+  if montageLen == 0 continue end
+
+  # declare master datatypes
+  msLabelAr = Vector{Int64}(undef, 0)
+  @eval msHmmDc = Dict{String, HMM}(χ => HMM(Array{Float64}(undef, 0), Array{Float64}(undef, 0), Array{Int64}(undef, 0)) for χ = $montage)
 
   ####################################################################################################
 
-  # trim file extension
-  edf = replace(ƒ, ".edf" => "")
+  # iterate on file vector
+  for ƒ ∈ shArgs["input"]
 
-  # read data
-  begin
+    # log
+    @info ƒ
 
-    # read edf file
-    edfDf, startTime, recordFreq = getSignals(string(shArgs["inputDir"], ƒ))
+    ####################################################################################################
 
-    # calibrate annotations
-    if haskey(annotFile, edf)
-      labelAr = annotationCalibrator(
-        annotFile[edf];
-        recordFreq = recordFreq,
-        signalLength = size(edfDf, 1),
-        shParams = shArgs,
-      )
-    # declare an empty vector
-    else
-      labelAr = zeros(convert.(Int64, size(edfDf, 1) / (shArgs["window-size"] / shArgs["bin-overlap"])))
+    # trim file extension
+    edf = replace(ƒ, ".edf" => "")
+
+    # read data
+    begin
+
+      # read edf file
+      edfDf, startTime, recordFreq = getSignals(string(shArgs["inputDir"], ƒ))
+
+      # calibrate annotations
+      if haskey(annotFile, edf)
+        labelAr = annotationCalibrator(
+          annotFile[edf];
+          recordFreq = recordFreq,
+          signalLength = size(edfDf, 1),
+          shParams = shArgs,
+        )
+      # declare an empty vector
+      else
+        labelAr = zeros(convert.(Int64, size(edfDf, 1) / (shArgs["window-size"] / shArgs["bin-overlap"])))
+      end
+
+    end;
+
+    ####################################################################################################
+
+    # record time points
+    writedlm(
+      string(mindData, "/", "time", "/", edf, ".txt"),
+      [size(edfDf, 1)],
+    )
+
+    ####################################################################################################
+
+    # load manually. catch non-present files
+    hmmDc = Dict{String, HMM}()
+    for κ ∈ @eval $montage
+      try
+        hmmDc[κ] = reconstructHMM(string(mindHMM, "/"), string(edf, "_", κ))
+      catch
+        hmmDc[κ] = HMM([zeros(0)], [zeros(0)], zeros(Int(size(edfDf, 1) / (shArgs["window-size"] / shArgs["bin-overlap"]))))
+      end
     end
 
-  end;
+    ####################################################################################################
 
-  ####################################################################################################
+    # concatenate labels
+    append!(msLabelAr, labelAr)
 
-  # record time points
-  writedlm(
-    string(mindData, "/", "time", "/", edf, ".txt"),
-    [size(edfDf, 1)],
-  )
-
-  ####################################################################################################
-
-  # load manually. catch non-present files
-  hmmDc = Dict{String, HMM}()
-  for κ ∈ channels
-    try
-      hmmDc[κ] = reconstructHMM(string(mindHMM, "/"), string(edf, "_", κ))
-    catch
-      hmmDc[κ] = HMM([zeros(0)], [zeros(0)], zeros(Int(size(edfDf, 1) / (shArgs["window-size"] / shArgs["bin-overlap"]))))
+    # concatenate hidden Markov model traceback
+    for (κ, υ) ∈ hmmDc
+      append!(msHmmDc[κ].traceback, υ.traceback)
     end
+
+    ####################################################################################################
+
   end
 
   ####################################################################################################
 
-  # concatenate labels
-  append!(msLabelAr, labelAr)
-
-  # concatenate hidden Markov model traceback
-  for (κ, υ) ∈ hmmDc
-    append!(msHmmDc[κ].traceback, υ.traceback)
+  # write concatenated traceback
+  for (κ, υ) ∈ msHmmDc
+    writeHMM(string(mindHMM, "/", annot, "_", κ, "_traceback", "_", montageSt, ".csv"), υ.traceback, κ)
   end
 
-  ####################################################################################################
+  # write concatenated labels
+  CSV.write(string(mindLabel, "/", annot, "_", montageSt, ".csv"), Tables.table(msLabelAr, header = [annot]))
 
 end
-
-####################################################################################################
-
-# write concatenated traceback
-for (κ, υ) ∈ msHmmDc
-  writeHMM(string(mindHMM, "/", annot, "_", κ, "_traceback", ".csv"), υ.traceback, κ)
-end
-
-# write concatenated labels
-CSV.write(string(mindLabel, "/", annot, ".csv"), Tables.table(msLabelAr, header = [annot]))
 
 ####################################################################################################
