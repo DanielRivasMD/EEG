@@ -144,7 +144,7 @@ for montage ∈ montages
     # load hidden Markov model
     msHmmDc = Dict{String, HMM}()
     for κ ∈ @eval $montage
-      msHmmDc[κ] = HMM([zeros(0)], [zeros(0)], HiddenMarkovModelReaders.readHMMtraceback(string(mindHMM, "/"), string(annot, "_", κ, "_traceback", "_", montageSt, ".csv")))
+      msHmmDc[κ] = HMM([zeros(0)], [zeros(0)], HiddenMarkovModelReaders.readHMMtraceback(string(mindHMM, "/"), string(annot, "_", κ, "_", montageSt)))
     end
 
     ####################################################################################################

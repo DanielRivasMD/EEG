@@ -199,7 +199,7 @@ for montage ∈ montages
 
   # write concatenated traceback
   for (κ, υ) ∈ msHmmDc
-    writeHMM(string(mindHMM, "/", annot, "_", κ, "_traceback", "_", montageSt, ".csv"), υ.traceback, κ)
+    writeHMM(string(mindHMM, "/", annot, "_", κ, "_", montageSt, "_", "traceback", ".csv"), υ.traceback, κ)
   end
 
   # write concatenated labels
