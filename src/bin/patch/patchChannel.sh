@@ -1,5 +1,5 @@
 #!/bin/bash
-# set -euo pipefail
+set -euo pipefail
 # DOC: patch wrongly label channel from edf files
 
 ####################################################################################################

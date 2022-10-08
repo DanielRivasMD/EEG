@@ -1,5 +1,5 @@
 #!/bin/bash
-# set -euo pipefail
+set -euo pipefail
 # DOC: control post training performance measurement. call performancePostraining.jl
 
 ####################################################################################################

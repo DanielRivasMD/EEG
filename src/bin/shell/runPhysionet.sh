@@ -1,5 +1,5 @@
 #!/bin/bash
-# set -euo pipefail
+set -euo pipefail
 
 ####################################################################################################
 
@@ -9,7 +9,6 @@ arr=(1..6 7..12 13..18 19..24)
 # iterate on patient batches
 for bt in ${arr[@]}
 do
-
   # iterate on patients
   for ix in {$bt}
   do
