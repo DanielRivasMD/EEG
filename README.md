@@ -1,51 +1,55 @@
 Computational analysis of EEG data using _MindReader_.
 
-### Archive
+## Archive
 
 contain notes & minutes
 
-### Assets
+## Assets
 
 contain various digital assests
 
-### Data description
+## Data description
 
 contain compressed physionet dataset
 
-### Journal
+## Journal
 
 generate pdf reports for sharing
 
-### Source
+## Source
 
-#### annotation
+### annotation
 
 contain **functions** to read & calibrate annotations, & **templates** for generating _de novo_ annotations
 
-#### bin
+### bin
 
-contain operational executables from **julia** & **shell**
+contain operational executables from **julia** & **shell**. files in **shell** constitute pipeline methodology & can be run from just protocols
 
-#### config
+### config
 
 configuration files
 
-#### graphics
+### graphics
 
 render graphics
 
-#### imported
+### imported
 
 various files imported from other projects
 
-#### pca
+### patch
+
+contain operational executables that handle modifications to data analysis and do not interfere main pipeline. there files are run directly under subshells
+
+### pca
 
 principal component analysis
 
-#### transfer
+### transfer
 
 contain transfer executable to be deployed on remote machine
 
-#### utilities
+### utilities
 
 contain utilities for processing data
