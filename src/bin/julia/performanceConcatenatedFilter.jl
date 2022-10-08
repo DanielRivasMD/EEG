@@ -89,55 +89,98 @@ channels = @chain begin
 end
 
 ####################################################################################################
+# patch patient 12 containing different montages
+####################################################################################################
 
-# load labels
-msLabelAr = readdlm(string(mindLabel, "/", annot, ".csv"))[2:end] .|> Int
+# select unipolar. chb12_28 & chb12_29
+unipolar = @chain channels begin
+  filter(χ -> !contains(χ, "-"), _)
+end
 
 ####################################################################################################
 
-# iterate on thresholds
-for timeThres ∈ timeThresholds
+# second bipokar set. chb12_27
+staticBipolar = ["F7-CS2", "T7-CS2", "P7-CS2", "FP1-CS2", "F3-CS2", "C3-CS2", "P3-CS2", "O1-CS2", "FZ-CS2", "CZ-CS2", "PZ-CS2", "FP2-CS2", "F4-CS2", "C4-CS2", "P4-CS2", "O2-CS2", "F8-CS2", "T8-CS2", "P8-CS2", "C2-CS2", "C6-CS2", "CP2-CS2", "CP4-CS2", "CP6-CS2"]
+secBipolar = channels[channels .∈ [staticBipolar]]
+
+####################################################################################################
+
+# reference channels
+refChannels = filter(χ -> contains(χ, "Ref"), channels)
+
+####################################################################################################
+
+# patch channels
+mainBipolar = channels[channels .∉ [[unipolar; secBipolar; refChannels]]]
+
+####################################################################################################
+
+# montages
+montages = [:mainBipolar, :secBipolar, :unipolar, :refChannels]
+
+# iterate on montages
+for montage ∈ montages
+
+  # declare variables
+  @eval montageSt = $(string(montage))
+  @eval montageLn = length($montage)
+
+  # check for empty vector
+  if montageLn == 0 continue end
+
+  # log
+  @info montageSt
+
+  # load labels
+  msLabelAr = readdlm(string(mindLabel, "/", annot, "_", montageSt, ".csv"))[2:end] .|> Int
 
   ####################################################################################################
 
-  # load hidden Markov model
-  msHmmDc = Dict{String, HMM}()
-  for κ ∈ channels
-    msHmmDc[κ] = HMM([zeros(0)], [zeros(0)], HiddenMarkovModelReaders.readHMMtraceback(string(mindHMM, "/"), string(annot, "_", κ)))
-  end
+  # iterate on thresholds
+  for timeThres ∈ timeThresholds
 
-  ####################################################################################################
+    ####################################################################################################
 
-  # iterate on dictionary
-  for (κ, υ) ∈ msHmmDc
-
-    # declare traceback
-    tb = υ.traceback
-
-    # identify peak
-    R" peakDf <- peak_iden($tb, 2) "
-    @rget peakDf
-
-    # reset traceback
-    υ.traceback = ones(υ.traceback |> length)
-
-    # assign peak values
-    for ρ ∈ eachrow(filter(:peak_length_ix => χ -> χ >= timeThres, peakDf))
-      υ.traceback[Int(ρ[:lower_lim_ix]):Int(ρ[:upper_lim_ix])] .= artificialState
+    # load hidden Markov model
+    msHmmDc = Dict{String, HMM}()
+    for κ ∈ @eval $montage
+      msHmmDc[κ] = HMM([zeros(0)], [zeros(0)], HiddenMarkovModelReaders.readHMMtraceback(string(mindHMM, "/"), string(annot, "_", κ, "_traceback", "_", montageSt, ".csv")))
     end
 
+    ####################################################################################################
+
+    # iterate on dictionary
+    for (κ, υ) ∈ msHmmDc
+
+      # declare traceback
+      tb = υ.traceback
+
+      # identify peak
+      R" peakDf <- peak_iden($tb, 2) "
+      @rget peakDf
+
+      # reset traceback
+      υ.traceback = ones(υ.traceback |> length)
+
+      # assign peak values
+      for ρ ∈ eachrow(filter(:peak_length_ix => χ -> χ >= timeThres, peakDf))
+        υ.traceback[Int(ρ[:lower_lim_ix]):Int(ρ[:upper_lim_ix])] .= artificialState
+      end
+
+    end
+
+    ####################################################################################################
+
+    # measure performance
+    writedlm(
+      string(shArgs["outDir"], "/", "roc/", timeThres, "/", replace(shArgs["annotation"], "-summary.txt" => ""), "_", montageSt, ".csv"),
+      writePerformance(sensitivitySpecificity(msHmmDc, msLabelAr)),
+      ",",
+    )
+
+    ####################################################################################################
+
   end
-
-  ####################################################################################################
-
-  # measure performance
-  writedlm(
-    string(shArgs["outDir"], "/", "roc/", timeThres, "/", replace(shArgs["annotation"], "-summary.txt" => ".csv")),
-    writePerformance(sensitivitySpecificity(msHmmDc, msLabelAr)),
-    ",",
-  )
-
-  ####################################################################################################
 
 end
 

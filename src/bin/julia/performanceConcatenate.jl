@@ -115,13 +115,13 @@ for montage ∈ montages
 
   # declare variables
   @eval montageSt = $(string(montage))
-
-  @info montageSt
-
-  @eval montageLen = length($montage)
+  @eval montageLn = length($montage)
 
   # check for empty vector
-  if montageLen == 0 continue end
+  if montageLn == 0 continue end
+
+  # log
+  @info montageSt
 
   # declare master datatypes
   msLabelAr = Vector{Int64}(undef, 0)
