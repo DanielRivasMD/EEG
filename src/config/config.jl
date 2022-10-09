@@ -9,6 +9,9 @@ mindDir = "/Users/drivas/Factorem/MindReader"
 # data
 dataDir = string(projDir, "/data")
 
+# external
+externalDir = "/Volumes/G/EEG"
+
 # source
 srcDir = string(projDir, "/src")
 binDir = string(srcDir, "/bin")

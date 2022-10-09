@@ -9,6 +9,9 @@ mindDir <- '/Users/drivas/Factorem/MindReader'
 # data
 dataDir <- paste0(projDir, '/data')
 
+# external
+externalDir <- '/Volumes/G/EEG'
+
 # source
 srcDir <- paste0(projDir, '/src')
 binDir <- paste0(srcDir, '/bin')

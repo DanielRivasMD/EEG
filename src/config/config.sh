@@ -9,6 +9,9 @@ mindDir="/Users/drivas/Factorem/MindReader"
 # data
 dataDir="${projDir}/data"
 
+# external
+externalDir="/Volumes/G/EEG"
+
 # source
 srcDir="${projDir}/src"
 binDir="${srcDir}/bin"
