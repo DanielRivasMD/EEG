@@ -11,6 +11,7 @@ end;
 begin
   using CSV
   using DataFrames
+  using Statistics
 end
 
 ####################################################################################################
@@ -48,6 +49,17 @@ for tier ∈ rocList
     for (ι, ç) ∈ enumerate(eachcol(df))
       df[!, ι] .= replace(ç, "missing" => missing)
     end
+
+    # construct dataframe
+    Df = describe(df[:, Not(:Electrode)])
+
+    # calculate standard deviation
+    Df[:, :std] .= map(eachcol(df[:, Not(:Electrode)])) do ç
+      std(skipmissing(ç))
+    end
+
+    # supress type column
+    Df = Df[:, Not(:eltype)]
 
     # log
     @info describe(Df)
