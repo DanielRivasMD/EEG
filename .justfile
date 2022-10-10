@@ -90,3 +90,9 @@ _default:
   julia --project src/bin/julia/parsePerformance.jl
 
 ####################################################################################################
+
+# summarize performance
+@Vesta-summarize:
+  julia --project src/stats/summarizePerformance.jl
+
+####################################################################################################
