@@ -65,6 +65,10 @@ for tier ∈ rocList
     @info describe(Df)
     @info Df
 
+    # write dataframe
+    @eval dir = $(string(Π)) |> lowercase
+    @eval writedf(string(mindData, "/", "summary", "/", dir, $tier, ".csv"), $Df, ',')
+
   end
 
 end
