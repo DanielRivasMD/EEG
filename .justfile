@@ -84,3 +84,9 @@ _default:
   julia --project src/graphics/EEGMontage.jl
 
 ####################################################################################################
+
+# parse performance
+@Vesta-performance:
+  julia --project src/bin/julia/parsePerformance.jl
+
+####################################################################################################
