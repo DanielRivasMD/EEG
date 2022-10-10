@@ -44,6 +44,11 @@ for tier ∈ rocList
     # log
     @info dir
 
+    # patch missing values
+    for (ι, ç) ∈ enumerate(eachcol(df))
+      df[!, ι] .= replace(ç, "missing" => missing)
+    end
+
     # log
     @info describe(Df)
     @info Df
