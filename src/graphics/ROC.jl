@@ -31,8 +31,8 @@ function renderROC(df, out)
     title = "Receiver Operating Characteristic (ROC) curve",
     xlabel = "False Positive Rate",
     ylabel = "True Positive Rate",
-    xticks = (0:0.1:1, string.(0:10:100, "%")),
-    yticks = (0:0.1:1, string.(0:10:100, "%")),
+    xticks = (0:0.2:1, string.(0:20:100, "%")),
+    yticks = (0:0.2:1, string.(0:20:100, "%")),
   )
 
   # render image
