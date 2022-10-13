@@ -73,6 +73,12 @@ _default:
 
 ####################################################################################################
 
+# create heatmap for recording
+@Vesta-heatmap:
+  julia --project src/graphics/sampleHeatmap.jl
+
+####################################################################################################
+
 # plot roc curve performance
 @Vesta-roc:
   julia --project src/graphics/ROC.jl
