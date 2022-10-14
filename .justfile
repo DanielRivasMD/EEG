@@ -114,3 +114,9 @@ _default:
   julia --project src/stats/summarizePerformance.jl
 
 ####################################################################################################
+
+# summarize performance per event
+@Vesta-perevent:
+  julia --project src/stats/summarizePerEventPerformance.jl
+
+####################################################################################################
