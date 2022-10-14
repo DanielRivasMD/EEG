@@ -103,6 +103,12 @@ _default:
 
 ####################################################################################################
 
+# parse performance per event
+@Vesta-recall:
+  julia --project src/bin/julia/parsePerEventPerformance.jl
+
+####################################################################################################
+
 # summarize performance
 @Vesta-summarize:
   julia --project src/stats/summarizePerformance.jl
