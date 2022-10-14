@@ -9,6 +9,8 @@ end;
 
 # load packages
 begin
+  using Chain: @chain
+
   using ImageTransformations
   using RCall
 
