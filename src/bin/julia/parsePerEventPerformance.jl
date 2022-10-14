@@ -44,8 +44,8 @@ for tier ∈ rocList
     df = df[Not(ismissing.(df[:, :Electrode])), :]
 
     # join dataframes
-    global Df = outerjoin(Df, df[:, [:Electrode, :Recall]]; on = :Electrode)
-    rename!(Df, :Recall) => replace(csv, ".csv" => "")
+    Df = outerjoin(Df, df[:, [:Electrode, :Recall]]; on = :Electrode)
+    rename!(Df, :Recall => replace(csv, ".csv" => ""))
 
   end
 
