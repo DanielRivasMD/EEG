@@ -141,6 +141,14 @@ for montage ∈ montages
 
   ####################################################################################################
 
+  # load hidden Markov model
+  msHmmDc = Dict{String, HMM}()
+  for κ ∈ @eval $montage
+    msHmmDc[κ] = HMM([zeros(0)], [zeros(0)], HiddenMarkovModelReaders.readHMMtraceback(string(mindHMM, "/"), string(annot, "_", κ, "_", montageSt)))
+  end
+
+  ####################################################################################################
+
   # identify peak
   R" peakDf <- peak_iden($msLabelAr, 1) "
   @rget peakDf
@@ -154,14 +162,6 @@ for montage ∈ montages
 
     # create output dataframe with zero values
     df = DataFrame(Electrode = String[], TP = Int64[], FP = Int64[])
-
-    ####################################################################################################
-
-    # load hidden Markov model
-    msHmmDc = Dict{String, HMM}()
-    for κ ∈ @eval $montage
-      msHmmDc[κ] = HMM([zeros(0)], [zeros(0)], HiddenMarkovModelReaders.readHMMtraceback(string(mindHMM, "/"), string(annot, "_", κ, "_", montageSt)))
-    end
 
     ####################################################################################################
 
@@ -187,10 +187,12 @@ for montage ∈ montages
       # assign dataframe row
       push!(df, (κ, tp, fp))
 
-      # calculate recall
-      df[:, :Recall] .= df[:, :TP] ./ (df[:, :TP] + df[:, :FP])
-
     end
+
+    ####################################################################################################
+
+    # calculate recall
+    df[:, :Recall] .= df[:, :TP] ./ (df[:, :TP] + df[:, :FP])
 
     ####################################################################################################
 
