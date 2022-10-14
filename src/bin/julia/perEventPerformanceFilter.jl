@@ -187,6 +187,9 @@ for montage ∈ montages
       # assign dataframe row
       push!(df, (κ, tp, fp))
 
+      # calculate recall
+      df[:, :Recall] .= df[:, :TP] ./ (df[:, :TP] + df[:, :FP])
+
     end
 
     ####################################################################################################
