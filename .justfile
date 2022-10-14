@@ -73,6 +73,12 @@ _default:
 
 ####################################################################################################
 
+# apply post processing filter & calculate performance per event
+@Vesta-event:
+  source src/bin/shell/perEventPerformanceFilter.sh
+
+####################################################################################################
+
 # create heatmap for recording
 @Vesta-heatmap:
   julia --project src/graphics/sampleHeatmap.jl
