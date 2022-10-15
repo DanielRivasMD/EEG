@@ -55,14 +55,14 @@ df = hcat(DataFrame(Electrode = electrode), map(ξ -> ξ = ξ[:, Not(1)], df) |>
 ####################################################################################################
 
 # write performance
-writedf(string(mindCSV, "/performance.csv"), df, ',')
+writedf(string(mindCSV, "/performance.csv"), df; sep = ',')
 
 ####################################################################################################
 
 # write channel & record
 ss = channelSS(df)
-writedf(string(mindCSV, "/sensitivity.csv"), ss[1], ',')
-writedf(string(mindCSV, "/specificity.csv"), ss[2], ',')
-writedf(string(mindCSV, "/channel.csv"), recordingSS(df), ',')
+writedf(string(mindCSV, "/sensitivity.csv"), ss[1]; sep = ',')
+writedf(string(mindCSV, "/specificity.csv"), ss[2]; sep = ',')
+writedf(string(mindCSV, "/channel.csv"), recordingSS(df); sep = ',')
 
 ####################################################################################################

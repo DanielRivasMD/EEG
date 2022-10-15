@@ -24,7 +24,7 @@ end
 ################################################################################
 
 "write dataframe"
-function writedf(path, df::DataFrame, sep = '\t')
+function writedf(path, df::DataFrame; sep = '\t')
   toWrite = [(df |> names |> permutedims); (df |> Array)]
   writedlm(path, toWrite, sep)
 end

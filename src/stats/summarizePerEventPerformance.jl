@@ -56,7 +56,7 @@ for tier ∈ rocList
   @info Df
 
   # write dataframe
-  writedf(string(mindData, "/", "summary", "/", "recall", tier, ".csv"), Df, ',')
+  writedf(string(mindData, "/", "summary", "/", "recall", tier, ".csv"), Df; sep = ',')
 
 end
 

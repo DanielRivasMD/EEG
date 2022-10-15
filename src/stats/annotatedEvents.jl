@@ -42,6 +42,6 @@ for summ ∈ summList
 end
 
 # write dataframe
-writedf(string(mindData, "/", "summary", "/", "events", ".csv"), df, ',')
+writedf(string(mindData, "/", "summary", "/", "events", ".csv"), df; sep = ',')
 
 ####################################################################################################

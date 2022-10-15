@@ -199,8 +199,8 @@ for montage ∈ montages
     # measure performance
     writedf(
       string(shArgs["outDir"], "/", "event", "/", timeThres, "/", replace(shArgs["annotation"], "-summary.txt" => ""), "_", montageSt, ".csv"),
-      df,
-      ",",
+      df;
+      sep = ',',
     )
 
     ####################################################################################################

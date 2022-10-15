@@ -67,7 +67,7 @@ for tier ∈ rocList
 
     # write dataframe
     @eval dir = $(string(Π)) |> lowercase
-    @eval writedf(string(mindData, "/", "summary", "/", dir, $tier, ".csv"), $Df, ',')
+    @eval writedf(string(mindData, "/", "summary", "/", dir, $tier, ".csv"), $Df; sep = ',')
 
   end
 
