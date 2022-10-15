@@ -61,9 +61,9 @@ _default:
 
 ####################################################################################################
 
-# concatenate model traceback & calculate performance
+# concatenate model tracebacks
 @Vesta-concatenate:
-  source src/bin/shell/performanceConcatenate.sh
+  source src/bin/shell/concatenateModels.sh
 
 ####################################################################################################
 

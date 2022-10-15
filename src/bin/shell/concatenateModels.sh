@@ -11,7 +11,7 @@ source "${HOME}/Factorem/EEG/src/config/config.sh"
 
 # declarations
 database="${externalDir}/chb-mit-scalp-eeg-database-1.0.0.zip"
-scriptJL="${binDir}/julia/performanceConcatenate.jl"
+scriptJL="${binDir}/julia/concatenate.jl"
 
 ####################################################################################################
 
