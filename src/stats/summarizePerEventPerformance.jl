@@ -33,7 +33,7 @@ for tier ∈ rocList
   @info tier
 
   # read dataframe
-  df = readdf(string(mindData, "/", "recall", "/", "filter", tier, ".csv"), ',')
+  df = readdf(string(mindData, "/", "recall", "/", "filter", tier, ".csv"); sep = ',')
 
   # patch missing values
   for (ι, ç) ∈ enumerate(eachcol(df))

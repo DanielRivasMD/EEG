@@ -28,7 +28,7 @@ events = readdir(mindScreen)
 ####################################################################################################
 
 # read files into dataframe array
-df = [readdf(string(mindScreen, "/", ι), ',') |> π -> rename(π, π |> names .|> π -> replace(π, " " => "") .|> π -> string(π, "_", replace(ι, ".csv" => ""))) for ι ∈ events]
+df = [readdf(string(mindScreen, "/", ι); sep = ',') |> π -> rename(π, π |> names .|> π -> replace(π, " " => "") .|> π -> string(π, "_", replace(ι, ".csv" => ""))) for ι ∈ events]
 
 # collect electrode names
 electrode = Array{String, 1}(undef, 0)

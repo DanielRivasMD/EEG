@@ -20,7 +20,7 @@ function reconstructHMM(filename::S) where S <: String
 
   # load hidden Markov model model
   model = @chain begin
-    readdf(string(filename, "_model.csv"), ',')
+    readdf(string(filename, "_model.csv"); sep = ',')
     map(1:size(_, 2)) do μ
       _[:, μ]
     end
@@ -28,7 +28,7 @@ function reconstructHMM(filename::S) where S <: String
 
   # load hidden Markov model traceback
   traceback = @chain begin
-    readdf(string(filename, "_traceback.csv"), ',')
+    readdf(string(filename, "_traceback.csv"); sep = ',')
     _[:, 1]
   end
 

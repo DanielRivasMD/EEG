@@ -40,7 +40,7 @@ for tier ∈ rocList
 
     # read dataframe
     @eval dir = $(string(Π)) |> lowercase
-    @eval df = readdf(string(mindData, "/", dir, "/", "filter", $tier, ".csv"), ',')
+    @eval df = readdf(string(mindData, "/", dir, "/", "filter", $tier, ".csv"); sep = ',')
 
     # log
     @info dir
