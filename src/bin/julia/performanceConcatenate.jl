@@ -125,7 +125,7 @@ for montage ∈ montages
 
   # declare master datatypes
   msLabelAr = Vector{Int64}(undef, 0)
-  @eval msHmmDc = Dict{String, HMM}(χ => HMM(Array{Float64}(undef, 0), Array{Float64}(undef, 0), Array{Int64}(undef, 0)) for χ = $montage)
+  @eval msHmmDc = Dict{String, HMM}(ν => HMM(Array{Float64}(undef, 0), Array{Float64}(undef, 0), Array{Int64}(undef, 0)) for ν = $montage)
 
   ####################################################################################################
 
@@ -177,7 +177,7 @@ for montage ∈ montages
       try
         hmmDc[κ] = reconstructHMM(string(mindHMM, "/"), string(edf, "_", κ))
       catch
-        hmmDc[κ] = HMM([zeros(0)], [zeros(0)], zeros(Int(size(edfDf, 1) / (shArgs["window-size"] / shArgs["bin-overlap"]))))
+        hmmDc[κ] = HMM([zeros(0)], [zeros(0)], ones(Int(size(edfDf, 1) / (shArgs["window-size"] / shArgs["bin-overlap"]))) * -1)
       end
     end
 
