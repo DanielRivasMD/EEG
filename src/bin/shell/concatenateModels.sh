@@ -1,6 +1,14 @@
 #!/bin/bash
 set -euo pipefail
-# DOC: concatenate patient models & measure performance. call performanceConcatenate.jl
+# DOC: concatenate model tracebacks
+# control concatenateModels.jl
+# input:
+#   summary files for annotations
+#   list of edf files per subject
+# output:
+#   log files
+#   concatenated labels @ label
+#   concatenated model tracebacks @ hmm
 
 ####################################################################################################
 
