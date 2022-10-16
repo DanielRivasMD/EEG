@@ -141,6 +141,8 @@ for montage ∈ montages
 
   # iterate on thresholds
   for timeThres ∈ timeThresholds
+    # preallocate mask
+    maskDc = Dict{String, Vector{Int}}()
 
     ####################################################################################################
 
@@ -155,6 +157,13 @@ for montage ∈ montages
       # preallocate temporary values
       tp = 0
       fp = 0
+
+      # collect masks
+      maskDc[κ] = findall(χ -> χ == -1, υ.traceback)
+
+      # redeclare traceback & laber array
+      tb = υ.traceback[1:end .∉ [maskDc[κ]]]
+      lb = msLabelAr[1:end .∉ [maskDc[κ]]]
 
       # iterate on peaks
       for ρ ∈ eachrow(peakDf)
