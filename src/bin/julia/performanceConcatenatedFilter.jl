@@ -133,11 +133,19 @@ for montage ∈ montages
 
     ####################################################################################################
 
+    # preallocate mask
+    maskDc = Dict{String, Vector{Int}}()
+
+    ####################################################################################################
+
     # iterate on dictionary
     for (κ, υ) ∈ msHmmDc
 
       # declare traceback
       tb = υ.traceback
+
+      # collect masks
+      maskDc[κ] = findall(χ -> χ == -1, tb)
 
       # identify peak
       R" peakDf <- peak_iden($tb, 2) "
@@ -157,8 +165,8 @@ for montage ∈ montages
 
     # measure performance
     writedlm(
-      string(shArgs["outDir"], "/", "roc/", timeThres, "/", replace(shArgs["annotation"], "-summary.txt" => ""), "_", montageSt, ".csv"),
-      writePerformance(sensitivitySpecificity(msHmmDc, msLabelAr)),
+      string(shArgs["outDir"], "/", "roc/", timeThres, "/", summary, "_", montageSt, ".csv"),
+      writePerformance(sensitivitySpecificity(msHmmDc, maskDc, msLabelAr)),
       ",",
     )
 
