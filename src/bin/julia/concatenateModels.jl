@@ -56,12 +56,12 @@ end
 ####################################################################################################
 
 # trim file extension
-annot = replace(shArgs["annotation"], "-summary.txt" => "")
+summary = replace(shArgs["annotation"], "-summary.txt" => "")
 
 # read available channels
 channels = @chain begin
   readdir(mindHMM)
-  filter(χ -> contains(χ, annot), _)
+  filter(χ -> contains(χ, summary), _)
   filter(χ -> contains(χ, "model"), _)
   filter(χ -> !contains(χ, "VNS"), _)
   filter(χ -> !contains(χ, "EKG"), _)
@@ -69,7 +69,7 @@ channels = @chain begin
   filter(χ -> !contains(χ, "LUE"), _)
   filter(χ -> !contains(χ, "_-_"), _)
   filter(χ -> !contains(χ, "_._"), _)
-  replace.(annot => "")
+  replace.(summary => "")
   replace.(r"_\d\d" => "")
   replace.("model.csv" => "")
   replace.("a" => "")
@@ -199,11 +199,11 @@ for montage ∈ montages
 
   # write concatenated traceback
   for (κ, υ) ∈ msHmmDc
-    writeHMM(string(mindHMM, "/", annot, "_", κ, "_", montageSt, "_", "traceback", ".csv"), υ.traceback, κ)
+    writeHMM(string(mindHMM, "/", summary, "_", κ, "_", montageSt, "_", "traceback", ".csv"), υ.traceback, κ)
   end
 
   # write concatenated labels
-  CSV.write(string(mindLabel, "/", annot, "_", montageSt, ".csv"), Tables.table(msLabelAr, header = [annot]))
+  CSV.write(string(mindLabel, "/", summary, "_", montageSt, ".csv"), Tables.table(msLabelAr, header = [summary]))
 
 end
 
