@@ -33,22 +33,6 @@ include(string(importDir, "/utilitiesJL/argParser.jl"));
 
 ####################################################################################################
 
-# include additional protocols
-if haskey(shArgs, "additional") && haskey(shArgs, "addDir")
-  for ι ∈ split(shArgs["additional"], ",")
-    include(string(shArgs["addDir"], ι))
-  end
-end
-
-####################################################################################################
-
-# read annotation
-if haskey(shArgs, "annotation") && haskey(shArgs, "annotDir")
-  annotFile = annotationReader(shArgs["annotDir"], shArgs["annotation"])
-end
-
-####################################################################################################
-
 # load modules
 begin
   include(string(utilDir, "/ioDataFrame.jl"))
@@ -57,7 +41,7 @@ end;
 ####################################################################################################
 
 # load peak identification function
-R" source(paste0($utilDir, '/peakIden.R')) "
+R" source(paste0($utilDir, '/peakIden.R')) ";
 
 ####################################################################################################
 
@@ -69,12 +53,12 @@ timeThresholds = [120, 100, 80, 60, 40, 20, 0]
 ####################################################################################################
 
 # trim file extension
-annot = replace(shArgs["annotation"], "-summary.txt" => "")
+summary = replace(shArgs["input"], "-summary.txt" => "")
 
 # read available channels
 channels = @chain begin
   readdir(mindHMM)
-  filter(χ -> contains(χ, annot), _)
+  filter(χ -> contains(χ, summary), _)
   filter(χ -> contains(χ, "model"), _)
   filter(χ -> !contains(χ, "VNS"), _)
   filter(χ -> !contains(χ, "EKG"), _)
@@ -82,7 +66,7 @@ channels = @chain begin
   filter(χ -> !contains(χ, "LUE"), _)
   filter(χ -> !contains(χ, "_-_"), _)
   filter(χ -> !contains(χ, "_._"), _)
-  replace.(annot => "")
+  replace.(summary => "")
   replace.(r"_\d\d" => "")
   replace.("model.csv" => "")
   replace.("a" => "")
@@ -137,14 +121,14 @@ for montage ∈ montages
   @info montageSt
 
   # load labels
-  msLabelAr = readdlm(string(mindLabel, "/", annot, "_", montageSt, ".csv"))[2:end] .|> Int
+  msLabelAr = readdlm(string(mindLabel, "/", summary, "_", montageSt, ".csv"))[2:end] .|> Int
 
   ####################################################################################################
 
   # load hidden Markov model
   msHmmDc = Dict{String, HMM}()
   for κ ∈ @eval $montage
-    msHmmDc[κ] = HMM([zeros(0)], [zeros(0)], HiddenMarkovModelReaders.readHMMtraceback(string(mindHMM, "/"), string(annot, "_", κ, "_", montageSt)))
+    msHmmDc[κ] = HMM([zeros(0)], [zeros(0)], HiddenMarkovModelReaders.readHMMtraceback(string(mindHMM, "/"), string(summary, "_", κ, "_", montageSt)))
   end
 
   ####################################################################################################
@@ -198,7 +182,7 @@ for montage ∈ montages
 
     # measure performance
     writedf(
-      string(shArgs["outDir"], "/", "event", "/", timeThres, "/", replace(shArgs["annotation"], "-summary.txt" => ""), "_", montageSt, ".csv"),
+      string(shArgs["outDir"], "/", "event", "/", timeThres, "/", summary, "_", montageSt, ".csv"),
       df;
       sep = ',',
     )
