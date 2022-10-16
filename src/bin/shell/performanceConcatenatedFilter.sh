@@ -36,22 +36,14 @@ do
   # log
   echo "\nSUMMARY: ${summary}\n"
 
-  # extract
-  unzip -p "${database}" "${fullsummary}" > "${dataDir}/${summary}"
-
-  ####################################################################################################
-
   # calculate performance
   julia \
     --project \
     "${scriptJL}" \
     --params "Parameters.jl" \
     --paramsDir "${binDir}/julia/" \
-    --annotation "${summary}" \
-    --annotDir "${dataDir}/" \
-    --outDir "${mindData}" \
-    --additional "annotationCalibrator.jl,fileReaderXLSX.jl" \
-    --addDir "${annotationDir}/functions/" &> "${mindLog}/${summary/-summary.txt/.log}"
+    --input "${summary}" \
+    --outDir "${mindData}" &> "${mindLog}/${summary/-summary.txt/.log}"
 
 done
 

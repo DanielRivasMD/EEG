@@ -11,7 +11,7 @@ arr=(annotation bounds inexact last patch)
 for bt in ${arr[@]}
 do
   # call error controller
-  source src/runDataset/errors.sh $bt
+  source src/bin/patch/errors.sh $bt
 done
 
 ####################################################################################################
