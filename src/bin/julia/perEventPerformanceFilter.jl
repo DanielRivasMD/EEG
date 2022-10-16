@@ -125,22 +125,19 @@ for montage ∈ montages
 
   ####################################################################################################
 
-  # load hidden Markov model
-  msHmmDc = Dict{String, HMM}()
-  for κ ∈ @eval $montage
-    msHmmDc[κ] = HMM([zeros(0)], [zeros(0)], HiddenMarkovModelReaders.readHMMtraceback(string(mindHMM, "/"), string(summary, "_", κ, "_", montageSt)))
-  end
-
-  ####################################################################################################
-
-  # identify peak
-  R" peakDf <- peak_iden($msLabelAr, 1) "
-  @rget peakDf
-
-  ####################################################################################################
-
   # iterate on thresholds
   for timeThres ∈ timeThresholds
+
+    ####################################################################################################
+
+    # load hidden Markov model
+    msHmmDc = Dict{String, HMM}()
+    for κ ∈ @eval $montage
+      msHmmDc[κ] = HMM([zeros(0)], [zeros(0)], HiddenMarkovModelReaders.readHMMtraceback(string(mindHMM, "/"), string(summary, "_", κ, "_", montageSt)))
+    end
+
+    ####################################################################################################
+
     # preallocate mask
     maskDc = Dict{String, Vector{Int}}()
 
@@ -165,11 +162,15 @@ for montage ∈ montages
       tb = υ.traceback[1:end .∉ [maskDc[κ]]]
       lb = msLabelAr[1:end .∉ [maskDc[κ]]]
 
+      # identify peak
+      R" peakDf <- peak_iden($lb, 1) "
+      @rget peakDf
+
       # iterate on peaks
       for ρ ∈ eachrow(peakDf)
 
         # collect calls
-        if sum(υ.traceback[convert(Int, ρ.lower_lim_ix):convert(Int, ρ.upper_lim_ix)] .> 1) > 1
+        if sum(tb[convert(Int, ρ.lower_lim_ix):convert(Int, ρ.upper_lim_ix)] .> 1) > 1
           tp += 1
         else
           fp += 1
