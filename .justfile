@@ -79,6 +79,9 @@ _default:
 
 ####################################################################################################
 
+
+####################################################################################################
+
 # apply post processing filter & calculate performance per event
 @Vesta-04-perEventPerformanceFilter:
   source src/bin/shell/perEventPerformanceFilter.sh
@@ -100,6 +103,9 @@ _default:
 # summarize performance per event
 @Vesta-07-summarizePerEventPerformance:
   julia --project src/stats/summarizePerEventPerformance.jl
+# annotate events
+@Vesta-S1-annotatedEvents:
+  julia --project src/stats/annotatedEvents.jl
 
 ####################################################################################################
 
