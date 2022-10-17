@@ -109,6 +109,12 @@ _default:
 
 ####################################################################################################
 
+# collect recorded time
+@Vesta-S2-collectTime:
+  julia --project src/stats/collectTime.jl
+
+####################################################################################################
+
 # create heatmap for recording
 @Vesta-08-sampleHeatmap:
   julia --project src/graphics/sampleHeatmap.jl
