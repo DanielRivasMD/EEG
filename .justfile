@@ -62,47 +62,47 @@ _default:
 ####################################################################################################
 
 # concatenate model tracebacks
-@Vesta-01-concatenateModels:
+@Vesta-P1-concatenateModels:
   source src/bin/shell/concatenateModels.sh
 
 ####################################################################################################
 
 # apply post processing filter & calculate performance
-@Vesta-02-performanceConcatenatedFilter:
+@Vesta-P2-performanceConcatenatedFilter:
   source src/bin/shell/performanceConcatenatedFilter.sh
 
 ####################################################################################################
 
 # parse performance
-@Vesta-03-parsePerformance:
+@Vesta-P3-parsePerformance:
   julia --project src/bin/julia/parsePerformance.jl
 
 ####################################################################################################
 
+# summarize performance
+@Vesta-P4-summarizePerformance:
+  julia --project src/stats/summarizePerformance.jl
 
 ####################################################################################################
 
 # apply post processing filter & calculate performance per event
-@Vesta-04-perEventPerformanceFilter:
+@Vesta-P2-perEventPerformanceFilter:
   source src/bin/shell/perEventPerformanceFilter.sh
 
 ####################################################################################################
 
 # parse performance per event
-@Vesta-05-parsePerEventPerformance:
+@Vesta-P3-parsePerEventPerformance:
   julia --project src/bin/julia/parsePerEventPerformance.jl
 
 ####################################################################################################
 
-# summarize performance
-@Vesta-06-summarizePerformance:
-  julia --project src/stats/summarizePerformance.jl
+# summarize performance per event
+@Vesta-P4-summarizePerEventPerformance:
+  julia --project src/stats/summarizePerEventPerformance.jl
 
 ####################################################################################################
 
-# summarize performance per event
-@Vesta-07-summarizePerEventPerformance:
-  julia --project src/stats/summarizePerEventPerformance.jl
 # annotate events
 @Vesta-S1-annotatedEvents:
   julia --project src/stats/annotatedEvents.jl
@@ -116,19 +116,19 @@ _default:
 ####################################################################################################
 
 # create heatmap for recording
-@Vesta-08-sampleHeatmap:
+@Vesta-G1-sampleHeatmap:
   julia --project src/graphics/sampleHeatmap.jl
 
 ####################################################################################################
 
 # plot roc curve performance
-@Vesta-09-ROC:
+@Vesta-G2-ROC:
   julia --project src/graphics/ROC.jl
 
 ####################################################################################################
 
 # plot montage
-@Vesta-10-EEGMontage:
+@Vesta-G3-EEGMontage:
   julia --project src/graphics/EEGMontage.jl
 
 ####################################################################################################
