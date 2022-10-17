@@ -1,8 +1,8 @@
 ####################################################################################################
 
 # project
-projDir = "/Users/drivas/Factorem/EEG"
-mindDir = "/Users/drivas/Factorem/MindReader"
+projDir = string(homedir(), "/Factorem/EEG")
+mindDir = string(homedir(), "/Factorem/MindReader")
 
 ####################################################################################################
 

@@ -1,8 +1,8 @@
 ####################################################################################################
 
 # project
-projDir="/Users/drivas/Factorem/EEG"
-mindDir="/Users/drivas/Factorem/MindReader"
+projDir="${HOME}/Factorem/EEG"
+mindDir="${HOME}/Factorem/MindReader"
 
 ####################################################################################################
 
