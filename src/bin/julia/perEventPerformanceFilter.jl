@@ -138,6 +138,11 @@ for montage ∈ montages
 
     ####################################################################################################
 
+    # preallocate maximum vector
+    mxHmm = zeros(Int, msHmmDc |> keys .|> string |> π -> getindex(π, 1) |> π -> msHmmDc[π].traceback |> length)
+
+    ####################################################################################################
+
     # preallocate mask
     maskDc = Dict{String, Vector{Int}}()
 
@@ -155,10 +160,16 @@ for montage ∈ montages
       tp = 0
       fp = 0
 
+      # load maximum vector
+      mxHmm += υ.traceback
+
       # collect masks
       maskDc[κ] = findall(χ -> χ == -1, υ.traceback)
 
-      # redeclare traceback & laber array
+      # keep mask footprint
+      mxHmm[maskDc[κ]] .= -1
+
+      # redeclare traceback & label array
       tb = υ.traceback[1:end .∉ [maskDc[κ]]]
       lb = msLabelAr[1:end .∉ [maskDc[κ]]]
 
@@ -182,6 +193,35 @@ for montage ∈ montages
       push!(df, (κ, tp, fp))
 
     end
+
+    ####################################################################################################
+
+    # preallocate temporary values
+    tp = 0
+    fp = 0
+
+    # redeclare maximum traceback
+    tb = mxHmm[1:end .∉ [findall(χ -> χ == -1, mxHmm)]]
+    lb = msLabelAr[1:end .∉ [findall(χ -> χ == -1, mxHmm)]]
+
+    # identify peak
+    R" peakDf <- peak_iden($lb, 1) "
+    @rget peakDf
+
+    # iterate on peaks
+    for ρ ∈ eachrow(peakDf)
+
+      # collect calls
+      if sum(tb[convert(Int, ρ.lower_lim_ix):convert(Int, ρ.upper_lim_ix)] .> 1) > 1
+        tp += 1
+      else
+        fp += 1
+      end
+
+    end
+
+    # assign dataframe row
+    push!(df, ("Maximum", tp, fp))
 
     ####################################################################################################
 
