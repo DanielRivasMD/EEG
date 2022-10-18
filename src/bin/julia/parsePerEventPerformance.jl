@@ -31,9 +31,6 @@ for tier ∈ rocList
   # declare collected dataframe
   Df = DataFrame(Electrode = String[])
 
-  # declare max dataframe
-  maxDf = DataFrame(Electrode = String[])
-
   # list records
   csvList = readdir(string(mindData, "/", "event", "/", tier))
 
@@ -50,14 +47,10 @@ for tier ∈ rocList
     Df = outerjoin(Df, df[:, [:Electrode, :Recall]]; on = :Electrode)
     rename!(Df, :Recall => replace(csv, ".csv" => ""))
 
-    maxDf = outerjoin(maxDf, df[:, [:Electrode, :TP]]; on = :Electrode)
-    rename!(maxDf, :TP => replace(csv, ".csv" => ""))
-
   end
 
   # write dataframe
   writedf(string(mindData, "/", "recall", "/", "filter", tier, ".csv"), Df; sep = ',')
-  writedf(string(mindData, "/", "recall", "/", "max", tier, ".csv"), Df; sep = ',')
 
 end
 
