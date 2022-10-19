@@ -79,7 +79,7 @@ writedf(string(mindCSV, "/", record, ".csv"), df; sep = ',')
 ####################################################################################################
 
 # load peak identification function
-R" source(paste0($utilDir, '/peakIden.R')) "
+R" source(paste0($utilDir, '/peakIden.R')) ";
 
 ####################################################################################################
 
@@ -142,5 +142,17 @@ heatmap!(
 
 # save figure
 save(string(mindPlot, "/", record, ".svg"), φ)
+
+####################################################################################################
+
+# interactive annotations
+annot = df[:, :Annotation]
+R" peakDf <- peak_iden($annot, 2) ";
+@rget peakDf
+
+# iterate on peaks
+for ρ ∈ eachrow(peakDf)
+  @info ((map(sum, eachrow(df[Int(ρ.lower_lim_ix):Int(ρ.upper_lim_ix), 1:end - 1])) ./ (size(df, 2) - 1)) |> sum) ./ ρ.peak_length_ix
+end
 
 ####################################################################################################
