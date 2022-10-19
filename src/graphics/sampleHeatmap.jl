@@ -69,7 +69,7 @@ end
 
 # read files into dataframe array & concatenate
 df = [readdf(string(mindHMM, "/", ι); sep = ',') for ι ∈ states]
-df = hcat(labelDf, df...)
+df = hcat(df..., labelDf)
 
 ####################################################################################################
 
@@ -94,8 +94,12 @@ timeThres = 120
 # apply filter
 for ι ∈ axes(df, 2)
 
-  # preserve annotation
-  if ι == 1 continue end
+  # preserve annotation filtering & adjust values
+  if ι == size(df, 2)
+    df[df[:, :Annotation] .== 1, ι] .= artificialState
+    df[df[:, :Annotation] .== 0, ι] .+= 1
+    continue
+  end
 
   # declare traceback
   ψ = df[:, ι]
