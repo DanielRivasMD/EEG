@@ -61,6 +61,12 @@ _default:
 
 ####################################################################################################
 
+# run main dataset
+@Vesta-P0-runPhysionet:
+  source src/bin/shell/runPhysionet.sh
+
+####################################################################################################
+
 # concatenate model tracebacks
 @Vesta-P1-concatenateModels:
   source src/bin/shell/concatenateModels.sh
