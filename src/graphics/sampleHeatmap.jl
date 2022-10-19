@@ -27,10 +27,15 @@ end;
 
 ####################################################################################################
 
+# declare recording
+record = "chb12_27"
+
+####################################################################################################
+
 # identify files to load
 states = @chain begin
   readdir(mindHMM)
-  filter(χ -> occursin("chb04_28", χ), _)
+  filter(χ -> occursin(record, χ), _)
   filter(χ -> occursin("traceback", χ), _)
 end
 
@@ -43,7 +48,7 @@ df = hcat(df...)
 ####################################################################################################
 
 # write dataframe
-writedf(string(mindCSV, "/chb04_28.csv"), df; sep = ',')
+writedf(string(mindCSV, "/", record, ".csv"), df; sep = ',')
 
 ####################################################################################################
 
@@ -58,7 +63,7 @@ artificialState = 10.
 # since sample per record = 256, window size = 256, & overlap = 4
 # then each bin represents 1 second of recording with 1 quarter of second offset
 # declare time threshold
-timeThres = 20
+timeThres = 120
 
 # apply filter
 for ι ∈ axes(df, 2)
@@ -103,6 +108,6 @@ heatmap!(
 )
 
 # save figure
-save(string(mindPlot, "/chb04_28.svg"), φ)
+save(string(mindPlot, "/", record, ".svg"), φ)
 
 ####################################################################################################

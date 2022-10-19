@@ -54,10 +54,15 @@ end;
 
 ####################################################################################################
 
+# declare recording
+record = "chb04_28"
+
+####################################################################################################
+
 # identify files to load
 states = @chain begin
   readdir(mindHMM)
-  filter(χ -> occursin("chb04_28", χ), _)
+  filter(χ -> occursin(record, χ), _)
   filter(χ -> occursin("traceback", χ), _)
 end
 
@@ -141,7 +146,7 @@ for ι ∈ extractPoints
   ####################################################################################################
 
   # render image
-  renderImg(heatβ, string(dataDir, "/", "heatmap", ι, ".svg"))
+  renderImg(heatβ, string(dataDir, "/", "heatmap", "_", record, "_", ι, ".svg"))
 
   ####################################################################################################
 
