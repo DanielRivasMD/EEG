@@ -11,6 +11,10 @@ end;
 begin
   using Chain: @chain
 
+  # mind reader
+  using MindReader
+
+  # dependencies
   using ImageTransformations
   using RCall
 
@@ -23,12 +27,34 @@ end;
 # load modules
 begin
   include(string(utilDir, "/ioDataFrame.jl"))
+  include(string(annotationDir, "/functions/annotationCalibrator.jl"))
 end;
 
 ####################################################################################################
 
 # declare recording
 record = "chb12_27"
+subject = "chb12"
+
+####################################################################################################
+
+# read edf file
+edfDf, startTime, recordFreq = getSignals(string(dataDir, "/", record, ".edf"))
+
+####################################################################################################
+
+# read annotation
+annotFile = annotationReader(string(dataDir, "/"), string(subject, "-summary.txt"))
+
+####################################################################################################
+
+# calibrate annotations
+labelDf = annotationCalibrator(
+  annotFile[record];
+  recordFreq = recordFreq,
+  signalLength = size(edfDf, 1),
+  shParams = Dict("window-size" => 256, "bin-overlap" => 4),
+) |> π -> DataFrame(Annotation = π)
 
 ####################################################################################################
 
@@ -43,7 +69,7 @@ end
 
 # read files into dataframe array & concatenate
 df = [readdf(string(mindHMM, "/", ι); sep = ',') for ι ∈ states]
-df = hcat(df...)
+df = hcat(labelDf, df...)
 
 ####################################################################################################
 
@@ -67,6 +93,9 @@ timeThres = 120
 
 # apply filter
 for ι ∈ axes(df, 2)
+
+  # preserve annotation
+  if ι == 1 continue end
 
   # declare traceback
   ψ = df[:, ι]
