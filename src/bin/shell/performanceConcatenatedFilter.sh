@@ -40,8 +40,6 @@ do
   julia \
     --project \
     "${scriptJL}" \
-    --params "Parameters.jl" \
-    --paramsDir "${binDir}/julia/" \
     --input "${summary}" \
     --outDir "${mindData}" &> "${mindLog}/${summary/-summary.txt/.log}"
 
