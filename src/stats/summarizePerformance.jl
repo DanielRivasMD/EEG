@@ -61,6 +61,9 @@ for tier ∈ rocList
     # supress type column
     Df = Df[:, Not(:eltype)]
 
+    # supress missing column
+    Df = Df[:, Not(:nmissing)]
+
     # log
     @info describe(Df)
     @info Df

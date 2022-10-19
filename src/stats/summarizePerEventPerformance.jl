@@ -44,12 +44,15 @@ for tier ∈ rocList
   Df = describe(df[:, Not(:Electrode)])
 
   # calculate standard deviation
-  Df[:, :std] .= map(eachcol(df[:, Not(:Electrode)])) do ç
-    std(skipmissing(ç))
+  Df[:, :std] .= map(eachcol(df[:, Not(:Electrode)])) do μ
+    std(skipmissing(μ))
   end
 
   # supress type column
   Df = Df[:, Not(:eltype)]
+
+  # supress missing column
+  Df = Df[:, Not(:nmissing)]
 
   # log
   @info describe(Df)
