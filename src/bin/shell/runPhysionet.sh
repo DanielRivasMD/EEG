@@ -15,7 +15,7 @@ do
   for ix in {$bt}
   do
     # call physionet controller
-    source src/runDataset/physionet.sh $(printf "%02d\n" $ix) &
+    source src/bin/shell/physionet.sh $(printf "%02d\n" $ix) &
   done
 done
 

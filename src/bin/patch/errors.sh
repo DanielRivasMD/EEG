@@ -33,16 +33,16 @@ do
   # call read mind
   julia \
     --project \
-    "/Users/drivas/Factorem/MindReader/src/ReadMind.jl" \
+    "${mindDir}/src/ReadMind.jl" \
     --input "${edf//*\/}" \
     --inputDir "/Volumes/G/EEG/physionet.org/files/chbmit/1.0.0/${dir}/" \
     --params "Parameters.jl" \
     --paramsDir "${binDir}/config/" \
     --annotation "${annotation//*\/}" \
     --annotDir "${patient}/" \
-    --outDir "/Users/drivas/Factorem/MindReader/data/" \
+    --outDir "${mindData}" \
     --additional "annotationCalibrator.jl,fileReaderXLSX.jl" \
-    --addDir "/Users/drivas/Factorem/EEG/src/annotation/functions/" 1> "/Users/drivas/Factorem/MindReader/data/log/${${edf//*\/}/edf/log}" 2> "/Users/drivas/Factorem/MindReader/data/err/${${edf//*\/}/edf/err}"
+    --addDir "${annotationDir}/functions/" 1> "/Users/drivas/Factorem/MindReader/data/log/${${edf//*\/}/edf/log}" 2> "/Users/drivas/Factorem/MindReader/data/err/${${edf//*\/}/edf/err}"
 
 done
 
