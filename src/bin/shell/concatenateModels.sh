@@ -82,7 +82,7 @@ do
     --input $(unzip -l "${database}" | awk -v ix="$(printf %02d $ix)" 'BEGIN{ORS = ","} {if ($NF  ~ "chb"ix && $NF ~ "edf$") {gsub("[\-.a-z0-9]*/", "", $NF); print $NF}}') \
     --inputDir "${dataDir}/" \
     --params "Parameters.jl" \
-    --paramsDir "${binDir}/julia/" \
+    --paramsDir "${binDir}/config/" \
     --annotation "${summary}" \
     --annotDir "${dataDir}/" \
     --outDir "${mindData}" \

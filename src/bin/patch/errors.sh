@@ -37,7 +37,7 @@ do
     --input "${edf//*\/}" \
     --inputDir "/Volumes/G/EEG/physionet.org/files/chbmit/1.0.0/${dir}/" \
     --params "Parameters.jl" \
-    --paramsDir "/Users/drivas/Factorem/EEG/src/runDataset/" \
+    --paramsDir "${binDir}/config/" \
     --annotation "${annotation//*\/}" \
     --annotDir "${patient}/" \
     --outDir "/Users/drivas/Factorem/MindReader/data/" \
