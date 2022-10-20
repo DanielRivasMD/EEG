@@ -22,12 +22,12 @@ function shArgParser(args)
 
         "--params", "-p"
         arg_type = String
-        required = true
+        required = false
         help = "parameters"
 
         "--paramsDir", "-P"
         arg_type = String
-        required = true
+        required = false
         help = "params file directory"
 
         "--annotation", "-a"
