@@ -3,7 +3,8 @@
 # calculate stats per recording
 function recordingSS(df)
   Ω = DataFrame(name = String[], mean = Float64[], std = Float64[])
-  for ι ∈ 2:size(df, 2)
+  for ι ∈ axes(df, 2)
+    if ι == 1 continue end
     push!(Ω, [names(df)[ι], df[df[:, ι] .!= 0, ι] |> mean, df[df[:, ι] .!= 0, ι] |> std])
   end
   return Ω
