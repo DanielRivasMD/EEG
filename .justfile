@@ -68,6 +68,12 @@ _default:
 ####################################################################################################
 
 # concatenate model tracebacks
+@Vesta-P1-performanceIndividual:
+  source src/bin/shell/performanceIndividual.sh
+
+####################################################################################################
+
+# concatenate model tracebacks
 @Vesta-P1-concatenateModels:
   source src/bin/shell/concatenateModels.sh
 
