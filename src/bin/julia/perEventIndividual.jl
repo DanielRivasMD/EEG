@@ -156,11 +156,6 @@ for ƒ ∈ shArgs["input"]
 
     ####################################################################################################
 
-    # preallocate dictionary
-    mxTb = zeros(Int, convert.(Int, size(edfDf, 1) / (shArgs["window-size"] / shArgs["bin-overlap"])))
-
-    ####################################################################################################
-
     # load manually. catch non-present files
     hmmDc = Dict{String, HMM}()
     try
@@ -189,66 +184,47 @@ for ƒ ∈ shArgs["input"]
         υ.traceback[Int(ρ[:lower_lim_ix]):Int(ρ[:upper_lim_ix])] .= artificialState
       end
 
-      # declare traceback
-      tb = υ.traceback
-
-      # identify peak
-      R" peakDf <- peak_iden($tb, $artificialState) "
-      @rget peakDf
-
       # preallocate temporary values
-      tp = 0
+      tp = zeros(Int, size(labelDf, 1))
 
       # iterate on annotations
-      for ρ ∈ eachrow(labelDf)
+      for (ι, ρ) ∈ enumerate(eachrow(labelDf))
+
+        # extract subset
+        subVc = υ.traceback[Int(ρ[:lower_lim_ix]):Int(ρ[:upper_lim_ix])]
 
         # identify peak overlaps
-        precisionDf = filter([:lower_lim_ix, :upper_lim_ix] => (lowix, uppix) -> lowix .> ρ[:lower_lim_ix] && uppix .< ρ[:upper_lim_ix], peakDf)
+        R" subDf <- peak_iden($subVc, $artificialState) "
+        @rget subDf
 
         # score overlaps
-        if size(precisionDf, 1) > 0
-          tp += 1
+        if size(subDf, 1) > 0
+          tp[ι] += 1
         end
 
       end
 
-      # assign dataframe row
-      push!(df, (κ, tp, size(labelDf, 1) - tp))
+      # collect identification record
+      labelDf[!, κ] = tp
 
-      # add maximum traceback
-      mxTb .+= tb
-
-    end
-
-    ####################################################################################################
-
-    # identify peak
-    R" peakDf <- peak_iden($mxTb, length($channels) + 1) "
-    @rget peakDf
-
-    # preallocate temporary values
-    tp = 0
-
-    # iterate on annotations
-    for ρ ∈ eachrow(labelDf)
-
-      # identify peak overlaps
-      precisionDf = filter([:lower_lim_ix, :upper_lim_ix] => (lowix, uppix) -> lowix .> ρ[:lower_lim_ix] && uppix .< ρ[:upper_lim_ix], peakDf)
-
-      # score overlaps
-      if size(precisionDf, 1) > 0
-        tp += 1
-      end
+      # append dataframe
+      push!(df, (κ, sum(tp), size(labelDf, 1) - sum(tp)))
 
     end
-
-    # assign dataframe row
-    push!(df, ("Maximum", tp, size(labelDf, 1) - tp))
 
     ####################################################################################################
 
     # calculate recall
     df[:, :Recall] .= df[:, :TP] ./ (df[:, :TP] + df[:, :FP])
+
+    ####################################################################################################
+
+    # write label & identification
+    writedf(
+      string(shArgs["outDir"], "/", "event", "/", timeThres, "/", replace(ƒ, "edf" => "csv")),
+      labelDf;
+      sep = ',',
+    )
 
     ####################################################################################################
 
