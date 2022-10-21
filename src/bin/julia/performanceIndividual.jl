@@ -66,7 +66,7 @@ end
 ####################################################################################################
 
 # declare artificial state
-artificialState = 10.
+artificialState = 10
 
 # since sample per record = 256, window size = 256, & overlap = 4
 # then each bin represents 1 second of recording with 1 quarter of second offset
