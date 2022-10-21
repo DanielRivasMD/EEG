@@ -36,7 +36,6 @@ include(string(importDir, "/utilitiesJL/argParser.jl"));
 # load modules
 begin
   include(string(utilDir, "/ioDataFrame.jl"))
-  include(string(utilDir, "/montage.jl"))
 end;
 
 ####################################################################################################
@@ -253,7 +252,7 @@ for ƒ ∈ shArgs["input"]
 
     ####################################################################################################
 
-    # calculate performance
+    # write precision
     writedf(
       string(shArgs["outDir"], "/", "precision", "/", timeThres, "/", replace(ƒ, "edf" => "csv")),
       df;

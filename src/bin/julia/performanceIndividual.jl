@@ -32,13 +32,6 @@ include(string(importDir, "/utilitiesJL/argParser.jl"));
 
 ####################################################################################################
 
-# load modules
-begin
-  include(string(utilDir, "/montage.jl"))
-end;
-
-####################################################################################################
-
 # load peak identification function
 R" source(paste0($utilDir, '/peakIden.R')) ";
 
@@ -178,7 +171,7 @@ for ƒ ∈ shArgs["input"]
 
     ####################################################################################################
 
-    # calculate performance
+    # write performance
     writedlm(
       string(shArgs["outDir"], "/", "screen/", timeThres, "/", replace(ƒ, "edf" => "csv")),
       writePerformance(sensitivitySpecificity(hmmDc, labelAr)),
