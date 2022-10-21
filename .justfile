@@ -73,6 +73,12 @@ _default:
 
 ####################################################################################################
 
+# calculate performance per event
+@Vesta-P1-perEventIndividual:
+  source src/bin/shell/perEventIndividual.sh
+
+####################################################################################################
+
 # concatenate model tracebacks
 @Vesta-P1-concatenateModels:
   source src/bin/shell/concatenateModels.sh
