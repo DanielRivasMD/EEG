@@ -111,43 +111,35 @@ for ƒ ∈ shArgs["input"]
 
   ####################################################################################################
 
-  # read data
-  begin
-
-    # read edf file
-    edfDf, startTime, recordFreq = getSignals(string(shArgs["inputDir"], ƒ))
-
-    # calibrate annotations
-    if haskey(annotFile, edf)
-      labelAr = annotationCalibrator(
-        annotFile[edf];
-        recordFreq = recordFreq,
-        signalLength = size(edfDf, 1),
-        shParams = shArgs,
-      ) .|> Int
-    # declare an empty vector
-    else
-      labelAr = zeros(Int, convert.(Int, size(edfDf, 1) / (shArgs["window-size"] / shArgs["bin-overlap"])))
-    end
-
-    # identify peak
-    R" labelDf <- peak_iden($labelAr, 1) "
-    @rget labelDf
-
-  end;
-
-  ####################################################################################################
-
-  # record time points
-  writedlm(
-    string(mindData, "/", "time", "/", edf, ".txt"),
-    [size(edfDf, 1)],
-  )
-
-  ####################################################################################################
-
   # iterate on thresholds
   for timeThres ∈ timeThresholds
+
+    ####################################################################################################
+
+    # read data
+    begin
+
+      # read edf file
+      edfDf, startTime, recordFreq = getSignals(string(shArgs["inputDir"], ƒ))
+
+      # calibrate annotations
+      if haskey(annotFile, edf)
+        labelAr = annotationCalibrator(
+          annotFile[edf];
+          recordFreq = recordFreq,
+          signalLength = size(edfDf, 1),
+          shParams = shArgs,
+        ) .|> Int
+      # declare an empty vector
+      else
+        labelAr = zeros(Int, convert.(Int, size(edfDf, 1) / (shArgs["window-size"] / shArgs["bin-overlap"])))
+      end
+
+      # identify peak
+      R" labelDf <- peak_iden($labelAr, 1) "
+      @rget labelDf
+
+    end;
 
     ####################################################################################################
 
