@@ -67,7 +67,7 @@ _default:
 
 ####################################################################################################
 
-# concatenate model tracebacks
+# calculate performance per frame
 @Vesta-P1-performanceIndividual:
   source src/bin/shell/performanceIndividual.sh
 
