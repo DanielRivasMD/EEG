@@ -29,7 +29,7 @@ rocList = readdir(string(mindData, "/", "event"))
 for tier ∈ rocList
 
   # declare collected dataframe
-  Df = DataFrame(Electrode = String[])
+  collectDf = DataFrame(Record = String[], Detected = Int[], peak_no = Float64[], lower_lim_ix = Float64[], upper_lim_ix = Float64[], peak_length_ix = Float64[])
 
   # list records
   csvList = readdir(string(mindData, "/", "event", "/", tier))
@@ -40,17 +40,23 @@ for tier ∈ rocList
     # read csv file
     df = CSV.read(string(mindData, "/", "event", "/", tier, "/", csv), DataFrame)
 
-    # remove missing rows by index
-    df = df[Not(ismissing.(df[:, :Electrode])), :]
+    # read files with annotations
+    if size(df, 1) > 0
 
-    # join dataframes
-    Df = outerjoin(Df, df[:, [:Electrode, :Recall]]; on = :Electrode)
-    rename!(Df, :Recall => replace(csv, ".csv" => ""))
+      # collected detection
+      # peak detection only contains 4 fields
+      det = map(sum, eachrow(df[:, 5:end]))
+
+      for ι ∈ axes(df, 1)
+        push!(collectDf, [replace(csv, ".csv" => ""); det[ι] > 0; [df[ι, ο] for ο ∈ 1:4]])
+      end
+
+    end
 
   end
 
   # write dataframe
-  writedf(string(mindData, "/", "recall", "/", "filter", tier, ".csv"), Df; sep = ',')
+  writedf(string(mindData, "/", "recall", "/", "filter", tier, ".csv"), collectDf; sep = ',')
 
 end
 
