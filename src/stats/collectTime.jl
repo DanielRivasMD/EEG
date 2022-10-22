@@ -9,6 +9,9 @@ end;
 
 # load packages
 begin
+  using Chain: @chain
+
+  # dependencies
   using DelimitedFiles
   using DataFrames
 end;
@@ -55,5 +58,14 @@ end
 
 # write dataframe
 writedf(string(mindData, "/", "summary", "/", "timeRecords", ".csv"), df; sep = ',')
+
+# collect subject times
+gdf = @chain df begin
+  groupby(_, :Subject)
+  combine(:Samples => sum => :Samples)
+end
+
+# write dataframe
+writedf(string(mindData, "/", "summary", "/", "timeSubjects", ".csv"), gdf; sep = ',')
 
 ####################################################################################################
