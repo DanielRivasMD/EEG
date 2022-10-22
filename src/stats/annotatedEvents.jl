@@ -24,7 +24,7 @@ end;
 ####################################################################################################
 
 # create dataframe
-df = DataFrame(subject = String[], events = Int64[])
+df = DataFrame(Subject = String[], Events = Int64[])
 
 # list directories
 summList = readdir(dataDir) |> π -> filter(χ -> contains(χ, "summary"), π)
@@ -50,7 +50,7 @@ for summ ∈ summList
 end
 
 # summarize all subjects
-push!(df, ("Total", sum(df[:, :events])))
+push!(df, ("Total", sum(df[:, :Events])))
 
 # write dataframe
 writedf(string(mindData, "/", "summary", "/", "events", ".csv"), df; sep = ',')

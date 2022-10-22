@@ -24,7 +24,7 @@ end;
 ####################################################################################################
 
 # create dataframe
-df = DataFrame(subject = String[], record = String[], samples = Int64[])
+df = DataFrame(Subject = String[], Record = String[], Samples = Int64[])
 
 # list directories
 timeList = readdir(string(mindData, "/", "time"))
