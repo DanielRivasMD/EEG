@@ -9,6 +9,9 @@ end;
 
 # load packages
 begin
+  using Chain: @chain
+
+  # dependencies
   using CSV
   using DataFrames
   using Statistics
@@ -29,37 +32,26 @@ rocList = readdir(string(mindData, "/", "event"))
 # iterate on directories
 for tier ∈ rocList
 
-  # log
-  @info tier
-
   # read dataframe
   df = readdf(string(mindData, "/", "recall", "/", "filter", tier, ".csv"); sep = ',')
 
-  # patch missing values
-  for (ι, ç) ∈ enumerate(eachcol(df))
-    df[!, ι] .= replace(ç, "missing" => missing)
+  # add total count
+  df[!, :Total] .= 1
+
+  # collect results
+  gdf = @chain df begin
+    groupby(_, :Subject)
+    combine(:Detected => sum => :Detected, :Total => sum => :Total)
   end
 
-  # construct dataframe
-  Df = describe(df[:, Not(:Electrode)])
+  # summarize all subjects
+  push!(gdf, ("Total", sum(gdf[:, :Detected]), sum(gdf[:, :Total])))
 
-  # calculate standard deviation
-  Df[:, :std] .= map(eachcol(df[:, Not(:Electrode)])) do μ
-    std(skipmissing(μ))
-  end
-
-  # supress type column
-  Df = Df[:, Not(:eltype)]
-
-  # supress missing column
-  Df = Df[:, Not(:nmissing)]
-
-  # log
-  @info describe(Df)
-  @info Df
+  # calculate percentage
+  gdf[!, :Percentage] .= gdf[:, :Detected] ./ gdf[:, :Total]
 
   # write dataframe
-  writedf(string(mindData, "/", "summary", "/", "recall", tier, ".csv"), Df; sep = ',')
+  writedf(string(mindData, "/", "summary", "/", "precision", tier, ".csv"), gdf; sep = ',')
 
 end
 
