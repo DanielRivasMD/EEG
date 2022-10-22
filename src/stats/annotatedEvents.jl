@@ -49,6 +49,9 @@ for summ ∈ summList
 
 end
 
+# summarize all subjects
+push!(df, ("Total", sum(df[:, :events])))
+
 # write dataframe
 writedf(string(mindData, "/", "summary", "/", "events", ".csv"), df; sep = ',')
 
