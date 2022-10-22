@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 # DOC: measure performance on concatenated subjects
-# control performanceConcatenatedFilter.jl
+# control frameConcatenated.jl
 # input:
 #   summary files for annotations
 #   concatenated labels @ label
@@ -19,7 +19,7 @@ source "${HOME}/Factorem/EEG/src/config/config.sh"
 
 # declarations
 database="${externalDir}/chb-mit-scalp-eeg-database-1.0.0.zip"
-scriptJL="${binDir}/julia/performanceConcatenatedFilter.jl"
+scriptJL="${binDir}/julia/frameConcatenated.jl"
 
 ####################################################################################################
 

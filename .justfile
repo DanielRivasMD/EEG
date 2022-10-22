@@ -67,9 +67,33 @@ _default:
 
 ####################################################################################################
 
+# concatenate model tracebacks
+@Vesta-P0-concatenateModels:
+  source src/bin/shell/concatenateModels.sh
+
+####################################################################################################
+
 # calculate performance per frame
-@Vesta-P1-performanceIndividual:
-  source src/bin/shell/performanceIndividual.sh
+@Vesta-P1-frameIndividual:
+  source src/bin/shell/frameIndividual.sh
+
+####################################################################################################
+
+# apply post processing filter & calculate performance per frame
+@Vesta-P2-frameConcatenated:
+  source src/bin/shell/frameConcatenated.sh
+
+####################################################################################################
+
+# parse performance per frame
+@Vesta-P3-frameParse:
+  julia --project src/bin/julia/frameParse.jl
+
+####################################################################################################
+
+# summarize performance per frame
+@Vesta-P4-frameSummarize:
+  julia --project src/stats/frameSummarize.jl
 
 ####################################################################################################
 
@@ -79,45 +103,21 @@ _default:
 
 ####################################################################################################
 
-# concatenate model tracebacks
-@Vesta-P1-concatenateModels:
-  source src/bin/shell/concatenateModels.sh
-
-####################################################################################################
-
-# apply post processing filter & calculate performance
-@Vesta-P2-performanceConcatenatedFilter:
-  source src/bin/shell/performanceConcatenatedFilter.sh
-
-####################################################################################################
-
-# parse performance
-@Vesta-P3-parsePerformance:
-  julia --project src/bin/julia/parsePerformance.jl
-
-####################################################################################################
-
-# summarize performance
-@Vesta-P4-summarizePerformance:
-  julia --project src/stats/summarizePerformance.jl
-
-####################################################################################################
-
 # apply post processing filter & calculate performance per event
-@Vesta-P2-perEventPerformanceFilter:
-  source src/bin/shell/perEventPerformanceFilter.sh
+@Vesta-P2-eventConcatenated:
+  source src/bin/shell/eventConcatenated.sh
 
 ####################################################################################################
 
 # parse performance per event
-@Vesta-P3-parsePerEventPerformance:
-  julia --project src/bin/julia/parsePerEventPerformance.jl
+@Vesta-P3-eventParse:
+  julia --project src/bin/julia/eventParse.jl
 
 ####################################################################################################
 
 # summarize performance per event
-@Vesta-P4-summarizePerEventPerformance:
-  julia --project src/stats/summarizePerEventPerformance.jl
+@Vesta-P4-eventSummarize:
+  julia --project src/stats/eventSummarize.jl
 
 ####################################################################################################
 

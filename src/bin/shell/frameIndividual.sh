@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 # DOC: concatenate model tracebacks
-# control performanceIndividual.jl
+# control frameIndividual.jl
 # input:
 #   summary files for annotations
 #   list of edf files per subject
@@ -19,7 +19,7 @@ source "${HOME}/Factorem/EEG/src/config/config.sh"
 
 # declarations
 database="${externalDir}/chb-mit-scalp-eeg-database-1.0.0.zip"
-scriptJL="${binDir}/julia/performanceIndividual.jl"
+scriptJL="${binDir}/julia/frameIndividual.jl"
 
 ####################################################################################################
 
