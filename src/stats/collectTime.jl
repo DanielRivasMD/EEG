@@ -101,6 +101,12 @@ for sm ∈ summList
 
 end
 
+# summarize all subjects
+push!(gdf, ("Total", sum(gdf[:, :Seconds]), sum(gdf[:, :EventAggregate])))
+
+# calculate percentage
+gdf[!, :Percentage] .= gdf[:, :EventAggregate] ./ gdf[:, :Seconds]
+
 # write dataframe
 writedf(string(mindData, "/", "summary", "/", "timeSubjects", ".csv"), gdf; sep = ',')
 
