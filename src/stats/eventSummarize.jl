@@ -14,6 +14,7 @@ begin
   # dependencies
   using CSV
   using DataFrames
+  using DelimitedFiles
   using Statistics
 end;
 
@@ -34,6 +35,20 @@ for tier ∈ rocList
 
   # read dataframe
   df = readdf(string(mindData, "/", "recall", "/", "filter", tier, ".csv"); sep = ',')
+
+  if tier == rocList[1]
+
+    # group by existing records
+    eventRecords = groupby(df, :Record) |> length
+
+    # write number of records
+    writedlm(
+      string(mindData, "/", "summary", "/", "eventRecords", ".csv"),
+      eventRecords,
+      ",",
+    )
+
+  end
 
   # add total count
   df[!, :Total] .= 1
