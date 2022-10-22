@@ -88,8 +88,13 @@ for tier ∈ rocList
     rename!(collectDf, "x1" => :Subject)
 
     # write dataframe
-    @eval dir = $(string(Π)) |> lowercase
     @eval writedf(string(mindData, "/", dir, "/", "aggregated", $tier, ".csv"), $collectDf; sep = ',')
+
+    # filter recorded events
+    filterDf = collectDf[.!(isnan.(collectDf[:, :mean])), :]
+
+    # write dataframe
+    @eval writedf(string(mindData, "/", dir, "/", "recorded", $tier, ".csv"), $filterDf; sep = ',')
 
   end
 
