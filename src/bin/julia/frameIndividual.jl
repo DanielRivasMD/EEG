@@ -18,7 +18,9 @@ begin
   using HiddenMarkovModelReaders
 
   # dependencies
+  using DataFrames
   using DelimitedFiles
+  using FreqTables
   using RCall
 
   # parameters
@@ -173,10 +175,30 @@ for ƒ ∈ shArgs["input"]
 
     # write performance
     writedlm(
-      string(shArgs["outDir"], "/", "screen/", timeThres, "/", replace(ƒ, "edf" => "csv")),
+      string(shArgs["outDir"], "/", "screen", "/", timeThres, "/", replace(ƒ, "edf" => "csv")),
       writePerformance(sensitivitySpecificity(hmmDc, labelAr)),
       ",",
     )
+
+    ####################################################################################################
+
+    for (κ, υ) ∈ hmmDc
+
+      # declare copy
+      tb = υ.traceback
+
+      # reassign frecuency labels
+      labels = [1, 2]
+      tb[tb .> 1] .= 2
+
+      # write confusion matrix
+      writedlm(
+        string(shArgs["outDir"], "/", "confusionMt", "/", timeThres, "/", replace(ƒ, "edf" => "csv")),
+        MindReader.adjustFq(tb, labelAr, labels),
+        ",",
+      )
+
+    end
 
     ####################################################################################################
 
