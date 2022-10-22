@@ -9,21 +9,17 @@ end;
 
 # load packages
 begin
-  using CSV
-  using DataFrames
+  using DelimitedFiles
 end;
 
 ####################################################################################################
 
 # load modules
-begin
-  include(string(utilDir, "/ioDataFrame.jl"))
-end;
 
 ####################################################################################################
 
-# performance
-performance = [:Sensitivity, :Specificity]
+# subjects
+subjectList = string.("chb", string.(1:24, pad = 2))
 
 # list directories
 rocList = readdir(string(mindScreen))
@@ -31,38 +27,58 @@ rocList = readdir(string(mindScreen))
 # iterate on directories
 for tier ∈ rocList
 
-  # iterate on performance
-  for Π ∈ performance
+  # declare dataset matrix
+  datasetMt = zeros(Int, 2, 2)
 
-    # declare symbols
-    collectDf = Symbol(Π, "Df")
+  # list records
+  csvList = readdir(string(mindData, "/", "event", "/", tier)) |> π -> replace.(π, ".csv" => "")
 
-    # declare collected dataframe
-    @eval $collectDf = DataFrame(Electrode = String[])
+  # iterate on subjects
+  for subj ∈ subjectList
 
-    # list records
-    csvList = readdir(string(mindScreen, "/", tier))
+    # declare subject matrix
+    subjectMt = zeros(Int, 2, 2)
+
+    # select subject files
+    recordList = csvList |> π -> filter(χ -> contains(χ, subj), π)
 
     # iterate on files
-    for csv ∈ csvList
+    for record ∈ recordList
 
-      # read csv file
-      df = CSV.read(string(mindScreen, "/", tier, "/", csv), DataFrame)
+      # declare record matrix
+      recordMt = zeros(Int, 2, 2)
 
-      # remove missing rows by index
-      df = df[Not(ismissing.(df[:, :Electrode])), :]
+      # select record files
+      channelList = readdir(string(mindData, "/", "confusionMt", "/", "channel", "/", tier)) |> π -> filter(χ -> contains(χ, record), π) |> π -> replace.(π, ".csv" => "")
 
-      # join dataframes
-      @eval global $collectDf = outerjoin($collectDf, $df[:, ["Electrode", $(string(Π))]]; on = :Electrode)
-      @eval rename!($collectDf, $(string(Π)) => Symbol(replace($csv, ".csv" => "")))
+      for channel ∈ channelList
+
+        # read csv file
+        mt = readdlm(string(mindData, "/", "confusionMt", "/", "channel", "/", tier, "/", channel, ".csv"), ',')
+
+        # add channel to record confusion matrix
+        recordMt .+= mt
+
+      end
+
+      # write record matrix
+      writedlm(string(mindData, "/", "confusionMt", "/", "record", "/", tier, "/", record, ".csv"), recordMt, ',')
+
+      # add record to subject confusion matrix
+      subjectMt .+= recordMt
 
     end
 
-    # write dataframe
-    @eval dir = $(string(Π)) |> lowercase
-    @eval writedf(string(mindData, "/", dir, "/", "filter", $tier, ".csv"), $collectDf; sep = ',')
+    # write subject matrix
+    writedlm(string(mindData, "/", "confusionMt", "/", "subject", "/", tier, "/", subj, ".csv"), subjectMt, ',')
+
+    # add subject to dataset confusion matrix
+    datasetMt .+= subjectMt
 
   end
+
+  # write dataset matrix
+  writedlm(string(mindData, "/", "confusionMt", "/", "dataset", "/", tier, ".csv"), datasetMt, ',')
 
 end
 
