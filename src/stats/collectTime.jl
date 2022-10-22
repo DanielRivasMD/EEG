@@ -24,7 +24,7 @@ end;
 ####################################################################################################
 
 # create dataframe
-df = DataFrame(record = String[], samples = Int64[])
+df = DataFrame(subject = String[], record = String[], samples = Int64[])
 
 # list directories
 timeList = readdir(string(mindData, "/", "time"))
@@ -32,15 +32,28 @@ timeList = readdir(string(mindData, "/", "time"))
 # iterate on times
 for tim ∈ timeList
 
+  # extract subject
+  subj = @chain tim begin
+    replace.(".txt" => "")
+    replace.(r"_\d\d" => "")
+    replace.("a" => "")
+    replace.("b" => "")
+    replace.("c" => "")
+    replace.("h" => "")
+    replace.("_" => "")
+    replace.("+" => "")
+    string("chb", _)
+  end
+
   # read time
   mt = readdlm(string(mindData, "/", "time", "/", tim))
 
   # append rows
-  push!(df, [replace(tim, ".txt" => ""), mt[1, 1]])
+  push!(df, [subj, replace(tim, ".txt" => ""), mt[1, 1]])
 
 end
 
 # write dataframe
-writedf(string(mindData, "/", "summary", "/", "time", ".csv"), df; sep = ',')
+writedf(string(mindData, "/", "summary", "/", "timeRecords", ".csv"), df; sep = ',')
 
 ####################################################################################################
