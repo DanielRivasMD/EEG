@@ -9,11 +9,19 @@ end;
 
 # load packages
 begin
+  # dependencies
   using CSV
   using DataFrames
 
   # Makie
   using CairoMakie
+end;
+
+####################################################################################################
+
+# load modules
+begin
+  include(string(configDir, "/timeThresholds.jl"))
 end;
 
 ####################################################################################################
@@ -49,23 +57,20 @@ end
 
 ####################################################################################################
 
-# list directories
-rocList = readdir(string(mindROC))
-
 # iterate on directories
-for tier ∈ rocList
+for timeThres ∈ timeThresholds
 
   # list records
-  csvList = readdir(string(mindROC, "/", tier))
+  csvList = readdir(string(mindROC, "/", timeThres))
 
   # iterate on files
   for csv ∈ csvList
 
     # read csv file
-    df = CSV.read(string(mindROC, "/", tier, "/", csv), DataFrame)
+    df = CSV.read(string(mindROC, "/", timeThres, "/", csv), DataFrame)
 
     # plot
-    renderROC(df, string(mindPlot, "/", tier, "/", replace(csv, ".csv" => ""), ".png"))
+    renderROC(df, string(mindPlot, "/", timeThres, "/", replace(csv, ".csv" => ""), ".png"))
 
   end
 end

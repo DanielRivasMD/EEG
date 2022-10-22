@@ -21,21 +21,19 @@ end;
 # load modules
 begin
   include(string(utilDir, "/ioDataFrame.jl"))
+  include(string(configDir, "/timeThresholds.jl"))
 end;
 
 ####################################################################################################
 
-# list directories
-rocList = readdir(string(mindData, "/", "event"))
-
 # iterate on directories
-for tier ∈ rocList
+for timeThres ∈ timeThresholds
 
   # declare collected dataframe
   collectDf = DataFrame(Subject = String[], Record = String[], Detected = Int[], peak_no = Float64[], lower_lim_ix = Float64[], upper_lim_ix = Float64[], peak_length_ix = Float64[])
 
   # list records
-  csvList = readdir(string(mindData, "/", "event", "/", tier))
+  csvList = readdir(string(mindData, "/", "event", "/", timeThres))
 
   # iterate on files
   for csv ∈ csvList
@@ -54,7 +52,7 @@ for tier ∈ rocList
     end
 
     # read csv file
-    df = CSV.read(string(mindData, "/", "event", "/", tier, "/", csv), DataFrame)
+    df = CSV.read(string(mindData, "/", "event", "/", timeThres, "/", csv), DataFrame)
 
     # read files with annotations
     if size(df, 1) > 0
@@ -72,7 +70,7 @@ for tier ∈ rocList
   end
 
   # write dataframe
-  writedf(string(mindData, "/", "recall", "/", "filter", tier, ".csv"), collectDf; sep = ',')
+  writedf(string(mindData, "/", "recall", "/", "filter", timeThres, ".csv"), collectDf; sep = ',')
 
 end
 

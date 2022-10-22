@@ -23,20 +23,18 @@ end;
 # load modules
 begin
   include(string(utilDir, "/ioDataFrame.jl"))
+  include(string(configDir, "/timeThresholds.jl"))
 end;
 
 ####################################################################################################
 
-# list directories
-rocList = readdir(string(mindData, "/", "event"))
-
 # iterate on directories
-for tier ∈ rocList
+for timeThres ∈ timeThresholds
 
   # read dataframe
-  df = readdf(string(mindData, "/", "recall", "/", "filter", tier, ".csv"); sep = ',')
+  df = readdf(string(mindData, "/", "recall", "/", "filter", timeThres, ".csv"); sep = ',')
 
-  if tier == rocList[1]
+  if timeThres == timeThresholds[1]
 
     # group by existing records
     eventRecords = groupby(df, :Record) |> length
@@ -66,7 +64,7 @@ for tier ∈ rocList
   gdf[!, :Percentage] .= gdf[:, :Detected] ./ gdf[:, :Total]
 
   # write dataframe
-  writedf(string(mindData, "/", "summary", "/", "precision", tier, ".csv"), gdf; sep = ',')
+  writedf(string(mindData, "/", "summary", "/", "precision", timeThres, ".csv"), gdf; sep = ',')
 
 end
 

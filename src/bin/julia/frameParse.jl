@@ -15,23 +15,23 @@ end;
 ####################################################################################################
 
 # load modules
+begin
+  include(string(configDir, "/timeThresholds.jl"))
+end;
 
 ####################################################################################################
 
 # subjects
 subjectList = string.("chb", string.(1:24, pad = 2))
 
-# list directories
-rocList = readdir(string(mindScreen))
-
 # iterate on directories
-for tier ∈ rocList
+for timeThres ∈ timeThresholds
 
   # declare dataset matrix
   datasetMt = zeros(Int, 2, 2)
 
   # list records
-  csvList = readdir(string(mindData, "/", "event", "/", tier)) |> π -> replace.(π, ".csv" => "")
+  csvList = readdir(string(mindData, "/", "event", "/", timeThres)) |> π -> replace.(π, ".csv" => "")
 
   # iterate on subjects
   for subj ∈ subjectList
@@ -49,12 +49,12 @@ for tier ∈ rocList
       recordMt = zeros(Int, 2, 2)
 
       # select record files
-      channelList = readdir(string(mindData, "/", "confusionMt", "/", "channel", "/", tier)) |> π -> filter(χ -> contains(χ, record), π) |> π -> replace.(π, ".csv" => "")
+      channelList = readdir(string(mindData, "/", "confusionMt", "/", "channel", "/", timeThres)) |> π -> filter(χ -> contains(χ, record), π) |> π -> replace.(π, ".csv" => "")
 
       for channel ∈ channelList
 
         # read csv file
-        mt = readdlm(string(mindData, "/", "confusionMt", "/", "channel", "/", tier, "/", channel, ".csv"), ',')
+        mt = readdlm(string(mindData, "/", "confusionMt", "/", "channel", "/", timeThres, "/", channel, ".csv"), ',')
 
         # add channel to record confusion matrix
         recordMt .+= mt
@@ -62,7 +62,7 @@ for tier ∈ rocList
       end
 
       # write record matrix
-      writedlm(string(mindData, "/", "confusionMt", "/", "record", "/", tier, "/", record, ".csv"), recordMt, ',')
+      writedlm(string(mindData, "/", "confusionMt", "/", "record", "/", timeThres, "/", record, ".csv"), recordMt, ',')
 
       # add record to subject confusion matrix
       subjectMt .+= recordMt
@@ -70,7 +70,7 @@ for tier ∈ rocList
     end
 
     # write subject matrix
-    writedlm(string(mindData, "/", "confusionMt", "/", "subject", "/", tier, "/", subj, ".csv"), subjectMt, ',')
+    writedlm(string(mindData, "/", "confusionMt", "/", "subject", "/", timeThres, "/", subj, ".csv"), subjectMt, ',')
 
     # add subject to dataset confusion matrix
     datasetMt .+= subjectMt
@@ -78,7 +78,7 @@ for tier ∈ rocList
   end
 
   # write dataset matrix
-  writedlm(string(mindData, "/", "confusionMt", "/", "dataset", "/", tier, ".csv"), datasetMt, ',')
+  writedlm(string(mindData, "/", "confusionMt", "/", "dataset", "/", timeThres, ".csv"), datasetMt, ',')
 
 end
 

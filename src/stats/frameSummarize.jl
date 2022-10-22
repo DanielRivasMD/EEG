@@ -22,6 +22,7 @@ end;
 # load modules
 begin
   include(string(utilDir, "/ioDataFrame.jl"))
+  include(string(configDir, "/timeThresholds.jl"))
 end;
 
 ####################################################################################################
@@ -29,21 +30,15 @@ end;
 # performance
 performance = [:Sensitivity, :Specificity]
 
-# list directories
-rocList = readdir(string(mindROC))
-
 # iterate on directories
-for tier ∈ rocList
-
-  # log
-  @info tier
+for timeThres ∈ timeThresholds
 
   # iterate on performance
   for Π ∈ performance
 
     # read dataframe
     @eval dir = $(string(Π)) |> lowercase
-    @eval df = readdf(string(mindData, "/", dir, "/", "filter", $tier, ".csv"); sep = ',')
+    @eval df = readdf(string(mindData, "/", dir, "/", "filter", $timeThres, ".csv"); sep = ',')
 
     # log
     @info dir
@@ -88,13 +83,13 @@ for tier ∈ rocList
     rename!(collectDf, "x1" => :Subject)
 
     # write dataframe
-    @eval writedf(string(mindData, "/", dir, "/", "aggregated", $tier, ".csv"), $collectDf; sep = ',')
+    @eval writedf(string(mindData, "/", dir, "/", "aggregated", $timeThres, ".csv"), $collectDf; sep = ',')
 
     # filter recorded events
     filterDf = collectDf[.!(isnan.(collectDf[:, :mean])), :]
 
     # write dataframe
-    @eval writedf(string(mindData, "/", dir, "/", "recorded", $tier, ".csv"), $filterDf; sep = ',')
+    @eval writedf(string(mindData, "/", dir, "/", "recorded", $timeThres, ".csv"), $filterDf; sep = ',')
 
   end
 
