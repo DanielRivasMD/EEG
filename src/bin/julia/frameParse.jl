@@ -26,7 +26,7 @@ end;
 performance = [:Sensitivity, :Specificity]
 
 # list directories
-rocList = readdir(string(mindROC))
+rocList = readdir(string(mindScreen))
 
 # iterate on directories
 for tier ∈ rocList
@@ -35,32 +35,32 @@ for tier ∈ rocList
   for Π ∈ performance
 
     # declare symbols
-    Df = Symbol(Π, "Df")
+    collectDf = Symbol(Π, "Df")
 
     # declare collected dataframe
-    @eval $Df = DataFrame(Electrode = String[])
+    @eval $collectDf = DataFrame(Electrode = String[])
 
     # list records
-    csvList = readdir(string(mindROC, "/", tier))
+    csvList = readdir(string(mindScreen, "/", tier))
 
     # iterate on files
     for csv ∈ csvList
 
       # read csv file
-      df = CSV.read(string(mindROC, "/", tier, "/", csv), DataFrame)
+      df = CSV.read(string(mindScreen, "/", tier, "/", csv), DataFrame)
 
       # remove missing rows by index
       df = df[Not(ismissing.(df[:, :Electrode])), :]
 
       # join dataframes
-      @eval global $Df = outerjoin($Df, $df[:, ["Electrode", $(string(Π))]]; on = :Electrode)
-      @eval rename!($Df, $(string(Π)) => Symbol(replace($csv, ".csv" => "")))
+      @eval global $collectDf = outerjoin($collectDf, $df[:, ["Electrode", $(string(Π))]]; on = :Electrode)
+      @eval rename!($collectDf, $(string(Π)) => Symbol(replace($csv, ".csv" => "")))
 
     end
 
     # write dataframe
     @eval dir = $(string(Π)) |> lowercase
-    @eval writedf(string(mindData, "/", dir, "/", "filter", $tier, ".csv"), $Df; sep = ',')
+    @eval writedf(string(mindData, "/", dir, "/", "filter", $tier, ".csv"), $collectDf; sep = ',')
 
   end
 
