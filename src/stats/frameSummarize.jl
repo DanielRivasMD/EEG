@@ -9,6 +9,9 @@ end;
 
 # load packages
 begin
+  using Chain: @chain
+
+  # dependencies
   using CSV
   using DataFrames
   using Statistics
@@ -51,26 +54,42 @@ for tier ∈ rocList
     end
 
     # construct dataframe
-    Df = describe(df[:, Not(:Electrode)])
+    collectDf = describe(df[:, Not(:Electrode)])
+
+    # rename record
+    rename!(collectDf, "variable" => :Record)
 
     # calculate standard deviation
-    Df[:, :std] .= map(eachcol(df[:, Not(:Electrode)])) do μ
+    collectDf[:, :std] .= map(eachcol(df[:, Not(:Electrode)])) do μ
       std(skipmissing(μ))
     end
 
     # supress type column
-    Df = Df[:, Not(:eltype)]
+    collectDf = collectDf[:, Not(:eltype)]
 
     # supress missing column
-    Df = Df[:, Not(:nmissing)]
+    collectDf = collectDf[:, Not(:nmissing)]
 
-    # log
-    @info describe(Df)
-    @info Df
+    # add subjects
+    subjects = @chain collectDf[:, :Record] begin
+      string.()
+      replace.(r"_\d\d" => "")
+      replace.("a" => "")
+      replace.("b" => "")
+      replace.("c" => "")
+      replace.("h" => "")
+      replace.("_" => "")
+      replace.("+" => "")
+      string.("chb", _)
+    end
+
+    # reorder columns
+    collectDf = hcat(subjects, collectDf)
+    rename!(collectDf, "x1" => :Subject)
 
     # write dataframe
     @eval dir = $(string(Π)) |> lowercase
-    @eval writedf(string(mindData, "/", "summary", "/", dir, $tier, ".csv"), $Df; sep = ',')
+    @eval writedf(string(mindData, "/", dir, "/", "aggregated", $tier, ".csv"), $collectDf; sep = ',')
 
   end
 
