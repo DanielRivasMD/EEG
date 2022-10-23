@@ -13,6 +13,7 @@ begin
   using MindReader
 
   # dependencies
+  using DataFrames
   using DelimitedFiles
 end;
 
@@ -20,6 +21,7 @@ end;
 
 # load modules
 begin
+  include(string(utilDir, "/ioDataFrame.jl"))
   include(string(configDir, "/timeThresholds.jl"))
 end;
 
@@ -102,6 +104,34 @@ for timeThres ∈ timeThresholds
     end
 
   end
+
+end
+
+####################################################################################################
+
+# iterate on times
+for timeThres ∈ timeThresholds
+
+  # read dataframes
+  df = [readdf(string(mindROC, "/", "subject", "/", timeThres, "/", subj, ".csv"), sep = ',') for subj ∈ subjectList]
+
+  # concatenate dataframes
+  df = vcat(df...)
+
+  # append overall
+  push!(df, eachrow(readdf(string(mindROC, "/", "dataset", "/", timeThres, ".csv"), sep = ','))[1])
+
+  # append subjects
+  df[:, :Subject] .= [subjectList; "Total"]
+  df = [df[:, :Subject] df[:, Not(:Subject)]]
+  rename!(df, "x1" => :Subject)
+
+  # write dataframe
+  writedf(
+    string(mindData, "/", "summary", "/", "performance", timeThres, ".csv"),
+    df,
+    sep = ',',
+  )
 
 end
 
