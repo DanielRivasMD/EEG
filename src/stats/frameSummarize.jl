@@ -9,87 +9,97 @@ end;
 
 # load packages
 begin
-  using Chain: @chain
+  # mind reader
+  using MindReader
 
   # dependencies
-  using CSV
-  using DataFrames
-  using Statistics
+  using DelimitedFiles
 end;
 
 ####################################################################################################
 
 # load modules
 begin
-  include(string(utilDir, "/ioDataFrame.jl"))
   include(string(configDir, "/timeThresholds.jl"))
 end;
 
 ####################################################################################################
 
-# performance
-performance = [:Sensitivity, :Specificity]
+# subjects
+subjectList = string.("chb", string.(1:24, pad = 2))
 
 # iterate on directories
 for timeThres ∈ timeThresholds
 
-  # iterate on performance
-  for Π ∈ performance
+  # load dataset
+  datasetMt = readdlm(string(mindData, "/", "confusionMt", "/", "dataset", "/", timeThres, ".csv"), ',')
 
-    # read dataframe
-    @eval dir = $(string(Π)) |> lowercase
-    @eval df = readdf(string(mindData, "/", dir, "/", "filter", $timeThres, ".csv"); sep = ',')
+  # write dataset
+  writePerformance(
+    string(mindROC, "/", "dataset", "/", timeThres, ".csv"),
+    performance(datasetMt),
+    delim = ",",
+  )
 
-    # log
-    @info dir
+  # list records
+  csvList = readdir(string(mindData, "/", "event", "/", timeThres)) |> π -> replace.(π, ".csv" => "")
 
-    # patch missing values
-    for (ι, ç) ∈ enumerate(eachcol(df))
-      df[!, ι] .= replace(ç, "missing" => missing)
+  # iterate on subjects
+  for subj ∈ subjectList
+
+    # load subject
+    subjectMt = readdlm(string(mindData, "/", "confusionMt", "/", "subject", "/", timeThres, "/", subj, ".csv"), ',')
+
+    # write subject
+    writePerformance(
+      string(mindROC, "/", "subject", "/", timeThres, "/", subj, ".csv"),
+      performance(subjectMt),
+      delim = ",",
+    )
+
+    # select subject files
+    recordList = csvList |> π -> filter(χ -> contains(χ, subj), π)
+
+    # iterate on files
+    for record ∈ recordList
+
+      # load record
+      recordMt = readdlm(string(mindData, "/", "confusionMt", "/", "record", "/", timeThres, "/", record, ".csv"), ',')
+
+      # write record
+      writePerformance(
+        string(mindROC, "/", "record", "/", timeThres, "/", record, ".csv"),
+        performance(recordMt),
+        delim = ",",
+      )
+
+      # preallocate dictionary
+      channelDc = Dict{String, Dict{String, Float64}}()
+
+      # select record files
+      channelList = readdir(string(mindData, "/", "confusionMt", "/", "channel", "/", timeThres)) |> π -> filter(χ -> contains(χ, record), π) |> π -> replace.(π, ".csv" => "")
+
+      for channel ∈ channelList
+
+        # define channel id
+        channelID = channel[findlast("_", channel)[1] + 1:end]
+
+        # load channel
+        channelMt = readdlm(string(mindData, "/", "confusionMt", "/", "channel", "/", timeThres, "/", channel, ".csv"), ',')
+
+        # append channel performance
+        channelDc[channelID] = performance(channelMt)
+
+      end
+
+      # write channels
+      writePerformance(
+        string(mindROC, "/", "channel", "/", timeThres, "/", record, ".csv"),
+        channelDc,
+        delim = ",",
+      )
+
     end
-
-    # construct dataframe
-    collectDf = describe(df[:, Not(:Electrode)])
-
-    # rename record
-    rename!(collectDf, "variable" => :Record)
-
-    # calculate standard deviation
-    collectDf[:, :std] .= map(eachcol(df[:, Not(:Electrode)])) do μ
-      std(skipmissing(μ))
-    end
-
-    # supress type column
-    collectDf = collectDf[:, Not(:eltype)]
-
-    # supress missing column
-    collectDf = collectDf[:, Not(:nmissing)]
-
-    # add subjects
-    subjects = @chain collectDf[:, :Record] begin
-      string.()
-      replace.(r"_\d\d" => "")
-      replace.("a" => "")
-      replace.("b" => "")
-      replace.("c" => "")
-      replace.("h" => "")
-      replace.("_" => "")
-      replace.("+" => "")
-      string.("chb", _)
-    end
-
-    # reorder columns
-    collectDf = hcat(subjects, collectDf)
-    rename!(collectDf, "x1" => :Subject)
-
-    # write dataframe
-    @eval writedf(string(mindData, "/", dir, "/", "aggregated", $timeThres, ".csv"), $collectDf; sep = ',')
-
-    # filter recorded events
-    filterDf = collectDf[.!(isnan.(collectDf[:, :mean])), :]
-
-    # write dataframe
-    @eval writedf(string(mindData, "/", dir, "/", "recorded", $timeThres, ".csv"), $filterDf; sep = ',')
 
   end
 
