@@ -122,8 +122,7 @@ for timeThres ∈ timeThresholds
   push!(df, eachrow(readdf(string(mindROC, "/", "dataset", "/", timeThres, ".csv"), sep = ','))[1])
 
   # append subjects
-  df[:, :Subject] .= [subjectList; "Total"]
-  df = [df[:, :Subject] df[:, Not(:Subject)]]
+  df = hcat([subjectList; "Total"], df)
   rename!(df, "x1" => :Subject)
 
   # write dataframe
@@ -134,5 +133,23 @@ for timeThres ∈ timeThresholds
   )
 
 end
+
+####################################################################################################
+
+# read dataframes
+df = [readdf(string(mindROC, "/", "dataset", "/", timeThres, ".csv"), sep = ',') for timeThres ∈ timeThresholds]
+
+# concatenate dataframes
+df = vcat(df...)
+
+# append time stamps
+df = hcat(timeThresholds, df)
+rename!(df, "x1" => :Filter)
+
+writedf(
+  string(mindData, "/", "summary", "/", "dataset", ".csv"),
+  df,
+  sep = ',',
+)
 
 ####################################################################################################
