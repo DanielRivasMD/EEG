@@ -10,7 +10,6 @@ end;
 # load packages
 begin
   # dependencies
-  using CSV
   using DataFrames
 
   # Makie
@@ -21,6 +20,7 @@ end;
 
 # load modules
 begin
+  include(string(utilDir, "/ioDataFrame.jl"))
   include(string(configDir, "/timeThresholds.jl"))
 end;
 
@@ -43,8 +43,11 @@ function renderROC(df, out)
     yticks = (0:0.2:1, string.(0:20:100, "%")),
   )
 
-  # render image
-  scatter!(render, 1 .- df[:, :Specificity], df[:, :Sensitivity])
+  # render points
+  scatter!(render, 1 .- df[:, :Specificity], df[:, :Sensitivity], color = :blue)
+
+  # render lines
+  lines!(render, [0; 1 .- df[:, :Specificity]; 1], [0; df[:, :Sensitivity]; 1], color = :red)
 
   # limits
   xlims!(render, (0, 1))
@@ -57,22 +60,10 @@ end
 
 ####################################################################################################
 
-# iterate on directories
-for timeThres ∈ timeThresholds
+# load dataset
+df = readdf(string(mindData, "/", "summary", "/", "dataset", ".csv"), sep = ',')
 
-  # list records
-  csvList = readdir(string(mindROC, "/", timeThres))
-
-  # iterate on files
-  for csv ∈ csvList
-
-    # read csv file
-    df = CSV.read(string(mindROC, "/", timeThres, "/", csv), DataFrame)
-
-    # plot
-    renderROC(df, string(mindPlot, "/", timeThres, "/", replace(csv, ".csv" => ""), ".png"))
-
-  end
-end
+# plot
+renderROC(df, string(mindPlot, "/", "dataset", ".png"))
 
 ####################################################################################################
