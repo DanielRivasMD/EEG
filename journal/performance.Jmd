@@ -30,7 +30,7 @@ begin
     f_peak_length <- which(f_seq[f_threseq + 1] < d_threshold) - which(f_seq[f_threseq-1] < d_threshold) + 1
     f_upperLimIx <- (f_threseq[cumsum(f_peak_length)]) - 1
     f_lowerLimIx <- f_upperLimIx - f_peak_length + 1
-    peak_feat <- data.frame(peak_no = seq_along(f_lowerLimIx), lowerLimIx = f_lowerLimIx, upperLimIx = f_upperLimIx, peakLengthIx = f_peak_length)
+    peak_feat <- data.frame(peakNo = seq_along(f_lowerLimIx), lowerLimIx = f_lowerLimIx, upperLimIx = f_upperLimIx, peakLengthIx = f_peak_length)
 
     return(peak_feat)
   }

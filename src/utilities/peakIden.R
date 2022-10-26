@@ -40,7 +40,7 @@ peakIden <- function(
   lowerLimIx <- upperLimIx - peakLength + 1
 
   # load values
-  peakFeat <- data.frame(peak_no = seq_along(lowerLimIx), lowerLimIx = lowerLimIx, upperLimIx = upperLimIx, peakLengthIx = peakLength)
+  peakFeat <- data.frame(peakNo = seq_along(lowerLimIx), lowerLimIx = lowerLimIx, upperLimIx = upperLimIx, peakLengthIx = peakLength)
 
   # return
   return(peakFeat)
