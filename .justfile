@@ -73,12 +73,6 @@ _default:
 
 ####################################################################################################
 
-# apply post processing filter & calculate performance per frame
-@Vesta-P2-frameConcatenated:
-  source src/bin/shell/frameConcatenated.sh
-
-####################################################################################################
-
 # parse performance per frame
 @Vesta-P3-frameParse:
   julia --project src/bin/julia/frameParse.jl
