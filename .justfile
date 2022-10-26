@@ -67,12 +67,6 @@ _default:
 
 ####################################################################################################
 
-# concatenate model tracebacks
-@Vesta-P0-concatenateModels:
-  source src/bin/shell/concatenateModels.sh
-
-####################################################################################################
-
 # calculate performance per frame
 @Vesta-P1-frameIndividual:
   source src/bin/shell/frameIndividual.sh
