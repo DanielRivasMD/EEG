@@ -105,15 +105,15 @@ for ι ∈ axes(df, 2)
   ψ = df[:, ι]
 
   # identify peak
-  R" peakDf <- peak_iden($ψ, 2) "
+  R" peakDf <- peakIden($ψ, 2) "
   @rget peakDf
 
   # reset traceback
   df[!, ι] = ones(size(df, 1))
 
   # assign peak values
-  for ρ ∈ eachrow(filter(:peak_length_ix => χ -> χ >= timeThres, peakDf))
-    df[Int(ρ[:lower_lim_ix]):Int(ρ[:upper_lim_ix]), ι] .= artificialState
+  for ρ ∈ eachrow(filter(:peakLengthIx => χ -> χ >= timeThres, peakDf))
+    df[Int(ρ[:lowerLimIx]):Int(ρ[:upperLimIx]), ι] .= artificialState
   end
 
 end
@@ -147,12 +147,12 @@ save(string(mindPlot, "/", record, ".svg"), φ)
 
 # interactive annotations
 annot = df[:, :Annotation]
-R" peakDf <- peak_iden($annot, 2) ";
+R" peakDf <- peakIden($annot, 2) ";
 @rget peakDf
 
 # iterate on peaks
 for ρ ∈ eachrow(peakDf)
-  @info ((map(sum, eachrow(df[Int(ρ.lower_lim_ix):Int(ρ.upper_lim_ix), 1:end - 1])) ./ (size(df, 2) - 1)) |> sum) ./ ρ.peak_length_ix
+  @info ((map(sum, eachrow(df[Int(ρ.lowerLimIx):Int(ρ.upperLimIx), 1:end - 1])) ./ (size(df, 2) - 1)) |> sum) ./ ρ.peakLengthIx
 end
 
 ####################################################################################################

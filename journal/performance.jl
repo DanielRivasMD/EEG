@@ -21,7 +21,7 @@ end;
 begin
   # declare peak identification function
   R"
-  peak_iden <- function(
+  peakIden <- function(
 
     f_seq,
     d_threshold = NULL
@@ -31,9 +31,9 @@ begin
     f_seq <- c(0, f_seq, 0)
     f_threseq <- which(f_seq >= d_threshold)
     f_peak_length <- which(f_seq[f_threseq + 1] < d_threshold) - which(f_seq[f_threseq-1] < d_threshold) + 1
-    f_upper_lim_ix <- (f_threseq[cumsum(f_peak_length)]) - 1
-    f_lower_lim_ix <- f_upper_lim_ix - f_peak_length + 1
-    peak_feat <- data.frame(peak_no = seq_along(f_lower_lim_ix), lower_lim_ix = f_lower_lim_ix, upper_lim_ix = f_upper_lim_ix, peak_length_ix = f_peak_length)
+    f_upperLimIx <- (f_threseq[cumsum(f_peak_length)]) - 1
+    f_lowerLimIx <- f_upperLimIx - f_peak_length + 1
+    peak_feat <- data.frame(peak_no = seq_along(f_lowerLimIx), lowerLimIx = f_lowerLimIx, upperLimIx = f_upperLimIx, peakLengthIx = f_peak_length)
 
     return(peak_feat)
   }
@@ -108,14 +108,14 @@ begin
 
     # identify peaks
     R"
-    tmp <- peak_iden($ρ, 2)
+    tmp <- peakIden($ρ, 2)
     "
     @rget tmp
 
     # load into dataframe
     global ç += 1
     insertcols!(tmp, :channel => ç)
-    pgTmp = filter(:peak_length_ix => χ -> χ >= frThres, tmp)
+    pgTmp = filter(:peakLengthIx => χ -> χ >= frThres, tmp)
     if ρ == pt[1, :]
       global δ = tmp
       global pgDf = pgTmp
@@ -130,7 +130,7 @@ begin
 
   # load canvas matrix
   for ρ ∈ eachrow(pgDf)
-    ms[ρ.channel, convert(Int64, ρ.lower_lim_ix):convert.(Int64, ρ.upper_lim_ix)] .= 2
+    ms[ρ.channel, convert(Int64, ρ.lowerLimIx):convert.(Int64, ρ.upperLimIx)] .= 2
   end
 
   # declare manual annotations
@@ -171,6 +171,6 @@ plot(hmASJ, hmAPh, hmRec, hmMas, layout = grid(4, 1, heights = [0.05, 0.05, 0.45
 ####################################################################################################
 
 # barplot peak distribution
-δ |> π -> sort(π, :peak_length_ix, rev = true) |> π -> bar(π[:, :peak_length_ix], leg = :none, dpi = 300)
+δ |> π -> sort(π, :peakLengthIx, rev = true) |> π -> bar(π[:, :peakLengthIx], leg = :none, dpi = 300)
 
 ####################################################################################################

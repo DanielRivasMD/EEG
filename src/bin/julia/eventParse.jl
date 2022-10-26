@@ -30,7 +30,7 @@ end;
 for timeThres ∈ timeThresholds
 
   # declare collected dataframe
-  collectDf = DataFrame(Subject = String[], Record = String[], Detected = Int[], peak_no = Float64[], lower_lim_ix = Float64[], upper_lim_ix = Float64[], peak_length_ix = Float64[])
+  collectDf = DataFrame(Subject = String[], Record = String[], Detected = Int[], peak_no = Float64[], lowerLimIx = Float64[], upperLimIx = Float64[], peakLengthIx = Float64[])
 
   # list records
   csvList = readdir(string(mindData, "/", "event", "/", timeThres))

@@ -131,15 +131,15 @@ for montage ∈ montages
       maskDc[κ] = findall(χ -> χ == -1, tb)
 
       # identify peak
-      R" peakDf <- peak_iden($tb, 2) "
+      R" peakDf <- peakIden($tb, 2) "
       @rget peakDf
 
       # reset traceback
       υ.traceback = ones(υ.traceback |> length)
 
       # assign peak values
-      for ρ ∈ eachrow(filter(:peak_length_ix => χ -> χ >= timeThres, peakDf))
-        υ.traceback[Int(ρ[:lower_lim_ix]):Int(ρ[:upper_lim_ix])] .= artificialState
+      for ρ ∈ eachrow(filter(:peakLengthIx => χ -> χ >= timeThres, peakDf))
+        υ.traceback[Int(ρ[:lowerLimIx]):Int(ρ[:upperLimIx])] .= artificialState
       end
 
     end

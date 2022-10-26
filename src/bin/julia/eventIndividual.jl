@@ -132,7 +132,7 @@ for ƒ ∈ shArgs["input"]
       end
 
       # identify peak
-      R" labelDf <- peak_iden($labelAr, 1) "
+      R" labelDf <- peakIden($labelAr, 1) "
       @rget labelDf
 
     end;
@@ -161,15 +161,15 @@ for ƒ ∈ shArgs["input"]
       tb = υ.traceback
 
       # identify peak
-      R" peakDf <- peak_iden($tb, 2) "
+      R" peakDf <- peakIden($tb, 2) "
       @rget peakDf
 
       # reset traceback
       υ.traceback = ones(Int, υ.traceback |> length)
 
       # assign peak values
-      for ρ ∈ eachrow(filter(:peak_length_ix => χ -> χ >= timeThres, peakDf))
-        υ.traceback[Int(ρ[:lower_lim_ix]):Int(ρ[:upper_lim_ix])] .= artificialState
+      for ρ ∈ eachrow(filter(:peakLengthIx => χ -> χ >= timeThres, peakDf))
+        υ.traceback[Int(ρ[:lowerLimIx]):Int(ρ[:upperLimIx])] .= artificialState
       end
 
       # preallocate temporary values
@@ -179,10 +179,10 @@ for ƒ ∈ shArgs["input"]
       for (ι, ρ) ∈ enumerate(eachrow(labelDf))
 
         # extract subset
-        subVc = υ.traceback[Int(ρ[:lower_lim_ix]):Int(ρ[:upper_lim_ix])]
+        subVc = υ.traceback[Int(ρ[:lowerLimIx]):Int(ρ[:upperLimIx])]
 
         # identify peak overlaps
-        R" subDf <- peak_iden($subVc, $artificialState) "
+        R" subDf <- peakIden($subVc, $artificialState) "
         @rget subDf
 
         # score overlaps

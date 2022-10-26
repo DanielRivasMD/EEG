@@ -149,14 +149,14 @@ for montage ∈ montages
       lb = msLabelAr[1:end .∉ [maskDc[κ]]]
 
       # identify peak
-      R" peakDf <- peak_iden($lb, 1) "
+      R" peakDf <- peakIden($lb, 1) "
       @rget peakDf
 
       # iterate on peaks
       for ρ ∈ eachrow(peakDf)
 
         # collect calls
-        if sum(tb[convert(Int, ρ.lower_lim_ix):convert(Int, ρ.upper_lim_ix)] .> 1) > 1
+        if sum(tb[convert(Int, ρ.lowerLimIx):convert(Int, ρ.upperLimIx)] .> 1) > 1
           tp += 1
         else
           fp += 1
@@ -180,14 +180,14 @@ for montage ∈ montages
     lb = msLabelAr[1:end .∉ [findall(χ -> χ == -1, mxHmm)]]
 
     # identify peak
-    R" peakDf <- peak_iden($lb, 1) "
+    R" peakDf <- peakIden($lb, 1) "
     @rget peakDf
 
     # iterate on peaks
     for ρ ∈ eachrow(peakDf)
 
       # collect calls
-      if sum(tb[convert(Int, ρ.lower_lim_ix):convert(Int, ρ.upper_lim_ix)] .> 1) > 1
+      if sum(tb[convert(Int, ρ.lowerLimIx):convert(Int, ρ.upperLimIx)] .> 1) > 1
         tp += 1
       else
         fp += 1

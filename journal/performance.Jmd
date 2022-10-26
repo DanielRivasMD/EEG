@@ -18,7 +18,7 @@ using RCall
 begin
   # declare peak identification function
   R"
-  peak_iden <- function(
+  peakIden <- function(
 
     f_seq,
     d_threshold = NULL
@@ -28,9 +28,9 @@ begin
     f_seq <- c(0, f_seq, 0)
     f_threseq <- which(f_seq >= d_threshold)
     f_peak_length <- which(f_seq[f_threseq + 1] < d_threshold) - which(f_seq[f_threseq-1] < d_threshold) + 1
-    f_upper_lim_ix <- (f_threseq[cumsum(f_peak_length)]) - 1
-    f_lower_lim_ix <- f_upper_lim_ix - f_peak_length + 1
-    peak_feat <- data.frame(peak_no = seq_along(f_lower_lim_ix), lower_lim_ix = f_lower_lim_ix, upper_lim_ix = f_upper_lim_ix, peak_length_ix = f_peak_length)
+    f_upperLimIx <- (f_threseq[cumsum(f_peak_length)]) - 1
+    f_lowerLimIx <- f_upperLimIx - f_peak_length + 1
+    peak_feat <- data.frame(peak_no = seq_along(f_lowerLimIx), lowerLimIx = f_lowerLimIx, upperLimIx = f_upperLimIx, peakLengthIx = f_peak_length)
 
     return(peak_feat)
   }
@@ -92,11 +92,11 @@ begin
   frThres = 120
   ct = 0
   for r ∈ eachrow(pt)
-    R"tmp <- peak_iden($r, 2)"
+    R"tmp <- peakIden($r, 2)"
     @rget tmp
     global ct += 1
     insertcols!(tmp, :channel => ct)
-    pgTmp = filter(:peak_length_ix => x -> x >= frThres, tmp)
+    pgTmp = filter(:peakLengthIx => x -> x >= frThres, tmp)
     if r == pt[1, :]
       global df = tmp
       global pgDf = pgTmp
@@ -109,7 +109,7 @@ begin
   ms = ones(Int64, size(pt))
 
   for r ∈ eachrow(pgDf)
-    ms[r.channel, convert(Int64, r.lower_lim_ix):convert.(Int64, r.upper_lim_ix)] .= 2
+    ms[r.channel, convert(Int64, r.lowerLimIx):convert.(Int64, r.upperLimIx)] .= 2
   end
 
   annotSJTime = [
@@ -179,6 +179,6 @@ Figure shows barplot of sorted changes in states across all channels in the reco
 
 ```julia; echo = false, fig_cap = "Barplot of state's delta lenght"
 
-df |> p -> sort(p, :peak_length_ix, rev = true) |> p -> bar(p[:, :peak_length_ix], leg = :none, dpi = 300)
+df |> p -> sort(p, :peakLengthIx, rev = true) |> p -> bar(p[:, :peakLengthIx], leg = :none, dpi = 300)
 
 ```
