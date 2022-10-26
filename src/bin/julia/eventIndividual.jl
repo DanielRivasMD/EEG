@@ -173,7 +173,13 @@ for ƒ ∈ shArgs["input"]
       end
 
       # preallocate temporary values
-      tp = zeros(Int, size(labelDf, 1))
+      overs = zeros(Int, size(labelDf, 1))
+
+      # true positive counter
+      tp = 0
+
+      # false positive counter
+      fp = 0
 
       # iterate on annotations
       for (ι, ρ) ∈ enumerate(eachrow(labelDf))
@@ -187,16 +193,46 @@ for ƒ ∈ shArgs["input"]
 
         # score overlaps
         if size(subDf, 1) > 0
-          tp[ι] += 1
+          overs[ι] += 1
+        end
+
+        # update true positive counter
+        tp += size(subDf, 1)
+
+        # update false positive counter
+        if size(subDf, 1) > 1
+          fp += size(subDf, 1) - 1
         end
 
       end
 
-      # collect identification record
-      labelDf[!, κ] = tp
+      # adjust counts
+      begin
+
+        # positive counts
+        adPos = size(peakDf, 1)
+
+        # negative counts
+        st = 0
+        ed = 0
+        if peakDf[1, :lowerLimIx] != 1 st = 1 end
+        if peakDf[end, :upperLimIx] == length(tb) ed = 1 end
+        adNeg = (size(peakDf, 1) - st - ed)
+
+      end;
+
+      # build confusion matrix
+      cnMt = [tp (adPos - tp); fp (adNeg - fp)]
+
+      # write confusion matrix
+      writedlm(
+        string(shArgs["outDir"], "/", "confusionMt", "/", "event", "/", timeThres, "/", edf, "_", κ, ".csv"),
+        cnMt,
+        ",",
+      )
 
       # append dataframe
-      push!(df, (κ, sum(tp), size(labelDf, 1) - sum(tp)))
+      push!(df, (κ, sum(overs), size(labelDf, 1) - sum(overs)))
 
     end
 
