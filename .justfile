@@ -91,12 +91,6 @@ _default:
 
 ####################################################################################################
 
-# apply post processing filter & calculate performance per event
-@Vesta-P2-eventConcatenated:
-  source src/bin/shell/eventConcatenated.sh
-
-####################################################################################################
-
 # parse performance per event
 @Vesta-P3-eventParse:
   julia --project src/bin/julia/eventParse.jl
