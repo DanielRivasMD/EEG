@@ -1,19 +1,49 @@
 ####################################################################################################
 
-peak_iden <- function(
-  f_seq,
-  d_threshold = NULL
+peakIden <- function(
+  seq,
+  threshold = NULL
 ) {
 
-  if (is.null(d_threshold)) d_threshold <- 1
-  f_seq <- c(0, f_seq, 0)
-  f_threseq <- which(f_seq >= d_threshold)
-  f_peak_length <- which(f_seq[f_threseq + 1] < d_threshold) - which(f_seq[f_threseq - 1] < d_threshold) + 1
-  f_upper_lim_ix <- (f_threseq[cumsum(f_peak_length)]) - 1
-  f_lower_lim_ix <- f_upper_lim_ix - f_peak_length + 1
-  peak_feat <- data.frame(peak_no = seq_along(f_lower_lim_ix), lower_lim_ix = f_lower_lim_ix, upper_lim_ix = f_upper_lim_ix, peak_length_ix = f_peak_length)
+  # assign default value
+  if (is.null(threshold)) threshold <- 1
 
-  return(peak_feat)
+  # decision on threshold
+  if (threshold >= 0) {
+
+    # pad sequence
+    seq <- c(threshold - 1, seq, threshold - 1)
+
+    # identify threshold indexes
+    threseq <- which(seq >= threshold)
+
+    # calculate peak lengths
+    peakLength <- which(seq[threseq + 1] < threshold) - which(seq[threseq - 1] < threshold) + 1
+
+  } else if (threshold < 0) {
+
+    # pad sequence
+    seq <- c(abs(threshold) + 1, seq, abs(threshold) + 1)
+
+    # identify threshold indexes
+    threseq <- which(seq <= abs(threshold))
+
+    # calculate peak lengths
+    peakLength <- which(seq[threseq + 1] > abs(threshold)) - which(seq[threseq - 1] > abs(threshold)) + 1
+
+  } else {
+    stop('value for threshold not recongnized')
+  }
+
+  # identify edges / limits
+  upperLimIx <- (threseq[cumsum(peakLength)]) - 1
+  lowerLimIx <- upperLimIx - peakLength + 1
+
+  # load values
+  peakFeat <- data.frame(peak_no = seq_along(lowerLimIx), lowerLimIx = lowerLimIx, upperLimIx = upperLimIx, peakLengthIx = peakLength)
+
+  # return
+  return(peakFeat)
 }
 
 ####################################################################################################
