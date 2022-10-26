@@ -86,8 +86,8 @@ _default:
 ####################################################################################################
 
 # calculate performance per event
-@Vesta-P1-perEventIndividual:
-  source src/bin/shell/perEventIndividual.sh
+@Vesta-P1-eventIndividual:
+  source src/bin/shell/eventIndividual.sh
 
 ####################################################################################################
 
