@@ -74,13 +74,13 @@ _default:
 ####################################################################################################
 
 # parse performance per frame
-@Vesta-P3-frameParse:
+@Vesta-P2-frameParse:
   julia --project src/bin/julia/frameParse.jl
 
 ####################################################################################################
 
 # summarize performance per frame
-@Vesta-P4-frameSummarize:
+@Vesta-P3-frameSummarize:
   julia --project src/stats/frameSummarize.jl
 
 ####################################################################################################
@@ -92,13 +92,13 @@ _default:
 ####################################################################################################
 
 # parse performance per event
-@Vesta-P3-eventParse:
+@Vesta-P2-eventParse:
   julia --project src/bin/julia/eventParse.jl
 
 ####################################################################################################
 
 # summarize performance per event
-@Vesta-P4-eventSummarize:
+@Vesta-P3-eventSummarize:
   julia --project src/stats/eventSummarize.jl
 
 ####################################################################################################
