@@ -226,7 +226,7 @@ for ƒ ∈ shArgs["input"]
 
       # write confusion matrix
       writedlm(
-        string(shArgs["outDir"], "/", "confusionMt", "/", "event", "/", timeThres, "/", edf, "_", κ, ".csv"),
+        string(shArgs["outDir"], "/", "confusionMt", "/", "channel", "/", timeThres, "/", "event", "_", edf, "_", κ, ".csv"),
         cnMt,
         ",",
       )
