@@ -238,24 +238,10 @@ for ƒ ∈ shArgs["input"]
 
     ####################################################################################################
 
-    # calculate recall
-    df[:, :Recall] .= df[:, :TP] ./ (df[:, :TP] + df[:, :FP])
-
-    ####################################################################################################
-
     # write label & identification
     writedf(
       string(shArgs["outDir"], "/", "event", "/", timeThres, "/", replace(ƒ, "edf" => "csv")),
       labelDf;
-      sep = ',',
-    )
-
-    ####################################################################################################
-
-    # write precision
-    writedf(
-      string(shArgs["outDir"], "/", "precision", "/", timeThres, "/", replace(ƒ, "edf" => "csv")),
-      df;
       sep = ',',
     )
 
