@@ -49,12 +49,12 @@ for timeThres ∈ timeThresholds
       recordMt = zeros(Int, 2, 2)
 
       # select record files
-      channelList = readdir(string(mindData, "/", "confusionMt", "/", "channel", "/", timeThres)) |> π -> filter(χ -> contains(χ, record), π) |> π -> replace.(π, ".csv" => "")
+      channelList = readdir(string(mindCM, "/", "channel", "/", timeThres)) |> π -> filter(χ -> contains(χ, record), π) |> π -> replace.(π, ".csv" => "")
 
       for channel ∈ channelList
 
         # read csv file
-        mt = readdlm(string(mindData, "/", "confusionMt", "/", "channel", "/", timeThres, "/", channel, ".csv"), ',')
+        mt = readdlm(string(mindCM, "/", "channel", "/", timeThres, "/", channel, ".csv"), ',')
 
         # add channel to record confusion matrix
         recordMt .+= mt
@@ -62,7 +62,7 @@ for timeThres ∈ timeThresholds
       end
 
       # write record matrix
-      writedlm(string(mindData, "/", "confusionMt", "/", "record", "/", timeThres, "/", "frame_", record, ".csv"), recordMt, ',')
+      writedlm(string(mindCM, "/", "record", "/", timeThres, "/", "frame_", record, ".csv"), recordMt, ',')
 
       # add record to subject confusion matrix
       subjectMt .+= recordMt
@@ -70,7 +70,7 @@ for timeThres ∈ timeThresholds
     end
 
     # write subject matrix
-    writedlm(string(mindData, "/", "confusionMt", "/", "subject", "/", timeThres, "/", "frame_", subj, ".csv"), subjectMt, ',')
+    writedlm(string(mindCM, "/", "subject", "/", timeThres, "/", "frame_", subj, ".csv"), subjectMt, ',')
 
     # add subject to dataset confusion matrix
     datasetMt .+= subjectMt
@@ -78,7 +78,7 @@ for timeThres ∈ timeThresholds
   end
 
   # write dataset matrix
-  writedlm(string(mindData, "/", "confusionMt", "/", "dataset", "/", "frame", timeThres, ".csv"), datasetMt, ',')
+  writedlm(string(mindCM, "/", "dataset", "/", "frame", timeThres, ".csv"), datasetMt, ',')
 
 end
 

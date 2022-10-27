@@ -34,7 +34,7 @@ subjectList = string.("chb", string.(1:24, pad = 2))
 for timeThres ∈ timeThresholds
 
   # load dataset
-  datasetMt = readdlm(string(mindData, "/", "confusionMt", "/", "dataset", "/", "frame", timeThres, ".csv"), ',')
+  datasetMt = readdlm(string(mindCM, "/", "dataset", "/", "frame", timeThres, ".csv"), ',')
 
   # write dataset
   writePerformance(
@@ -50,7 +50,7 @@ for timeThres ∈ timeThresholds
   for subj ∈ subjectList
 
     # load subject
-    subjectMt = readdlm(string(mindData, "/", "confusionMt", "/", "subject", "/", timeThres, "/", subj, ".csv"), ',')
+    subjectMt = readdlm(string(mindCM, "/", "subject", "/", timeThres, "/", subj, ".csv"), ',')
 
     # write subject
     writePerformance(
@@ -66,7 +66,7 @@ for timeThres ∈ timeThresholds
     for record ∈ recordList
 
       # load record
-      recordMt = readdlm(string(mindData, "/", "confusionMt", "/", "record", "/", timeThres, "/", record, ".csv"), ',')
+      recordMt = readdlm(string(mindCM, "/", "record", "/", timeThres, "/", record, ".csv"), ',')
 
       # write record
       writePerformance(
@@ -79,7 +79,7 @@ for timeThres ∈ timeThresholds
       channelDc = Dict{String, Dict{String, Float64}}()
 
       # select record files
-      channelList = readdir(string(mindData, "/", "confusionMt", "/", "channel", "/", timeThres)) |> π -> filter(χ -> contains(χ, record), π) |> π -> replace.(π, ".csv" => "")
+      channelList = readdir(string(mindCM, "/", "channel", "/", timeThres)) |> π -> filter(χ -> contains(χ, record), π) |> π -> replace.(π, ".csv" => "")
 
       for channel ∈ channelList
 
@@ -87,7 +87,7 @@ for timeThres ∈ timeThresholds
         channelID = channel[findlast("_", channel)[1] + 1:end]
 
         # load channel
-        channelMt = readdlm(string(mindData, "/", "confusionMt", "/", "channel", "/", timeThres, "/", channel, ".csv"), ',')
+        channelMt = readdlm(string(mindCM, "/", "channel", "/", timeThres, "/", channel, ".csv"), ',')
 
         # append channel performance
         channelDc[channelID] = performance(channelMt)
