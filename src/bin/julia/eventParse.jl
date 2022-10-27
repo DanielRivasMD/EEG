@@ -33,7 +33,7 @@ for timeThres ∈ timeThresholds
   collectDf = DataFrame(Subject = String[], Record = String[], Detected = Int[], peakNo = Float64[], lowerLimIx = Float64[], upperLimIx = Float64[], peakLengthIx = Float64[])
 
   # list records
-  csvList = readdir(string(mindData, "/", "event", "/", timeThres))
+  csvList = readdir(string(mindEvent, "/", timeThres))
 
   # iterate on files
   for csv ∈ csvList
@@ -52,7 +52,7 @@ for timeThres ∈ timeThresholds
     end
 
     # read csv file
-    df = CSV.read(string(mindData, "/", "event", "/", timeThres, "/", csv), DataFrame)
+    df = readdf(string(mindEvent, "/", timeThres, "/", csv); sep = ',')
 
     # read files with annotations
     if size(df, 1) > 0

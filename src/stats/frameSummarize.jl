@@ -44,7 +44,7 @@ for timeThres ∈ timeThresholds
   )
 
   # list records
-  csvList = readdir(string(mindData, "/", "event", "/", timeThres)) |> π -> replace.(π, ".csv" => "")
+  csvList = readdir(string(mindEvent, "/", timeThres)) |> π -> replace.(π, ".csv" => "")
 
   # iterate on subjects
   for subj ∈ subjectList

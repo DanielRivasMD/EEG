@@ -31,7 +31,7 @@ for timeThres ∈ timeThresholds
   datasetMt = zeros(Int, 2, 2)
 
   # list records
-  csvList = readdir(string(mindData, "/", "event", "/", timeThres)) |> π -> replace.(π, ".csv" => "")
+  csvList = readdir(string(mindEvent, "/", timeThres)) |> π -> replace.(π, ".csv" => "")
 
   # iterate on subjects
   for subj ∈ subjectList
