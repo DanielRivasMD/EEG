@@ -25,12 +25,12 @@ graphDir <- paste0(srcDir, '/graphics')
 
 # data
 mindData <- paste0(mindDir, '/data')
+mindCM <- paste0(mindData, '/confusionMt')
 mindCSV <- paste0(mindData, '/csv')
 mindHMM <- paste0(mindData, '/hmm')
 mindLabel <- paste0(mindData, '/label')
 mindLog <- paste0(mindData, '/log')
 mindErr <- paste0(mindData, '/err')
-mindScreen <- paste0(mindData, '/screen')
 mindROC <- paste0(mindData, '/roc')
 mindPlot <- paste0(mindData, '/plot')
 

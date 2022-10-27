@@ -25,12 +25,12 @@ graphDir = string(srcDir, "/graphics")
 
 # data
 mindData = string(mindDir, "/data")
+mindCM = string(mindData, "/confusionMt")
 mindCSV = string(mindData, "/csv")
 mindHMM = string(mindData, "/hmm")
 mindLabel = string(mindData, "/label")
 mindLog = string(mindData, "/log")
 mindErr = string(mindData, "/err")
-mindScreen = string(mindData, "/screen")
 mindROC = string(mindData, "/roc")
 mindPlot = string(mindData, "/plot")
 

@@ -25,12 +25,12 @@ graphDir="${srcDir}/graphics"
 
 # data
 mindData="${mindDir}/data"
+mindCM="${mindData}/confusionMt"
 mindCSV="${mindData}/csv"
 mindHMM="${mindData}/hmm"
 mindLabel="${mindData}/label"
 mindLog="${mindData}/log"
 mindErr="${mindData}/err"
-mindScreen="${mindData}/screen"
 mindROC="${mindData}/roc"
 mindPlot="${mindData}/plot"
 
