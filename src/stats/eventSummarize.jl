@@ -12,7 +12,6 @@ begin
   using Chain: @chain
 
   # dependencies
-  using CSV
   using DataFrames
   using DelimitedFiles
   using Statistics
