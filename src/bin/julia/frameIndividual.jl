@@ -175,15 +175,6 @@ for ƒ ∈ shArgs["input"]
 
     ####################################################################################################
 
-    # write performance
-    writedlm(
-      string(shArgs["outDir"], "/", "screen", "/", timeThres, "/", replace(ƒ, "edf" => "csv")),
-      writePerformance(sensitivitySpecificity(hmmDc, labelAr)),
-      ",",
-    )
-
-    ####################################################################################################
-
     for (κ, υ) ∈ hmmDc
 
       # declare copy
