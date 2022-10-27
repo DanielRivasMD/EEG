@@ -61,6 +61,12 @@ _default:
 
 ####################################################################################################
 
+# prepare file structure
+@Vesta-P0-fileStructure:
+  source src/bin/shell/fileStructure.sh
+
+####################################################################################################
+
 # run main dataset
 @Vesta-P0-runPhysionet:
   source src/bin/shell/runPhysionet.sh
