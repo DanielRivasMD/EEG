@@ -62,7 +62,7 @@ for timeThres ∈ timeThresholds
       end
 
       # write record matrix
-      writedlm(string(mindCM, "/", "record", "/", timeThres, "/", "frame_", record, ".csv"), recordMt, ',')
+      writedlm(string(mindCM, "/", "record", "/", timeThres, "/", "frame", "_", record, ".csv"), recordMt, ',')
 
       # add record to subject confusion matrix
       subjectMt .+= recordMt
@@ -70,7 +70,7 @@ for timeThres ∈ timeThresholds
     end
 
     # write subject matrix
-    writedlm(string(mindCM, "/", "subject", "/", timeThres, "/", "frame_", subj, ".csv"), subjectMt, ',')
+    writedlm(string(mindCM, "/", "subject", "/", timeThres, "/", "frame", "_", subj, ".csv"), subjectMt, ',')
 
     # add subject to dataset confusion matrix
     datasetMt .+= subjectMt
