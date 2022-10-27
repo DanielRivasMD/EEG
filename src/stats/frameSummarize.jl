@@ -34,11 +34,11 @@ subjectList = string.("chb", string.(1:24, pad = 2))
 for timeThres ∈ timeThresholds
 
   # load dataset
-  datasetMt = readdlm(string(mindData, "/", "confusionMt", "/", "dataset", "/", timeThres, ".csv"), ',')
+  datasetMt = readdlm(string(mindData, "/", "confusionMt", "/", "dataset", "/", "frame", timeThres, ".csv"), ',')
 
   # write dataset
   writePerformance(
-    string(mindROC, "/", "dataset", "/", timeThres, ".csv"),
+    string(mindROC, "/", "dataset", "/", "frame", timeThres, ".csv"),
     performance(datasetMt),
     delim = ",",
   )
@@ -54,7 +54,7 @@ for timeThres ∈ timeThresholds
 
     # write subject
     writePerformance(
-      string(mindROC, "/", "subject", "/", timeThres, "/", subj, ".csv"),
+      string(mindROC, "/", "subject", "/", timeThres, "/", "frame", "_", subj, ".csv"),
       performance(subjectMt),
       delim = ",",
     )
@@ -70,7 +70,7 @@ for timeThres ∈ timeThresholds
 
       # write record
       writePerformance(
-        string(mindROC, "/", "record", "/", timeThres, "/", record, ".csv"),
+        string(mindROC, "/", "record", "/", timeThres, "/", "frame", "_", record, ".csv"),
         performance(recordMt),
         delim = ",",
       )
@@ -96,7 +96,7 @@ for timeThres ∈ timeThresholds
 
       # write channels
       writePerformance(
-        string(mindROC, "/", "channel", "/", timeThres, "/", record, ".csv"),
+        string(mindROC, "/", "channel", "/", timeThres, "/", "frame", "_", record, ".csv"),
         channelDc,
         delim = ",",
       )
@@ -127,7 +127,7 @@ for timeThres ∈ timeThresholds
 
   # write dataframe
   writedf(
-    string(mindData, "/", "summary", "/", "performance", timeThres, ".csv"),
+    string(mindData, "/", "summary", "/", "performance", "_", "frame", "_", timeThres, ".csv"),
     df,
     sep = ',',
   )
@@ -137,7 +137,7 @@ end
 ####################################################################################################
 
 # read dataframes
-df = [readdf(string(mindROC, "/", "dataset", "/", timeThres, ".csv"), sep = ',') for timeThres ∈ timeThresholds]
+df = [readdf(string(mindROC, "/", "dataset", "/", "frame", timeThres, ".csv"), sep = ',') for timeThres ∈ timeThresholds]
 
 # concatenate dataframes
 df = vcat(df...)
@@ -147,7 +147,7 @@ df = hcat(timeThresholds, df)
 rename!(df, "x1" => :Filter)
 
 writedf(
-  string(mindData, "/", "summary", "/", "dataset", ".csv"),
+  string(mindData, "/", "summary", "/", "dataset", "_", "frame", "_",".csv"),
   df,
   sep = ',',
 )
