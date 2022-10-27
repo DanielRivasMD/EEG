@@ -28,6 +28,88 @@ end;
 
 ####################################################################################################
 
+# subjects
+subjectList = string.("chb", string.(1:24, pad = 2))
+
+# iterate on directories
+for timeThres ∈ timeThresholds
+
+  # load dataset
+  datasetMt = readdlm(string(mindData, "/", "confusionMt", "/", "dataset", "/", timeThres, ".csv"), ',')
+
+  # write dataset
+  writePerformance(
+    string(mindROC, "/", "dataset", "/", "event", timeThres, ".csv"),
+    performance(datasetMt),
+    delim = ",",
+  )
+
+  # list records
+  csvList = readdir(string(mindData, "/", "event", "/", timeThres)) |> π -> replace.(π, ".csv" => "")
+
+  # iterate on subjects
+  for subj ∈ subjectList
+
+    # load subject
+    subjectMt = readdlm(string(mindData, "/", "confusionMt", "/", "subject", "/", timeThres, "/", subj, ".csv"), ',')
+
+    # write subject
+    writePerformance(
+      string(mindROC, "/", "subject", "/", timeThres, "/", "event", subj, ".csv"),
+      performance(subjectMt),
+      delim = ",",
+    )
+
+    # select subject files
+    recordList = csvList |> π -> filter(χ -> contains(χ, subj), π)
+
+    # iterate on files
+    for record ∈ recordList
+
+      # load record
+      recordMt = readdlm(string(mindData, "/", "confusionMt", "/", "record", "/", timeThres, "/", record, ".csv"), ',')
+
+      # write record
+      writePerformance(
+        string(mindROC, "/", "record", "/", timeThres, "/", "event", record, ".csv"),
+        performance(recordMt),
+        delim = ",",
+      )
+
+      # preallocate dictionary
+      channelDc = Dict{String, Dict{String, Float64}}()
+
+      # select record files
+      channelList = readdir(string(mindData, "/", "confusionMt", "/", "channel", "/", timeThres)) |> π -> filter(χ -> contains(χ, record), π) |> π -> replace.(π, ".csv" => "")
+
+      for channel ∈ channelList
+
+        # define channel id
+        channelID = channel[findlast("_", channel)[1] + 1:end]
+
+        # load channel
+        channelMt = readdlm(string(mindData, "/", "confusionMt", "/", "channel", "/", timeThres, "/", channel, ".csv"), ',')
+
+        # append channel performance
+        channelDc[channelID] = performance(channelMt)
+
+      end
+
+      # write channels
+      writePerformance(
+        string(mindROC, "/", "channel", "/", timeThres, "/", "event", record, ".csv"),
+        channelDc,
+        delim = ",",
+      )
+
+    end
+
+  end
+
+end
+
+####################################################################################################
+
 # iterate on directories
 for timeThres ∈ timeThresholds
 
