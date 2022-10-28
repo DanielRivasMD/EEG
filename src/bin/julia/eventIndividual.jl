@@ -18,8 +18,6 @@ begin
   using HiddenMarkovModelReaders
 
   # dependencies
-  using DataFrames
-  using DelimitedFiles
   using RCall
 
   # parameters

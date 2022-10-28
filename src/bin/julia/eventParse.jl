@@ -10,9 +10,6 @@ end;
 # load packages
 begin
   using Chain: @chain
-
-  # dependencies
-  using DataFrames
 end;
 
 ####################################################################################################

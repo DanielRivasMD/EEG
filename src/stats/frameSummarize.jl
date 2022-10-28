@@ -11,10 +11,6 @@ end;
 begin
   # mind reader
   using MindReader
-
-  # dependencies
-  using DataFrames
-  using DelimitedFiles
 end;
 
 ####################################################################################################
