@@ -137,11 +137,6 @@ for ƒ ∈ shArgs["input"]
 
     ####################################################################################################
 
-    # preallocate dataframe
-    df = DataFrame(Electrode = String[], TP = Int64[], FP = Int64[])
-
-    ####################################################################################################
-
     # load manually. catch non-present files
     hmmDc = Dict{String, HMM}()
     try
@@ -204,6 +199,9 @@ for ƒ ∈ shArgs["input"]
 
       end
 
+      # collect identification record
+      labelDf[!, κ] .= overs
+
       # adjust counts
       begin
 
@@ -228,9 +226,6 @@ for ƒ ∈ shArgs["input"]
         cnMt,
         ",",
       )
-
-      # append dataframe
-      push!(df, (κ, sum(overs), size(labelDf, 1) - sum(overs)))
 
     end
 
