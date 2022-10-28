@@ -9,6 +9,8 @@ end;
 
 # load packages
 begin
+  using Chain: @chain
+
   # mind reader
   using MindReader
 end;
@@ -46,7 +48,7 @@ for timeThres ∈ timeThresholds
   for subj ∈ subjectList
 
     # load subject
-    subjectMt = readdlm(string(mindCM, "/", "subject", "/", timeThres, "/", subj, ".csv"), ',')
+    subjectMt = readdlm(string(mindCM, "/", "subject", "/", timeThres, "/", "frame", "_", subj, ".csv"), ',')
 
     # write subject
     writePerformance(
@@ -62,7 +64,7 @@ for timeThres ∈ timeThresholds
     for record ∈ recordList
 
       # load record
-      recordMt = readdlm(string(mindCM, "/", "record", "/", timeThres, "/", record, ".csv"), ',')
+      recordMt = readdlm(string(mindCM, "/", "record", "/", timeThres, "/", "frame", "_", record, ".csv"), ',')
 
       # write record
       writePerformance(
@@ -75,7 +77,12 @@ for timeThres ∈ timeThresholds
       channelDc = Dict{String, Dict{String, Float64}}()
 
       # select record files
-      channelList = readdir(string(mindCM, "/", "channel", "/", timeThres)) |> π -> filter(χ -> contains(χ, record), π) |> π -> replace.(π, ".csv" => "")
+      channelList = @chain begin
+        readdir(string(mindCM, "/", "channel", "/", timeThres))
+        filter(χ -> contains(χ, record), _)
+        filter(χ -> contains(χ, "frame"), _)
+        replace.(_, ".csv" => "")
+      end
 
       for channel ∈ channelList
 
@@ -109,13 +116,13 @@ end
 for timeThres ∈ timeThresholds
 
   # read dataframes
-  df = [readdf(string(mindROC, "/", "subject", "/", timeThres, "/", subj, ".csv"), sep = ',') for subj ∈ subjectList]
+  df = [readdf(string(mindROC, "/", "subject", "/", timeThres, "/", "frame", "_", subj, ".csv"), sep = ',') for subj ∈ subjectList]
 
   # concatenate dataframes
   df = vcat(df...)
 
   # append overall
-  push!(df, eachrow(readdf(string(mindROC, "/", "dataset", "/", timeThres, ".csv"), sep = ','))[1])
+  push!(df, eachrow(readdf(string(mindROC, "/", "dataset", "/", "frame", timeThres, ".csv"), sep = ','))[1])
 
   # append subjects
   df = hcat([subjectList; "Total"], df)
