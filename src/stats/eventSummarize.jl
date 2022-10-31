@@ -98,11 +98,11 @@ for timeThres ∈ timeThresholds
   for subj ∈ subjectList
 
     # load subject
-    subjectMt = readdlm(string(mindCM, "/", "subject", "/", timeThres, "/", subj, ".csv"), ',')
+    subjectMt = readdlm(string(mindCM, "/", "subject", "/", timeThres, "/", "event", "_", subj, ".csv"), ',')
 
     # write subject
     writePerformance(
-      string(mindROC, "/", "subject", "/", timeThres, "/", "event", subj, ".csv"),
+      string(mindROC, "/", "subject", "/", timeThres, "/", "event", "_", subj, ".csv"),
       performance(subjectMt),
       delim = ",",
     )
@@ -114,11 +114,11 @@ for timeThres ∈ timeThresholds
     for record ∈ recordList
 
       # load record
-      recordMt = readdlm(string(mindCM, "/", "record", "/", timeThres, "/", record, ".csv"), ',')
+      recordMt = readdlm(string(mindCM, "/", "record", "/", timeThres, "/", "event", "_", record, ".csv"), ',')
 
       # write record
       writePerformance(
-        string(mindROC, "/", "record", "/", timeThres, "/", "event", record, ".csv"),
+        string(mindROC, "/", "record", "/", timeThres, "/", "event", "_", record, ".csv"),
         performance(recordMt),
         delim = ",",
       )
@@ -127,7 +127,12 @@ for timeThres ∈ timeThresholds
       channelDc = Dict{String, Dict{String, Float64}}()
 
       # select record files
-      channelList = readdir(string(mindCM, "/", "channel", "/", timeThres)) |> π -> filter(χ -> contains(χ, record), π) |> π -> replace.(π, ".csv" => "")
+      channelList = @chain begin
+        readdir(string(mindCM, "/", "channel", "/", timeThres))
+        filter(χ -> contains(χ, record), _)
+        filter(χ -> contains(χ, "event"), _)
+        replace.(_, ".csv" => "")
+      end
 
       for channel ∈ channelList
 
@@ -144,7 +149,7 @@ for timeThres ∈ timeThresholds
 
       # write channels
       writePerformance(
-        string(mindROC, "/", "channel", "/", timeThres, "/", "event", record, ".csv"),
+        string(mindROC, "/", "channel", "/", timeThres, "/", "event", "_", record, ".csv"),
         channelDc,
         delim = ",",
       )
