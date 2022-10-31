@@ -11,8 +11,8 @@ end;
 begin
   using Chain: @chain
 
-  # dependencies
-  using Statistics
+  # mind reader
+  using MindReader
 end;
 
 ####################################################################################################
@@ -162,44 +162,47 @@ end
 
 ####################################################################################################
 
-# iterate on directories
+# iterate on times
 for timeThres ∈ timeThresholds
 
-  # read dataframe
-  df = readdf(string(mindData, "/", "recall", "/", "filter", timeThres, ".csv"); sep = ',')
+  # read dataframes
+  df = [readdf(string(mindROC, "/", "subject", "/", timeThres, "/", "event", "_", subj, ".csv"), sep = ',') for subj ∈ subjectList]
 
-  if timeThres == timeThresholds[1]
+  # concatenate dataframes
+  df = vcat(df...)
 
-    # group by existing records
-    eventRecords = groupby(df, :Record) |> length
+  # append overall
+  push!(df, eachrow(readdf(string(mindROC, "/", "dataset", "/", "event", timeThres, ".csv"), sep = ','))[1])
 
-    # write number of records
-    writedlm(
-      string(mindData, "/", "summary", "/", "eventRecords", ".csv"),
-      eventRecords,
-      ",",
-    )
-
-  end
-
-  # add total count
-  df[!, :Total] .= 1
-
-  # collect results
-  gdf = @chain df begin
-    groupby(_, :Subject)
-    combine(:Detected => sum => :Detected, :Total => sum => :Total)
-  end
-
-  # summarize all subjects
-  push!(gdf, ("Total", sum(gdf[:, :Detected]), sum(gdf[:, :Total])))
-
-  # calculate percentage
-  gdf[!, :Percentage] .= gdf[:, :Detected] ./ gdf[:, :Total]
+  # append subjects
+  df = hcat([subjectList; "Total"], df)
+  rename!(df, "x1" => :Subject)
 
   # write dataframe
-  writedf(string(mindData, "/", "summary", "/", "precision", timeThres, ".csv"), gdf; sep = ',')
+  writedf(
+    string(mindData, "/", "summary", "/", "performance", "_", "event", "_", timeThres, ".csv"),
+    df,
+    sep = ',',
+  )
 
 end
+
+####################################################################################################
+
+# read dataframes
+df = [readdf(string(mindROC, "/", "dataset", "/", "event", timeThres, ".csv"), sep = ',') for timeThres ∈ timeThresholds]
+
+# concatenate dataframes
+df = vcat(df...)
+
+# append time stamps
+df = hcat(timeThresholds, df)
+rename!(df, "x1" => :Filter)
+
+writedf(
+  string(mindData, "/", "summary", "/", "dataset", "_", "event", "_",".csv"),
+  df,
+  sep = ',',
+)
 
 ####################################################################################################

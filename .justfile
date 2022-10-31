@@ -109,12 +109,14 @@ _default:
 
 ####################################################################################################
 
+# TODO: update
 # annotate events
 @Vesta-S1-annotatedEvents:
   julia --project src/stats/annotatedEvents.jl
 
 ####################################################################################################
 
+# TODO: update
 # collect recorded time
 @Vesta-S2-collectTime:
   julia --project src/stats/collectTime.jl
