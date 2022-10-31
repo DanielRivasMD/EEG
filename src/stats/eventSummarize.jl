@@ -200,7 +200,7 @@ df = hcat(timeThresholds, df)
 rename!(df, "x1" => :Filter)
 
 writedf(
-  string(mindData, "/", "summary", "/", "dataset", "_", "event", "_",".csv"),
+  string(mindData, "/", "summary", "/", "dataset", "_", "event", ".csv"),
   df,
   sep = ',',
 )
