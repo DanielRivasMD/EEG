@@ -206,3 +206,25 @@ writedf(
 )
 
 ####################################################################################################
+
+# collect dataframe
+collectDf = DataFrame(Threshold = Int64[], Detected = Int64[])
+
+# iterate on thresholds
+for timeThres ∈ timeThresholds
+
+  # read dataframe
+  df = readdf(string(mindData, "/", "summary", "/", "event", timeThres, ".csv"), sep = ',')
+
+  # load data
+  push!(collectDf, [timeThres, sum(df[:, :Detected])])
+
+end
+
+writedf(
+  string(mindData, "/", "summary", "/", "events", ".csv"),
+  collectDf,
+  sep = ',',
+)
+
+####################################################################################################
