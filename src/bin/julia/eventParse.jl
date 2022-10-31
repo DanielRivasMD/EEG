@@ -134,7 +134,7 @@ for timeThres ∈ timeThresholds
   end
 
   # write dataframe
-  writedf(string(mindData, "/", "summary", "/", "events", timeThres, ".csv"), collectDf; sep = ',')
+  writedf(string(mindData, "/", "summary", "/", "event", timeThres, ".csv"), collectDf; sep = ',')
 
 end
 
