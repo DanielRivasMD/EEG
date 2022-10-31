@@ -32,7 +32,7 @@ subjectList = string.("chb", string.(1:24, pad = 2))
 for timeThres ∈ timeThresholds
 
   # load dataset
-  datasetMt = readdlm(string(mindCM, "/", "dataset", "/", timeThres, ".csv"), ',')
+  datasetMt = readdlm(string(mindCM, "/", "dataset", "/", "event", timeThres, ".csv"), ',')
 
   # write dataset
   writePerformance(
