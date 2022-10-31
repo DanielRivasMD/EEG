@@ -9,6 +9,9 @@ end;
 
 # load packages
 begin
+  using Chain: @chain
+
+  # dependencies
   using DelimitedFiles
 end;
 
@@ -49,7 +52,12 @@ for timeThres ∈ timeThresholds
       recordMt = zeros(Int, 2, 2)
 
       # select record files
-      channelList = readdir(string(mindCM, "/", "channel", "/", timeThres)) |> π -> filter(χ -> contains(χ, record), π) |> π -> replace.(π, ".csv" => "")
+      channelList = @chain begin
+        readdir(string(mindCM, "/", "channel", "/", timeThres))
+        filter(χ -> contains(χ, record), _)
+        filter(χ -> contains(χ, "frame"), _)
+        replace.(_, ".csv" => "")
+      end
 
       for channel ∈ channelList
 
