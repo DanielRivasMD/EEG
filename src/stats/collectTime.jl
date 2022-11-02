@@ -12,9 +12,7 @@ begin
   using Chain: @chain
 
   # dependencies
-  using DataFrames
   using Dates
-  using DelimitedFiles
 end;
 
 ####################################################################################################
