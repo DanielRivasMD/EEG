@@ -116,7 +116,7 @@ end
 push!(gdf, ("Total", sum(gdf[:, :Seconds]), sum(gdf[:, :Events]), sum(gdf[:, :EventAggregate])))
 
 # calculate percentage
-gdf[!, :Percentage] .= gdf[:, :EventAggregate] ./ gdf[:, :Seconds]
+gdf[!, :Percentage] .= round.(gdf[:, :EventAggregate] ./ gdf[:, :Seconds], digits = 4)
 
 # write dataframe
 writedf(string(mindData, "/", "summary", "/", "timeSubjects", ".csv"), gdf; sep = ',')
