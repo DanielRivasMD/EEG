@@ -69,7 +69,8 @@ gdf = @chain df begin
   combine(:Seconds => sum => :Seconds)
 end
 
-# append column
+# append columns
+gdf[!, :Events] .= 0
 gdf[!, :EventAggregate] .= 0
 
 # list directories
@@ -83,6 +84,18 @@ for sm ∈ summList
 
   # read annotation
   annotFile = annotationReader(string(dataDir, "/"), sm)
+
+  # preallocate events
+  events = 0
+
+  # iterate on dictionary
+  for (κ, υ) ∈ annotFile
+    # increase count
+    events += length(υ)
+  end
+
+  # add aggregated to grouped dataframe
+  gdf[findfirst(subj .== gdf[:, :Subject]), :Events] = events
 
   # aggregate events
   eventSum = Second(0)
@@ -100,7 +113,7 @@ for sm ∈ summList
 end
 
 # summarize all subjects
-push!(gdf, ("Total", sum(gdf[:, :Seconds]), sum(gdf[:, :EventAggregate])))
+push!(gdf, ("Total", sum(gdf[:, :Seconds]), sum(gdf[:, :Events]), sum(gdf[:, :EventAggregate])))
 
 # calculate percentage
 gdf[!, :Percentage] .= gdf[:, :EventAggregate] ./ gdf[:, :Seconds]
