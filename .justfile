@@ -109,15 +109,9 @@ _default:
 
 ####################################################################################################
 
-# annotate events
-@Vesta-S1-annotatedEvents:
-  julia --project src/stats/annotatedEvents.jl
-
-####################################################################################################
-
-# collect recorded time
-@Vesta-S2-collectTime:
-  julia --project src/stats/collectTime.jl
+# describe dataset
+@Vesta-S1-describeDataset:
+  julia --project src/stats/describeDataset.jl
 
 ####################################################################################################
 
