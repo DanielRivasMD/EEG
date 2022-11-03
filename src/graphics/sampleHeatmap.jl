@@ -26,15 +26,35 @@ end;
 
 # load modules
 begin
-  include(string(utilDir, "/ioDataFrame.jl"))
-  include(string(annotationDir, "/functions/annotationCalibrator.jl"))
+  include(string(utilDir, "/", "ioDataFrame.jl"))
+  include(string(annotationDir, "/", "functions", "/", "annotationCalibrator.jl"))
 end;
 
 ####################################################################################################
 
+# load peak identification function
+R" source(paste0($utilDir, '/peakIden.R')) ";
+
+####################################################################################################
+
 # declare recording
+record = "chb04_28"
+subject = "chb04"
+
+record = "chb12_23"
+subject = "chb12"
+
 record = "chb12_27"
 subject = "chb12"
+
+record = "chb12_29"
+subject = "chb12"
+
+record = "chb24_04"
+subject = "chb24"
+
+record = "chb24_14"
+subject = "chb24"
 
 ####################################################################################################
 
@@ -78,18 +98,13 @@ writedf(string(mindCSV, "/", record, ".csv"), df; sep = ',')
 
 ####################################################################################################
 
-# load peak identification function
-R" source(paste0($utilDir, '/peakIden.R')) ";
-
-####################################################################################################
-
 # declare artificial state
 artificialState = 10.
 
 # since sample per record = 256, window size = 256, & overlap = 4
 # then each bin represents 1 second of recording with 1 quarter of second offset
 # declare time threshold
-timeThres = 120
+timeThres = 0
 
 # apply filter
 for ι ∈ axes(df, 2)
@@ -141,7 +156,7 @@ heatmap!(
 )
 
 # save figure
-save(string(mindPlot, "/", record, ".svg"), φ)
+save(string(mindPlot, "/", record, "_", timeThres, ".svg"), φ)
 
 ####################################################################################################
 
