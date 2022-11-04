@@ -34,5 +34,6 @@ mindLog="${mindData}/log"
 mindErr="${mindData}/err"
 mindROC="${mindData}/roc"
 mindPlot="${mindData}/plot"
+mindHeatmap="${mindData}/heatmap"
 
 ####################################################################################################

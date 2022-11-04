@@ -34,5 +34,6 @@ mindLog <- paste0(mindData, '/log')
 mindErr <- paste0(mindData, '/err')
 mindROC <- paste0(mindData, '/roc')
 mindPlot <- paste0(mindData, '/plot')
+mindHeatmap <- paste0(mindData, '/heatmap')
 
 ####################################################################################################

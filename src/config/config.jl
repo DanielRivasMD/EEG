@@ -34,5 +34,6 @@ mindLog = string(mindData, "/log")
 mindErr = string(mindData, "/err")
 mindROC = string(mindData, "/roc")
 mindPlot = string(mindData, "/plot")
+mindHeatmap = string(mindData, "/heatmap")
 
 ####################################################################################################
