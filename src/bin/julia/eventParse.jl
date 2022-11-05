@@ -26,7 +26,7 @@ end;
 subjectList = string.("chb", string.(1:24, pad = 2))
 
 # iterate on directories
-for timeThres ∈ timeThresholds
+for timeThres ∈ abs.(timeThresholds)
 
   # declare dataset matrix
   datasetMt = zeros(Int, 2, 2)

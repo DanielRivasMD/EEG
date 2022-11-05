@@ -234,7 +234,7 @@ for ƒ ∈ shArgs["input"]
 
       # write confusion matrix
       writedlm(
-        string(shArgs["outDir"], "/", "confusionMt", "/", "channel", "/", timeThres, "/", "event", "_", edf, "_", κ, ".csv"),
+        string(shArgs["outDir"], "/", "confusionMt", "/", "channel", "/", abs(timeThres), "/", "event", "_", edf, "_", κ, ".csv"),
         cnMt,
         ",",
       )
@@ -245,7 +245,7 @@ for ƒ ∈ shArgs["input"]
 
     # write label & identification
     writedf(
-      string(shArgs["outDir"], "/", "event", "/", timeThres, "/", replace(ƒ, "edf" => "csv")),
+      string(shArgs["outDir"], "/", "event", "/", abs(timeThres), "/", replace(ƒ, "edf" => "csv")),
       labelDf;
       sep = ',',
     )

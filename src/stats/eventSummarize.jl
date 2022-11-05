@@ -26,7 +26,7 @@ end;
 ####################################################################################################
 
 # iterate on directories
-for timeThres ∈ timeThresholds
+for timeThres ∈ abs.(timeThresholds)
 
   # declare collected dataframe
   collectDf = DataFrame(Subject = String[], Record = String[], Detected = Int[], peakNo = Float64[], lowerLimIx = Float64[], upperLimIx = Float64[], peakLengthIx = Float64[])
