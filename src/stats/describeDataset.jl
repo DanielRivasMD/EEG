@@ -76,6 +76,9 @@ gdf[!, :EventAggregate] .= 0
 # list directories
 summList = readdir(dataDir) |> π -> filter(χ -> contains(χ, "summary"), π)
 
+# create dataframe
+df = DataFrame(Subject = String[], Record = String[], Start = Int64[], End = Int64[])
+
 # iterate on summaries
 for sm ∈ summList
 
@@ -88,29 +91,38 @@ for sm ∈ summList
   # preallocate events
   events = 0
 
-  # iterate on dictionary
+  # aggregate events
+  eventSum = 0
+
+  # collect event duration
   for (κ, υ) ∈ annotFile
+
     # increase count
     events += length(υ)
+
+    # iterate on events
+    for ι ∈ eachindex(υ)
+
+      # add annotated event
+      push!(df, [subj, κ, υ[ι][1].value, υ[ι][2].value])
+
+      # sum event length
+      eventSum += υ[ι][2].value - υ[ι][1].value
+
+    end
+
   end
 
   # add aggregated to grouped dataframe
   gdf[findfirst(subj .== gdf[:, :Subject]), :Events] = events
 
-  # aggregate events
-  eventSum = Second(0)
-
-  # collect event duration
-  for (κ, υ) ∈ annotFile
-    for ι ∈ eachindex(υ)
-      eventSum += υ[ι][2] - υ[ι][1]
-    end
-  end
-
-  # add aggregated to grouped dataframe
-  gdf[findfirst(subj .== gdf[:, :Subject]), :EventAggregate] = eventSum.value
+  # add aggregated to grouped sum dataframe
+  gdf[findfirst(subj .== gdf[:, :Subject]), :EventAggregate] = eventSum
 
 end
+
+# calculate event duration
+df[!, :Duration] .= df[:, :End] .- df[:, :Start]
 
 # summarize all subjects
 push!(gdf, ("Total", sum(gdf[:, :Seconds]), sum(gdf[:, :Events]), sum(gdf[:, :EventAggregate])))
@@ -118,7 +130,10 @@ push!(gdf, ("Total", sum(gdf[:, :Seconds]), sum(gdf[:, :Events]), sum(gdf[:, :Ev
 # calculate percentage
 gdf[!, :Percentage] .= round.(gdf[:, :EventAggregate] ./ gdf[:, :Seconds], digits = 4)
 
-# write dataframe
+# write dataframe annotated events
+writedf(string(mindData, "/", "summary", "/", "timeEvents", ".csv"), df; sep = ',')
+
+# write dataframe annotated events aggregate
 writedf(string(mindData, "/", "summary", "/", "timeSubjects", ".csv"), gdf; sep = ',')
 
 ####################################################################################################
