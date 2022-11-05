@@ -13,6 +13,7 @@ begin
 
   # dependencies
   using Dates
+  using Statistics
 end;
 
 ####################################################################################################
@@ -135,5 +136,43 @@ writedf(string(mindData, "/", "summary", "/", "timeEvents", ".csv"), df; sep = '
 
 # write dataframe annotated events aggregate
 writedf(string(mindData, "/", "summary", "/", "timeSubjects", ".csv"), gdf; sep = ',')
+
+####################################################################################################
+
+# calculate annotated event distribution per subject
+gdf = @chain df begin
+  groupby(_, :Subject)
+  combine(_, describe)
+  filter(χ -> χ.variable == :Duration, _)
+  _[:, Not([:variable, :nmissing, :eltype])]
+end
+
+# calculate annotated event standard deviation per subject
+@chain df begin
+  groupby(_, :Subject)
+  combine(:Duration => std)
+  gdf[!, :std] .= _[:, :Duration_std]
+end
+
+# append overall annotated distribution & std deviation
+@chain df begin
+  describe
+  filter(χ -> χ.variable == :Duration, _)
+  _[:, Not([:variable, :nmissing, :eltype])]
+  push!(gdf, ["Overall"; Vector(_[1, :]); std(df[:, :Duration])])
+end
+
+# write dataframe annotated events distribution
+writedf(string(mindData, "/", "summary", "/", "timeDistribution", ".csv"), gdf; sep = ',')
+
+####################################################################################################
+
+# # TODO: plot event duration distribution
+# using UnicodePlots
+
+# barplot(
+#   df[:, :Record],
+#   df[:, :Duration],
+# )
 
 ####################################################################################################
