@@ -29,7 +29,7 @@ end;
 subjectList = string.("chb", string.(1:24, pad = 2))
 
 # iterate on directories
-for timeThres ∈ timeThresholds
+for timeThres ∈ abs.(timeThresholds)
 
   # load dataset
   datasetMt = readdlm(string(mindCM, "/", "dataset", "/", "frame", timeThres, ".csv"), ',')

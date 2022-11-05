@@ -198,7 +198,7 @@ for ƒ ∈ shArgs["input"]
 
       # write confusion matrix
       writedlm(
-        string(shArgs["outDir"], "/", "confusionMt", "/", "channel", "/", timeThres, "/", "frame", "_", edf, "_", κ, ".csv"),
+        string(shArgs["outDir"], "/", "confusionMt", "/", "channel", "/", abs(timeThres), "/", "frame", "_", edf, "_", κ, ".csv"),
         MindReader.adjustFq(tb, labelAr, labels),
         ",",
       )
