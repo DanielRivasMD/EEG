@@ -30,14 +30,15 @@ fi
 if [[ ! -d "${mindEvent}" ]]
 then
   mkdir "${mindEvent}"
-  for timeThres in "${timeThresholds[@]}"
-  do
-    if [[ ! -d "${mindEvent}/${timeThres}" ]]
-    then
-      mkdir "${mindEvent}/${timeThres}"
-    fi
-  done
 fi
+
+for timeThres in "${timeThresholds[@]}"
+do
+  if [[ ! -d "${mindEvent}/${timeThres}" ]]
+  then
+    mkdir "${mindEvent}/${timeThres}"
+  fi
+done
 
 ####################################################################################################
 
@@ -45,24 +46,27 @@ fi
 if [[ ! -d "${mindCM}" ]]
 then
   mkdir "${mindCM}"
-  for dir in "${subdirs[@]}"
+fi
+
+for dir in "${subdirs[@]}"
+do
+  if [[ ! -d "${mindCM}/${dir}" ]]
+  then
+    mkdir "${mindCM}/${dir}"
+  fi
+
+  for timeThres in "${timeThresholds[@]}"
   do
-    if [[ ! -d "${mindCM}/${dir}" ]]
+    if [[ ! -d "${mindCM}/${dir}/${timeThres}" ]]
     then
-      mkdir "${mindCM}/${dir}"
-      for timeThres in "${timeThresholds[@]}"
-      do
-        if [[ ! -d "${mindCM}/${dir}/${timeThres}" ]]
-        then
-          mkdir "${mindCM}/${dir}/${timeThres}"
-        fi
-      done
+      mkdir "${mindCM}/${dir}/${timeThres}"
     fi
   done
-  if [[ ! -d "${mindCM}/dataset" ]]
-  then
-    mkdir "${mindCM}/dataset"
-  fi
+done
+
+if [[ ! -d "${mindCM}/dataset" ]]
+then
+  mkdir "${mindCM}/dataset"
 fi
 
 ####################################################################################################
@@ -71,24 +75,27 @@ fi
 if [[ ! -d "${mindROC}" ]]
 then
   mkdir "${mindROC}"
-  for dir in "${subdirs[@]}"
+fi
+
+for dir in "${subdirs[@]}"
+do
+  if [[ ! -d "${mindROC}/${dir}" ]]
+  then
+    mkdir "${mindROC}/${dir}"
+  fi
+
+  for timeThres in "${timeThresholds[@]}"
   do
-    if [[ ! -d "${mindROC}/${dir}" ]]
+    if [[ ! -d "${mindROC}/${dir}/${timeThres}" ]]
     then
-      mkdir "${mindROC}/${dir}"
-      for timeThres in "${timeThresholds[@]}"
-      do
-        if [[ ! -d "${mindROC}/${dir}/${timeThres}" ]]
-        then
-          mkdir "${mindROC}/${dir}/${timeThres}"
-        fi
-      done
+      mkdir "${mindROC}/${dir}/${timeThres}"
     fi
   done
-  if [[ ! -d "${mindROC}/dataset" ]]
-  then
-    mkdir "${mindROC}/dataset"
-  fi
+done
+
+if [[ ! -d "${mindROC}/dataset" ]]
+then
+  mkdir "${mindROC}/dataset"
 fi
 
 ####################################################################################################
