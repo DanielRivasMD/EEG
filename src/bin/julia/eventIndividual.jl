@@ -160,9 +160,21 @@ for ƒ ∈ shArgs["input"]
       # reset traceback
       υ.traceback = ones(Int, υ.traceback |> length)
 
-      # assign peak values
-      for ρ ∈ eachrow(filter(:peakLengthIx => χ -> χ >= timeThres, peakDf))
-        υ.traceback[Int(ρ[:lowerLimIx]):Int(ρ[:upperLimIx])] .= artificialState
+      # apply filter
+      if timeThres >= 0
+
+        # assign peak values
+        for ρ ∈ eachrow(filter(:peakLengthIx => χ -> χ >= timeThres, peakDf))
+          υ.traceback[Int(ρ[:lowerLimIx]):Int(ρ[:upperLimIx])] .= artificialState
+        end
+
+      elseif timeThres < 0
+
+        # assign peak values
+        for ρ ∈ eachrow(filter(:peakLengthIx => χ -> χ <= abs(timeThres), peakDf))
+          υ.traceback[Int(ρ[:lowerLimIx]):Int(ρ[:upperLimIx])] .= artificialState
+        end
+
       end
 
       # preallocate temporary values
