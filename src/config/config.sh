@@ -12,6 +12,9 @@ dataDir="${projDir}/data"
 # external
 externalDir="/Volumes/G/EEG"
 
+# database
+database="${externalDir}/physionet.org/files/chbmit/1.0.0"
+
 # source
 srcDir="${projDir}/src"
 binDir="${srcDir}/bin"

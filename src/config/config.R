@@ -12,6 +12,9 @@ dataDir <- paste0(projDir, '/data')
 # external
 externalDir <- '/Volumes/G/EEG'
 
+# database
+database <- paste0(externalDir, '/physionet.org/files/chbmit/1.0.0')
+
 # source
 srcDir <- paste0(projDir, '/src')
 binDir <- paste0(srcDir, '/bin')

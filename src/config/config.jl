@@ -12,6 +12,9 @@ dataDir = string(projDir, "/data")
 # external
 externalDir = "/Volumes/G/EEG"
 
+# database
+database = string(externalDir, "/physionet.org/files/chbmit/1.0.0")
+
 # source
 srcDir = string(projDir, "/src")
 binDir = string(srcDir, "/bin")
