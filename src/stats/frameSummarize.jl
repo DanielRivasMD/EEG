@@ -114,7 +114,7 @@ end
 ####################################################################################################
 
 # iterate on times
-for timeThres ∈ timeThresholds
+for timeThres ∈ abs.(timeThresholds)
 
   # read dataframes
   df = [readdf(string(mindROC, "/", "subject", "/", timeThres, "/", "frame", "_", subj, ".csv"), sep = ',') for subj ∈ subjectList]
@@ -141,7 +141,7 @@ end
 ####################################################################################################
 
 # read dataframes
-df = [readdf(string(mindROC, "/", "dataset", "/", "frame", timeThres, ".csv"), sep = ',') for timeThres ∈ timeThresholds]
+df = [readdf(string(mindROC, "/", "dataset", "/", "frame", timeThres, ".csv"), sep = ',') for timeThres ∈ abs.(timeThresholds)]
 
 # concatenate dataframes
 df = vcat(df...)
