@@ -33,9 +33,6 @@ for timeThres ∈ abs.(timeThresholds)
   # declare dataset matrix
   datasetMt = zeros(Int, 2, 2)
 
-  # list records
-  csvList = readdir(string(mindEvent, "/", timeThres)) |> π -> replace.(π, ".csv" => "")
-
   # iterate on subjects
   for subj ∈ subjectList
 
@@ -43,7 +40,11 @@ for timeThres ∈ abs.(timeThresholds)
     subjectMt = zeros(Int, 2, 2)
 
     # select subject files
-    recordList = csvList |> π -> filter(χ -> contains(χ, subj), π)
+    recordList = @chain begin
+      readdir(string(database, "/", subj))
+      filter(χ -> contains(χ, r"edf$"), _)
+      replace.(".edf" => "")
+    end
 
     # iterate on files
     for record ∈ recordList

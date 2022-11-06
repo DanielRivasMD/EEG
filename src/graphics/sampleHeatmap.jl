@@ -44,8 +44,6 @@ overW = 4
 # subjects
 subjectList = string.("chb", string.(1:24, pad = 2))
 
-database = string(externalDir, "/physionet.org/files/chbmit/1.0.0")
-
 ####################################################################################################
 
 # iterate on subjects
