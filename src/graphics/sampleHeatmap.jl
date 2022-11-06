@@ -57,6 +57,7 @@ for subject ∈ subjectList
   # read annotation
   annotFile = annotationReader(string(dataDir, "/"), string(subject, "-summary.txt"))
 
+  # select subject files
   recordList = @chain begin
     readdir(string(database, "/", subject))
     filter(χ -> contains(χ, r"edf$"), _)
@@ -126,38 +127,42 @@ for subject ∈ subjectList
 
     ####################################################################################################
 
-    # declare artificial state
-    artificialState = 10.
+    if monochromatic == true
 
-    # since sample per record = 256, window size = 256, & overlap = 4
-    # then each bin represents 1 second of recording with 1 quarter of second offset
-    # declare time threshold
-    timeThres = 0
+      # declare artificial state
+      artificialState = 10.
 
-    # apply filter
-    for ι ∈ axes(df, 2)
+      # apply filter
+      for ι ∈ axes(df, 2)
 
-      # preserve annotation filtering & adjust values
-      if ι == size(df, 2)
-        df[df[:, :Annotation] .== 1, ι] .= artificialState
-        df[df[:, :Annotation] .== 0, ι] .+= 1
-        continue
+        # preserve annotation filtering & adjust values
+        if ι == size(df, 2)
+          df[df[:, :Annotation] .== 1, ι] .= artificialState
+          df[df[:, :Annotation] .== 0, ι] .+= 1
+          continue
+        end
+
+        # declare traceback
+        ψ = df[:, ι]
+
+        # identify peak
+        R" peakDf <- peakIden($ψ, 2) "
+        @rget peakDf
+
+        # reset traceback
+        df[!, ι] = ones(size(df, 1))
+
+        # assign peak values
+        for ρ ∈ eachrow(filter(:peakLengthIx => χ -> χ >= timeThres, peakDf))
+          df[Int(ρ[:lowerLimIx]):Int(ρ[:upperLimIx]), ι] .= artificialState
+        end
+
       end
 
-      # declare traceback
-      ψ = df[:, ι]
+    else
 
-      # identify peak
-      R" peakDf <- peakIden($ψ, 2) "
-      @rget peakDf
-
-      # reset traceback
-      df[!, ι] = ones(size(df, 1))
-
-      # assign peak values
-      for ρ ∈ eachrow(filter(:peakLengthIx => χ -> χ >= timeThres, peakDf))
-        df[Int(ρ[:lowerLimIx]):Int(ρ[:upperLimIx]), ι] .= artificialState
-      end
+      # recalibrate annotation values
+      df[!, :Annotation] .+= 1
 
     end
 
