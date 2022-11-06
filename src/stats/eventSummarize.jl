@@ -79,7 +79,7 @@ end
 subjectList = string.("chb", string.(1:24, pad = 2))
 
 # iterate on directories
-for timeThres ∈ timeThresholds
+for timeThres ∈ abs.(timeThresholds)
 
   # load dataset
   datasetMt = readdlm(string(mindCM, "/", "dataset", "/", "event", timeThres, ".csv"), ',')
@@ -164,7 +164,7 @@ end
 ####################################################################################################
 
 # iterate on times
-for timeThres ∈ timeThresholds
+for timeThres ∈ abs.(timeThresholds)
 
   # read dataframes
   df = [readdf(string(mindROC, "/", "subject", "/", timeThres, "/", "event", "_", subj, ".csv"), sep = ',') for subj ∈ subjectList]
@@ -191,7 +191,7 @@ end
 ####################################################################################################
 
 # read dataframes
-df = [readdf(string(mindROC, "/", "dataset", "/", "event", timeThres, ".csv"), sep = ',') for timeThres ∈ timeThresholds]
+df = [readdf(string(mindROC, "/", "dataset", "/", "event", timeThres, ".csv"), sep = ',') for timeThres ∈ abs.(timeThresholds)]
 
 # concatenate dataframes
 df = vcat(df...)
