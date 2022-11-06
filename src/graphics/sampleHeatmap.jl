@@ -38,11 +38,25 @@ R" source(paste0($utilDir, '/peakIden.R')) ";
 ####################################################################################################
 
 # declare variables
-sizeW = 256
-overW = 4
+begin
+# window parameters
+  sizeW = 256
+  overW = 4
 
-# subjects
-subjectList = string.("chb", string.(1:24, pad = 2))
+  # color palette
+  coldPalette = ["#FFFFFF", "#0000FF", "#003FFF", "#007FFF", "#00BFFF", "#00FFFF"]
+  warmPalette = ["#FFFFFF", "#FF0000", "#FF3F00", "#FF7F00", "#FFBF00", "#FFFF00"]
+  binaryPalatte = ["#ffffff", "#ff0000"]
+  monochromatic = false
+
+  # since sample per record = 256, window size = 256, & overlap = 4
+  # then each bin represents 1 second of recording with 1 quarter of second offset
+  # declare time threshold
+  timeThres = 0
+
+  # subjects
+  subjectList = string.("chb", string.(1:24, pad = 2))
+end;
 
 ####################################################################################################
 
@@ -185,7 +199,7 @@ for subject ∈ subjectList
     heatmap!(
       ξ,
       df |> Matrix |> π -> imresize(π, (Int(size(df, 1) / 4), size(df, 2))),
-      colormap = ["#ffffff", "#ff0000"],
+      colormap = warmPalette,
     )
 
     # save figure
