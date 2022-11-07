@@ -11,9 +11,6 @@ end;
 begin
   using Chain: @chain
 
-  # ai models
-  using AImodels
-
   # Makie
   using CairoMakie
 

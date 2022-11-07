@@ -11,9 +11,6 @@ end;
 begin
   using Chain: @chain
 
-  # mind reader
-  using MindReader
-
   # dependencies
   using ImageTransformations
   using RCall
@@ -39,7 +36,7 @@ R" source(paste0($utilDir, '/peakIden.R')) ";
 
 # declare variables
 begin
-# window parameters
+  # window parameters
   sizeW = 256
   overW = 4
 
