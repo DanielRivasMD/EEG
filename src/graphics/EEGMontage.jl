@@ -65,6 +65,9 @@ record = "chb04_28"
 # event 2)    15125 : 15596
 extractPoints = [7000, 15550, 25000, 43530]
 
+# preallocate matrix
+rangeSize = 100
+
 ####################################################################################################
 
 # identify files to load
@@ -104,13 +107,8 @@ end
 
 ####################################################################################################
 
-# preallocate matrix
-rangeSize = 100
-
-####################################################################################################
-
 # iterate on extract points
-for ι ∈ extractPoints
+for ν ∈ extractPoints
 
   ####################################################################################################
 
@@ -123,10 +121,10 @@ for ι ∈ extractPoints
   # iterate on electrodes
   for (κ, υ) ∈ electrodes
     ç += 1
-    if df[ι, ç] == 1
+    if df[ν, ç] == 1
       toHeat[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .= montageβ[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .* -1
     else
-      toHeat[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .= montageβ[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .* conicMask .* df[ι, ç]
+      toHeat[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .= montageβ[υ[1]:υ[1] + rangeSize, υ[2] - rangeSize:υ[2]] .* conicMask .* df[ν, ç]
     end
   end
 
@@ -151,7 +149,7 @@ for ι ∈ extractPoints
   ####################################################################################################
 
   # render image
-  renderImg(heatβ, string(dataDir, "/", "heatmap", "_", record, "_", ι, ".svg"))
+  renderImg(heatβ, string(dataDir, "/", "heatmap", "_", record, "_", ν, ".svg"))
 
   ####################################################################################################
 
