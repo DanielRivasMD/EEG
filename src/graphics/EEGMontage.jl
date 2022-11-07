@@ -56,6 +56,17 @@ end;
 
 # declare recording
 record = "chb04_28"
+# record = "chb20_15"
+# record = "chb20_13"
+# record = "chb19_29"
+# record = "chb19_28"
+# record = "chb17_13"
+
+# defined arbitrary extract points
+# record:     chb04_28
+# event 1)    6713  : 7128
+# event 2)    15125 : 15596
+extractPoints = [7000, 15550, 25000, 43530]
 
 ####################################################################################################
 
@@ -98,9 +109,6 @@ end
 
 # preallocate matrix
 rangeSize = 100
-
-# defined arbitrary extract points
-extractPoints = [1215, 2800, 5000]
 
 ####################################################################################################
 
