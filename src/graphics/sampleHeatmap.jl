@@ -11,12 +11,15 @@ end;
 begin
   using Chain: @chain
 
-  # dependencies
-  using ImageTransformations
-  using RCall
+  # MindReader
+  using MindReader
 
   # Makie
   using CairoMakie
+
+  # dependencies
+  using ImageTransformations
+  using RCall
 end;
 
 ####################################################################################################
@@ -69,17 +72,8 @@ end;
 
 ####################################################################################################
 
-
-# log
-@info subject
-
-####################################################################################################
-
 # read annotation
 annotFile = annotationReader(string(dataDir, "/"), string(subject, "-summary.txt"))
-
-# log
-@info record
 
 ####################################################################################################
 
@@ -188,8 +182,7 @@ end
   title = "Heatmap representing all channels during length of recording",
   xlabel = "Time along EEG recording",
   yticks = (1:size(df, 2), df |> names),
-  xticks = (extractPoints ./ collapseFactor, repeat([""], length(extractPoints))
-  ),
+  xticks = (extractPoints ./ collapseFactor, repeat([""], length(extractPoints))),
 )
 
 # plot matrix
