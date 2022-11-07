@@ -115,9 +115,9 @@ _default:
 
 ####################################################################################################
 
-# create heatmap for recording
-@Vesta-G1-sampleHeatmap:
-  julia --project src/graphics/sampleHeatmap.jl
+# create heatmap for recordings
+@Vesta-G1-heatmap:
+  julia --project src/graphics/heatmap.jl
 
 ####################################################################################################
 
@@ -130,5 +130,11 @@ _default:
 # plot montage
 @Vesta-G3-EEGMontage:
   julia --project src/graphics/EEGMontage.jl
+
+####################################################################################################
+
+# create heatmaps for recording
+@Vesta-G4-sampleHeatmap:
+  julia --project src/graphics/sampleHeatmap.jl
 
 ####################################################################################################
