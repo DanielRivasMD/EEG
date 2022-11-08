@@ -162,6 +162,10 @@ end
   push!(gdf, ["Overall"; Vector(_[1, :]); std(df[:, :Duration])])
 end
 
+# round mean & std
+gdf[!, :mean] .= round.(gdf[:, :mean], digits = 2)
+gdf[!, :std] .= round.(gdf[:, :std], digits = 2)
+
 # write dataframe annotated events distribution
 writedf(string(mindData, "/", "summary", "/", "timeDistribution", ".csv"), gdf; sep = ',')
 
