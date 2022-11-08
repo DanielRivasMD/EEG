@@ -11,6 +11,9 @@ end;
 begin
   using Chain: @chain
 
+  # Makie
+  using CairoMakie
+
   # dependencies
   using Dates
   using Statistics
@@ -171,12 +174,28 @@ writedf(string(mindData, "/", "summary", "/", "timeDistribution", ".csv"), gdf; 
 
 ####################################################################################################
 
-# # TODO: plot event duration distribution
-# using UnicodePlots
+# plot boxplot
+φ = Figure()
 
-# barplot(
-#   df[:, :Record],
-#   df[:, :Duration],
-# )
+# assign axes labels
+ξ = CairoMakie.Axis(
+  φ[1, 1],
+  title = "Distribution of annotated events",
+  xlabel = "Subjects",
+  ylabel = "Event duration in Seconds",
+  xticks = ([1:24...], string.("chb", string.(1:24, pad = 2))),
+  xticklabelsize = 8,
+)
+
+# plot distribution
+boxplot!(
+  ξ,
+  df[:, :Subject] .|> π -> replace(π, "chb" => "") .|> π -> parse(Int, π),
+  df[:, :Duration],
+  show_outliers = true
+)
+
+# save figure
+save(string(mindPlot, "/", "eventDistribution", ".svg"), φ)
 
 ####################################################################################################
