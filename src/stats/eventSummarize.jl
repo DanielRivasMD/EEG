@@ -212,13 +212,13 @@ writedf(
 collectDf = DataFrame(Threshold = Int64[], Detected = Int64[])
 
 # iterate on thresholds
-for timeThres ∈ timeThresholds
+for timeThres ∈ abs.(timeThresholds)
 
   # read dataframe
-  df = readdf(string(mindData, "/", "summary", "/", "event", timeThres, ".csv"), sep = ',')
+  tmpDf = readdf(string(mindData, "/", "summary", "/", "event", timeThres, ".csv"), sep = ',')
 
   # load data
-  push!(collectDf, [timeThres, sum(df[:, :Detected])])
+  push!(collectDf, [timeThres, sum(tmpDf[:, :Detected])])
 
 end
 
