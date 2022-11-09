@@ -1,12 +1,5 @@
 ################################################################################
 
-# declarations
-begin
-  include("/Users/drivas/Factorem/EEG/src/config/config.jl")
-end;
-
-################################################################################
-
 # load packages
 begin
   using DataFrames
