@@ -24,6 +24,7 @@ end;
 # load modules
 begin
   include(string(utilDir, "/", "ioDataFrame.jl"))
+  include(string(utilDir, "/", "timeConversion.jl"))
   include(string(annotationDir, "/", "functions", "/", "annotationCalibrator.jl"))
 end;
 
@@ -70,7 +71,7 @@ writedf(string(mindData, "/", "summary", "/", "timeRecords", ".csv"), df; sep = 
 # collect subject times
 gdf = @chain df begin
   groupby(_, :Subject)
-  combine(:Seconds => sum => :Seconds)
+  combine(:Seconds => sum => :TotalSeconds)
 end
 
 # append columns
@@ -129,10 +130,16 @@ end
 df[!, :Duration] .= df[:, :End] .- df[:, :Start]
 
 # summarize all subjects
-push!(gdf, ("Total", sum(gdf[:, :Seconds]), sum(gdf[:, :Events]), sum(gdf[:, :EventAggregate])))
+push!(gdf, ("Total", sum(gdf[:, :TotalSeconds]), sum(gdf[:, :Events]), sum(gdf[:, :EventAggregate])))
+
+# add time columns
+time = convertFromSeconds.(gdf[:, :TotalSeconds])
+gdf[:, :Hours] .= Int.([τ[1] for τ ∈ time])
+gdf[:, :Minutes] .= Int.([τ[2] for τ ∈ time])
+gdf[:, :Seconds] .= Int.([τ[3] for τ ∈ time])
 
 # calculate percentage
-gdf[!, :Percentage] .= round.(gdf[:, :EventAggregate] ./ gdf[:, :Seconds], digits = 4)
+gdf[!, :Percentage] .= round.(gdf[:, :EventAggregate] ./ gdf[:, :TotalSeconds], digits = 4)
 
 # write dataframe annotated events
 writedf(string(mindData, "/", "summary", "/", "timeEvents", ".csv"), df; sep = ',')
