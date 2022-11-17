@@ -148,6 +148,7 @@ if monochromatic == true
 else
 
   # recalibrate annotation values
+  df[df[:, :Annotation] .== 1, :Annotation] .= artificialState - 1
   df[!, :Annotation] .+= 1
 
 end
