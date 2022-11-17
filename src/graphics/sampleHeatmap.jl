@@ -97,32 +97,13 @@ end
 
 ####################################################################################################
 
-# identify files to load
-states = @chain begin
-  readdir(mindHMM)
-  filter(χ -> contains(χ, record), _)
-  filter(χ -> contains(χ, "traceback"), _)
-  filter(χ -> !contains(χ, "VNS"), _)
-  filter(χ -> !contains(χ, "EKG"), _)
-  filter(χ -> !contains(χ, "LOC"), _)
-  filter(χ -> !contains(χ, "LUE"), _)
-  filter(χ -> !contains(χ, "_-_"), _)
-  filter(χ -> !contains(χ, "_._"), _)
-  replace.(record => "")
-  replace.(r"_\d\d" => "")
-  replace.("traceback.csv" => "")
-  replace.("a" => "")
-  replace.("b" => "")
-  replace.("c" => "")
-  replace.("_" => "")
-  replace.("+" => "")
-  unique(_)
-end
+# declare files to load manually
+include(string(configDir, "/", "electrodeDisplay.jl"))
 
 ####################################################################################################
 
 # read files into dataframe array & concatenate
-df = [readdf(string(mindHMM, "/", record, "_", ι, "_", "traceback", ".csv"); sep = ',') for ι ∈ states]
+df = [readdf(string(mindHMM, "/", record, "_", ι, "_", "traceback", ".csv"); sep = ',') for ι ∈ electrodeDisplay]
 df = hcat(df..., labelDf)
 
 ####################################################################################################
