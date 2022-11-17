@@ -159,18 +159,32 @@ end
 φ = Figure()
 
 # assign axes labels
-ξ = CairoMakie.Axis(
+ξ1 = CairoMakie.Axis(
   φ[1, 1],
   title = "Heatmap representing all channels during length of recording",
-  xlabel = "Time along EEG recording",
-  yticks = (1:size(df, 2), df |> names),
   xticks = (extractPoints ./ collapseFactor, repeat([""], length(extractPoints))),
+  yticks = ([1], [names(df)[end]]),
+)
+
+# plot annotations
+heatmap!(
+  ξ1,
+  df|> Matrix |> π -> imresize(π, (Int(size(df, 1) / collapseFactor), size(df, 2))) |> π -> π[:, end] |> π -> reshape(π, (length(π), 1)),
+  colormap = warmPalette[[1, end]],
+)
+
+# assign axes labels
+ξ2 = CairoMakie.Axis(
+  φ[2, 1],
+  yticks = (1:size(df, 2), names(df)),
+  xticks = (extractPoints ./ collapseFactor, repeat([""], length(extractPoints))),
+  xlabel = "Time along EEG recording",
 )
 
 # plot matrix
 heatmap!(
-  ξ,
-  df |> Matrix |> π -> imresize(π, (Int(size(df, 1) / collapseFactor), size(df, 2))),
+  ξ2,
+  df[:, Not(end)] |> Matrix |> π -> imresize(π, (Int(size(df, 1) / collapseFactor), size(df, 2) - 1)),
   colormap = warmPalette,
 )
 
