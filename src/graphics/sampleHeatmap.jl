@@ -54,8 +54,8 @@ begin
 
   # color palette
   coldPalette = ["#FFFFFF", "#0000FF", "#003FFF", "#007FFF", "#00BFFF", "#00FFFF"]
-  warmPalette = ["#FFFFFF", "#FF0000", "#FF3F00", "#FF7F00", "#FFBF00", "#FFFF00"]
-  binaryPalatte = ["#ffffff", "#ff0000"]
+  warmPalette = ["#FFFFFF", "#FF0000", "#FF3F00", "#FF7F00", "#FFBF00", "#FFFF00", "#8A2BE2"]
+  binaryPalatte = ["#FFFFFF", "#FF0000"]
   monochromatic = false
 
   # since sample per record = 256, window size = 256, & overlap = 4
