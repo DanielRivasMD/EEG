@@ -113,10 +113,10 @@ writedf(string(mindCSV, "/", record, ".csv"), df; sep = ',')
 
 ####################################################################################################
 
-if monochromatic == true
+# declare artificial state
+artificialState = 10.
 
-  # declare artificial state
-  artificialState = 10.
+if monochromatic == true
 
   # apply filter
   for ι ∈ axes(df, 2)
