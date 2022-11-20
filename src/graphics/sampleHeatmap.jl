@@ -155,22 +155,12 @@ end
 
 ####################################################################################################
 
-# plot heatmap
-φ = Figure()
-
 # assign axes labels
 ξ1 = CairoMakie.Axis(
   φ[1, 1],
   title = "Heatmap representing all channels during length of recording",
   xticks = (extractPoints ./ collapseFactor, repeat([""], length(extractPoints))),
   yticks = ([1], [names(df)[end]]),
-)
-
-# plot annotations
-heatmap!(
-  ξ1,
-  df|> Matrix |> π -> imresize(π, (Int(size(df, 1) / collapseFactor), size(df, 2))) |> π -> π[:, end] |> π -> reshape(π, (length(π), 1)),
-  colormap = warmPalette[[1, end]],
 )
 
 # assign axes labels
@@ -181,12 +171,51 @@ heatmap!(
   xlabel = "Time along EEG recording",
 )
 
+
+# spacing multipler
+spx = 20
+
+# plot heatmap
+φ = Figure()
+
+# declare grid
+γ = φ[1, 1] = GridLayout()
+
+# panel layout
+α = [MakieLayout.Axis(γ[row, col]) for row ∈ 1:2, col ∈ 1:1]
+
+# # hide decorations
+# hidedecorations!(α[1, 1])
+
+# ticks
+α[1, 1].yticks = ([1], [names(df)[end]])
+α[1, 1].xticks = ([], [])
+α[2, 1].yticks = (1:size(df, 2), names(df))
+α[2, 1].xticks = (extractPoints ./ collapseFactor, repeat([""], length(extractPoints)))
+
+# panel title
+Label(γ[1, :, Top()], "Heatmap representing all channels during length of recording", valign = :bottom)
+
+# plot annotations
+heatmap!(
+  α[1, 1],
+  df|> Matrix |> π -> imresize(π, (Int(size(df, 1) / collapseFactor), size(df, 2))) |> π -> π[:, end] |> π -> reshape(π, (length(π), 1)),
+  colormap = warmPalette[[1, end]],
+)
+
 # plot matrix
 heatmap!(
-  ξ2,
+  α[2, 1],
   df[:, Not(end)] |> Matrix |> π -> imresize(π, (Int(size(df, 1) / collapseFactor), size(df, 2) - 1)),
   colormap = warmPalette,
 )
+
+# row sizes
+rowsize!(γ, 1, 1 * spx)
+rowsize!(γ, 2, 22 * spx)
+
+# row gap
+rowgap!(γ, 0 * spx)
 
 # save figure
 save(string(mindHeatmap, "/", record, "_", timeThres, ".svg"), φ)
