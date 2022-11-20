@@ -29,7 +29,7 @@ end;
 for timeThres ∈ abs.(timeThresholds)
 
   # declare collected dataframe
-  collectDf = DataFrame(Subject = String[], Record = String[], Detected = Int[], peakNo = Float64[], lowerLimIx = Float64[], upperLimIx = Float64[], peakLengthIx = Float64[])
+  collectDf = DataFrame(Subject = String[], Record = String[], Detected = Int[], Electrode = Float64[], peakNo = Float64[], lowerLimIx = Float64[], upperLimIx = Float64[], peakLengthIx = Float64[])
 
   # list records
   csvList = readdir(string(mindEvent, "/", timeThres))
@@ -61,7 +61,7 @@ for timeThres ∈ abs.(timeThresholds)
       det = map(sum, eachrow(df[:, 5:end]))
 
       for ι ∈ axes(df, 1)
-        push!(collectDf, [subj; replace(csv, ".csv" => ""); det[ι] > 0; [df[ι, ο] for ο ∈ 1:4]])
+        push!(collectDf, [subj; replace(csv, ".csv" => ""); det[ι] > 0; det[ι] / (size(df, 2) - 4); [df[ι, ο] for ο ∈ 1:4]])
       end
 
     end
