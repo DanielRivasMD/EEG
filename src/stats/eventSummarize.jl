@@ -66,7 +66,7 @@ for timeThres ∈ abs.(timeThresholds)
       det = map(sum, eachrow(df[:, 5:end]))
 
       for ι ∈ axes(df, 1)
-        push!(collectDf, [subj; replace(csv, ".csv" => ""); det[ι] > 0; det[ι] / (size(df, 2) - 4); [df[ι, ο] for ο ∈ 1:4]])
+        push!(collectDf, [subj; replace(csv, ".csv" => ""); det[ι] > 0; round.(det[ι] / (size(df, 2) - 4), digits = 2); [df[ι, ο] for ο ∈ 1:4]])
       end
 
     end
