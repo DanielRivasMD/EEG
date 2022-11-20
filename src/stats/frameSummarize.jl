@@ -19,8 +19,8 @@ end;
 
 # load modules
 begin
-  include(string(utilDir, "/ioDataFrame.jl"))
-  include(string(configDir, "/timeThresholds.jl"))
+  include(string(utilDir, "/", "ioDataFrame.jl"))
+  include(string(configDir, "/", "timeThresholds.jl"))
 end;
 
 ####################################################################################################
