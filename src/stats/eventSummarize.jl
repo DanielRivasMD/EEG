@@ -25,6 +25,11 @@ end;
 
 ####################################################################################################
 
+# declare range
+histRange = [0:0.1:1...]
+
+####################################################################################################
+
 # iterate on directories
 for timeThres ∈ abs.(timeThresholds)
 
@@ -70,6 +75,52 @@ for timeThres ∈ abs.(timeThresholds)
 
   # write dataframe
   writedf(string(mindData, "/", "summary", "/", "event", timeThres, ".csv"), collectDf; sep = ',')
+
+  # collect distribution manually
+  histDf = DataFrame(RangeS = Float64[], RangeE = Float64[], Count = Int[])
+
+  for (ι, υ) ∈ enumerate(histRange)
+    # identify zero
+    if ι == 1
+
+      # identify in-range
+      ç = filter(χ -> χ .== υ, collectDf[:, :Electrode])
+
+      # mount on dataframe
+      push!(histDf, [υ, υ, length(ç)])
+
+    end
+
+    # identify full set
+    if ι > 10
+
+      # identify in-range
+      ç = filter(χ -> χ .== υ, collectDf[:, :Electrode])
+
+      # mount on dataframe
+      push!(histDf, [υ, υ, length(ç)])
+
+    else
+
+      # declare off-phase
+      ο = ι + 1
+      ν = histRange[ο]
+
+      # identify in-range
+      ç = filter(χ -> χ .> υ && χ .< ν, collectDf[:, :Electrode])
+
+      # mount on dataframe
+      push!(histDf, [υ, ν, length(ç)])
+
+    end
+
+  end
+
+  # calculate percentage
+  histDf[!, :Percentage] .= round.(histDf[:, :Count] ./ sum(histDf[:, :Count]), digits = 2)
+
+  # write dataframe
+  writedf(string(mindData, "/", "summary", "/", "electrodePercentage", timeThres, ".csv"), histDf; sep = ',')
 
 end
 
