@@ -45,8 +45,8 @@ end
 
 # load modules
 begin
-  include(string(utilDir, "/ioDataFrame.jl"))
-  include(string(configDir, "/electrodeCoor.jl"))
+  include(string(utilDir, "/", "ioDataFrame.jl"))
+  include(string(configDir, "/", "electrodeCoor.jl"))
 end;
 
 ####################################################################################################
