@@ -97,6 +97,9 @@ for timeThres ∈ abs.(timeThresholds)
       # identify in-range
       ç = filter(χ -> χ .== υ, collectDf[:, :Electrode])
 
+      # patch upper counter
+      histDf[11, :Count] -= length(ç)
+
       # mount on dataframe
       push!(histDf, [υ, υ, length(ç)])
 
@@ -107,7 +110,7 @@ for timeThres ∈ abs.(timeThresholds)
       ν = histRange[ο]
 
       # identify in-range
-      ç = filter(χ -> χ .> υ && χ .< ν, collectDf[:, :Electrode])
+      ç = filter(χ -> χ .> υ && χ .<= ν, collectDf[:, :Electrode])
 
       # mount on dataframe
       push!(histDf, [υ, ν, length(ç)])
