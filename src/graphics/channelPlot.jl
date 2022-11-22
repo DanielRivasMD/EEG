@@ -54,6 +54,11 @@ edfDf, _, _ = getSignals(string(database, "/", subject, "/", record, ".edf"))
 
 ####################################################################################################
 
+# declare files to load manually
+include(string(configDir, "/", "electrodeDisplay.jl"))
+
+####################################################################################################
+
 # iterate on extract points
 for (ι, υ) ∈ enumerate(extractPoints)
 
@@ -63,7 +68,7 @@ for (ι, υ) ∈ enumerate(extractPoints)
   startIx = extractPoints[ι] - plotWindow
 
   # extract matrix
-  toPlot = edfDf[startIx:(startIx + plotWindow), :]
+  toPlot = edfDf[startIx:(startIx + plotWindow), electrodeDisplay]
 
   # plot signals
   φ = Figure()
