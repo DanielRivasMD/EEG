@@ -73,7 +73,7 @@ end;
 ####################################################################################################
 
 # read annotation
-annotFile = annotationReader(string(dataDir, "/"), string(subject, "-summary.txt"))
+annotFile = annotationReader(string(database, "/", subject, "/"), string(subject, "-summary.txt"))
 
 ####################################################################################################
 
