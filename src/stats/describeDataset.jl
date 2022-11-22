@@ -74,6 +74,14 @@ gdf = @chain df begin
   combine(:Seconds => sum => :TotalSeconds)
 end
 
+# count records
+gdf[!, :RecordCount] .= 0
+
+# iterate on subjects
+for subj ∈ string.("chb", string.(1:24, pad = 2))
+  gdf[findfirst(gdf[:, :Subject] .== subj), :RecordCount] = length(findall(subj .== df[:, :Subject]))
+end
+
 # append columns
 gdf[!, :Events] .= 0
 gdf[!, :EventAggregate] .= 0
@@ -130,7 +138,7 @@ end
 df[!, :Duration] .= df[:, :End] .- df[:, :Start]
 
 # summarize all subjects
-push!(gdf, ("Total", sum(gdf[:, :TotalSeconds]), sum(gdf[:, :Events]), sum(gdf[:, :EventAggregate])))
+push!(gdf, ("Total", sum(gdf[:, :TotalSeconds]), sum(gdf[:, :RecordCount]), sum(gdf[:, :Events]), sum(gdf[:, :EventAggregate])))
 
 # add time columns
 time = convertFromSeconds.(gdf[:, :TotalSeconds])
