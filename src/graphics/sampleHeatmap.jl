@@ -155,23 +155,6 @@ end
 
 ####################################################################################################
 
-# assign axes labels
-ξ1 = CairoMakie.Axis(
-  φ[1, 1],
-  title = "Heatmap representing all channels during length of recording",
-  xticks = (extractPoints ./ collapseFactor, repeat([""], length(extractPoints))),
-  yticks = ([1], [names(df)[end]]),
-)
-
-# assign axes labels
-ξ2 = CairoMakie.Axis(
-  φ[2, 1],
-  yticks = (1:size(df, 2), names(df)),
-  xticks = (extractPoints ./ collapseFactor, repeat([""], length(extractPoints))),
-  xlabel = "Time along EEG recording",
-)
-
-
 # spacing multipler
 spx = 20
 
@@ -184,17 +167,16 @@ spx = 20
 # panel layout
 α = [MakieLayout.Axis(γ[row, col]) for row ∈ 1:2, col ∈ 1:1]
 
-# # hide decorations
-# hidedecorations!(α[1, 1])
-
 # ticks
 α[1, 1].yticks = ([1], [names(df)[end]])
 α[1, 1].xticks = ([], [])
 α[2, 1].yticks = (1:size(df, 2), names(df))
 α[2, 1].xticks = (extractPoints ./ collapseFactor, repeat([""], length(extractPoints)))
 
+α[2, 1].xlabel = "Time along EEG recording"
+
 # panel title
-Label(γ[1, :, Top()], "Heatmap representing all channels during length of recording", valign = :bottom)
+Label(γ[1, :, Top()], "Heatmap representing all channels during length of recording", valign = :bottom, padding = (0, 0, 10, 0))
 
 # plot annotations
 heatmap!(
