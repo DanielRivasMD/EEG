@@ -16,7 +16,7 @@ end;
 # hidden Markov model parameters
 hmmParams = HMMParams(
   penalty = 200,
-  distance = euclDist,
+  distance = euclideanDistance,
   minimumFrequency = 20,
   verbosity = false,
 )
